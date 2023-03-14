@@ -1,0 +1,13 @@
+Pods
+.DS_Store
+Podfile.lock
+xcuserdata/
+*.xccheckout
+*.xcscmblueprint
+
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/xcshareddata/
+!*.xcworkspace/contents.xcworkspacedata
+
+**/xcshareddata/WorkspaceSettings.xcsettings

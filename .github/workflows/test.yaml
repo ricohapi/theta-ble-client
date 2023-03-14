@@ -1,0 +1,37 @@
+name: Test
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'kotlin-multiplatform/**'
+      - 'react-native/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: macos-13
+    steps:
+    - uses: actions/checkout@v3
+    - name: Select Xcode version
+      run: sudo xcode-select -s '/Applications/Xcode_15.0.1.app/Contents/Developer'
+    - name: Show Xcode version
+      run: xcodebuild -version
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+    - name: test-kmm
+      uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
+      with:
+        arguments: testDebugUnitTest
+    - name: Archive code coverage results
+      if: always()
+      uses: actions/upload-artifact@v1
+      with:
+        name: code-coverage-report
+        path: kotlin-multiplatform/build/reports/tests/testDebugUnitTest

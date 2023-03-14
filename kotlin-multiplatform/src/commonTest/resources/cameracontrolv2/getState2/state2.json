@@ -1,0 +1,20 @@
+{
+  "_externalGpsInfo": {
+    "gpsInfo": {
+      "_dateTimeZone": "2023:08:09 16:23:16+09:00",
+      "_altitude": 4.99,
+      "lat": 35.48,
+      "_datum": "WGS84",
+      "lng": 134.24
+    }
+  },
+  "_internalGpsInfo": {
+    "gpsInfo": {
+      "_dateTimeZone": "2023:08:09 16:23:16+09:00",
+      "_altitude": 5.99,
+      "lat": 36.48,
+      "_datum": "WGS84",
+      "lng": 135.24
+    }
+  }
+}
