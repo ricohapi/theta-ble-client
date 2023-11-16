@@ -427,6 +427,8 @@ PODS:
   - SocketRocket (0.6.1)
   - theta-ble-client-react-native (1.0.0):
     - React-Core
+    - THETABleClient (= 1.0.0)
+  - THETABleClient (1.0.0)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
@@ -512,6 +514,7 @@ SPEC REPOS:
     - libevent
     - OpenSSL-Universal
     - SocketRocket
+    - THETABleClient
     - YogaKit
 
 EXTERNAL SOURCES:
@@ -643,7 +646,8 @@ SPEC CHECKSUMS:
   RNDefaultPreference: 08bdb06cfa9188d5da97d4642dac745218d7fb31
   RNScreens: 218801c16a2782546d30bd2026bb625c0302d70f
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
-  theta-ble-client-react-native: ea3ae8821eb463d2612e1be01adbce33b436bb9c
+  theta-ble-client-react-native: f88e25cae7959fa817f30df02481682edcacda46
+  THETABleClient: 3508915ade12b51203dd95ffe641d14b89dd01ab
   Yoga: e71803b4c1fff832ccf9b92541e00f9b873119b9
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
