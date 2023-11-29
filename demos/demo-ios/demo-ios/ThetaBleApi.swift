@@ -573,4 +573,22 @@ uptime: \(thetaInfo.uptime)
             setInfoText("Error. Set state notify.")
         }
     }
+    
+    func scanSsid() async throws {
+        do {
+            setInfoText("Scanning...")
+            let ssidList = try await ThetaBle.Companion.shared.scanThetaSsid(model: nil, timeout: 10000)
+            if ssidList.isEmpty {
+                setInfoText("Device not found")
+            } else {
+                var message = ""
+                ssidList.forEach { element in
+                    message += "ssid: \(element.first as? String ?? "")\npassword: \(element.second as? String ?? "")\n\n"
+                }
+                setInfoText(message)
+            }
+        } catch {
+            setInfoText("Error. scan ssid.")
+        }
+    }
 }

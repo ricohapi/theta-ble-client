@@ -1,6 +1,8 @@
 package com.ricoh360.thetableclient
 
 import com.ricoh360.thetableclient.ble.MockBleScanner
+import com.ricoh360.thetableclient.ble.newAdvertisement
+import com.ricoh360.thetableclient.service.data.values.ThetaModel
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import kotlin.test.*
@@ -217,6 +219,23 @@ class ThetaBleTest {
     }
 
     /**
+     * Exception api for ThetaBle.scan of nearby scan call.
+     */
+    @Test
+    fun scanExceptionApiScanNearbyTest() = runTest {
+        MockBleScanner.bleList = listOf(null)
+
+        try {
+            ThetaBle.scan()
+            assertTrue(false, "exception scan")
+        } catch (e: ThetaBle.BluetoothException) {
+            assertTrue(e.message!!.indexOf("scan", 0, true) >= 0, "exception scan")
+        } catch (e: Throwable) {
+            assertTrue(false, "exception scan")
+        }
+    }
+
+    /**
      * First wait for ThetaBle.scan call.
      */
     @Test
@@ -239,4 +258,129 @@ class ThetaBleTest {
         val secondTime = getSystemTimeMillis()
         assertTrue(secondTime - firstTime < 100, "First wait: ${secondTime - firstTime}")
     }
+
+    /**
+     * call ThetaBle.scan of nearby scan.
+     */
+    @Test
+    fun scanSsid() = runTest {
+        val nameList = listOf(
+            "12345678",
+            "23456789",
+            "A3456789",
+            "123456789",
+            "1234567",
+        )
+        MockBleScanner.bleList = nameList
+
+        val thetaList = ThetaBle.scan()
+        assertEquals(thetaList.size, 2)
+        assertEquals(thetaList[0].name, nameList[0])
+        assertEquals(thetaList[1].name, nameList[1])
+    }
+
+    /**
+     * call ThetaBle.scanThetaSsid.
+     */
+    @Test
+    fun scanThetaSsid() = runTest {
+        val nameList = listOf(
+            "12345678",
+        )
+        MockBleScanner.bleList = nameList
+
+        val ssidListAll = ThetaBle.scanThetaSsid()
+        assertEquals(ssidListAll.size, 4)
+        assertEquals(ssidListAll[0].second, nameList[0])
+        assertEquals(ssidListAll[1].second, nameList[0])
+        assertEquals(ssidListAll[2].second, nameList[0])
+        assertEquals(ssidListAll[3].second, nameList[0])
+
+        assertEquals(ssidListAll[0].first, "THETAYR${nameList[0]}.OSC")
+        assertEquals(ssidListAll[1].first, "THETAYN${nameList[0]}.OSC")
+        assertEquals(ssidListAll[2].first, "THETAYP${nameList[0]}.OSC")
+        assertEquals(ssidListAll[3].first, "THETAYL${nameList[0]}.OSC")
+    }
+
+    /**
+     * call ThetaBle.scanThetaSsid.
+     */
+    @Test
+    fun scanThetaSsidWithModelX() = runTest {
+        val nameList = listOf(
+            "12345678",
+        )
+        MockBleScanner.bleList = nameList
+
+        val ssidListAll = ThetaBle.scanThetaSsid(ThetaModel.THETA_X)
+        assertEquals(ssidListAll.size, 1)
+        assertEquals(ssidListAll[0].second, nameList[0])
+        assertEquals(ssidListAll[0].first, "THETAYR${nameList[0]}.OSC")
+    }
+
+    /**
+     * Exception unsupported model for ThetaBle.scanThetaSsid.
+     */
+    @Test
+    fun scanThetaSsidWithUnsupportedModel() = runTest {
+        val nameList = listOf(
+            "12345678",
+        )
+        MockBleScanner.bleList = nameList
+
+        try {
+            ThetaBle.scanThetaSsid(ThetaModel.THETA_S)
+            assertTrue(false)
+        } catch (e: ThetaBle.ThetaBleApiException) {
+            assertTrue(e.message!!.indexOf("Unsupported", 0, true) >= 0, "exception getSsid")
+        }
+    }
+
+    /**
+     * Exception bluetooth for ThetaBle.scanThetaSsid.
+     */
+    @Test
+    fun scanThetaSsidExceptionApiScanNearbyTest() = runTest {
+        MockBleScanner.bleList = listOf(null)
+
+        try {
+            ThetaBle.scanThetaSsid()
+            assertTrue(false, "exception scan")
+        } catch (e: ThetaBle.BluetoothException) {
+            assertTrue(e.message!!.indexOf("scan", 0, true) >= 0, "exception scan")
+        } catch (e: Throwable) {
+            assertTrue(false, "exception scan")
+        }
+    }
+
+    /**
+     * call ThetaDevice.getSsid.
+     */
+    @Test
+    fun deviceGetSsid() = runTest {
+        val device = ThetaBle.ThetaDevice(newAdvertisement(devName))
+        val nameList = listOf(
+            Pair(ThetaModel.THETA_V, "THETAYL$devName.OSC"),
+            Pair(ThetaModel.THETA_Z1, "THETAYN$devName.OSC"),
+            Pair(ThetaModel.THETA_SC2, "THETAYP$devName.OSC"),
+            Pair(ThetaModel.THETA_X, "THETAYR$devName.OSC"),
+            Pair(ThetaModel.THETA_SC2_B, "THETAYP$devName.OSC"),
+            Pair(ThetaModel.THETA_S, null),
+            Pair(ThetaModel.THETA_SC, null),
+            Pair(ThetaModel.UNKNOWN, null),
+        )
+        nameList.forEach {
+            try {
+                val ssid = device.getSsid(it.first)
+                assertEquals(ssid.first, it.second)
+                assertEquals(ssid.second, devName)
+            } catch (e: ThetaBle.ThetaBleApiException) {
+                assertTrue(e.message!!.indexOf("Unsupported", 0, true) >= 0, "exception getSsid")
+                assertNull(it.second)
+            } catch (e: Throwable) {
+                assertTrue(false, "exception getSsid2 ${it.first.name}")
+            }
+        }
+    }
+
 }

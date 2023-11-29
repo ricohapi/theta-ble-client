@@ -32,22 +32,48 @@ class ThetaBleClientReactNative: RCTEventEmitter {
         Task {
             do {
                 let scanParams = toScanParams(params: params as? [String: Any] ?? [:])
-                let device = try await ThetaBle.Companion.shared.scan(name: scanParams.name, timeout: scanParams.timeout)
-                ThetaBleClientReactNative.counter += 1
-                let id = ThetaBleClientReactNative.counter
-                
-                if let device = device {
-                    ThetaBleClientReactNative.deviceList[id] = device
-                    resolve(id)
-                } else {
-                    resolve(0)
+                let scanList = try await {
+                    if let name = scanParams.name {
+                        if let device = try await ThetaBle.Companion.shared.scan(name: name, timeout: scanParams.timeout) {
+                            return [device]
+                        } else {
+                            return []
+                        }
+                    } else {
+                        return try await ThetaBle.Companion.shared.scan(timeout: scanParams.timeout)
+                    }
+                }()
+                let resultList = fromTheta(
+                    firstId: ThetaBleClientReactNative.counter + 1,
+                    deviceList: scanList
+                )
+                scanList.forEach { device in
+                    ThetaBleClientReactNative.counter += 1
+                    ThetaBleClientReactNative.deviceList[ThetaBleClientReactNative.counter] = device
                 }
+                resolve(resultList)
             } catch {
                 reject(ERROR_TITLE, error.localizedDescription, error)
             }
         }
     }
-    
+
+    @objc(nativeScanThetaSsid:withResolver:withRejecter:)
+    func nativeScanThetaSsid(params: [AnyHashable: Any],
+                             resolve: @escaping RCTPromiseResolveBlock,
+                             reject: @escaping RCTPromiseRejectBlock) -> Void
+    {
+        Task {
+            do {
+                let scanParams = toScanSsidParams(params: params as? [String: Any] ?? [:])
+                let scanList = try await ThetaBle.Companion.shared.scanThetaSsid(model: scanParams.model, timeout: toKotlinInt(value: scanParams.timeout))
+                resolve(fromTheta(ssidList: scanList))
+            } catch {
+                reject(ERROR_TITLE, error.localizedDescription, error)
+            }
+        }
+    }
+
     @objc(nativeConnect:withUuid:withResolver:withRejecter:)
     func nativeConnect(id: Int,
                        uuid: String?,

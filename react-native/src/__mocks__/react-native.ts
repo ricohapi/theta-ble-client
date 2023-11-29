@@ -1,6 +1,7 @@
 export const NativeModules  = {
   ThetaBleClientReactNative: {
     nativeScan: jest.fn(),
+    nativeScanThetaSsid: jest.fn(),
     nativeConnect: jest.fn(),
     nativeIsConnected: jest.fn(),
     nativeDisconnect: jest.fn(),

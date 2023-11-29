@@ -6,6 +6,7 @@ import { DeviceProvider } from './device-context';
 import MenuScreen from './screen/menu-screen';
 import CameraStatusScreen from './screen/camera-status-screen';
 import CameraControlCommandV2Screen from './screen/camera-control-command-v2';
+import ScanSsidScreen from './screen/scan-ssid-screen';
 
 const Stack = createNativeStackNavigator();
 
@@ -36,6 +37,11 @@ const RootStack = () => {
         options={{ title: 'CameraControlCommandV2' }}
         name="CameraControlCommandV2"
         component={CameraControlCommandV2Screen}
+      />
+      <Stack.Screen
+        options={{ title: 'Scan SSID' }}
+        name="ScanSsid"
+        component={ScanSsidScreen}
       />
     </Stack.Navigator>
   );

@@ -2,7 +2,10 @@ package com.ricoh360.thetableclient.thetaBleClientDemo
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -86,8 +89,18 @@ fun MainScreen(
                 }) {
                     Text("Disconnect")
                 }
-
-                Text(text = "\n$infoText")
+                Button(onClick = {
+                    viewModel.scanThetaSsid()
+                }) {
+                    Text("Scan SSID")
+                }
+                Column(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    Text(text = "\n$infoText")
+                }
             }
         }
     }

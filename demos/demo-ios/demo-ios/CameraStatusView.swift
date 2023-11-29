@@ -14,9 +14,6 @@ struct CameraStatusView: View {
 
     var body: some View {
         VStack {
-            Text("Camera Status")
-                .fontWeight(.bold)
-
             HStack {
                 Text("Battery level: \(thetaBleApi.batteryLevel ?? 0)")
                 Button("Update") {
@@ -95,7 +92,7 @@ struct CameraStatusView: View {
 
             Text("Information\n\(thetaBleApi.infoText)")
         }
-        .padding()
+        .navigationBarTitle("Camera Status", displayMode: .inline)
         .onAppear {
             thetaBleApi.setInfoText("")
             if thetaBleApi.checkCameraStatusCommand() {

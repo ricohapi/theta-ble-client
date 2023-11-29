@@ -19,6 +19,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.lang.StringBuilder
 
 class ThetaViewModel : ViewModel() {
     private val _infoText = MutableLiveData("Initialized")
@@ -645,6 +646,23 @@ class ThetaViewModel : ViewModel() {
                 setInfoText(text)
             } catch (e: Throwable) {
                 setInfoText("Error. ${e.message}")
+            }
+        }
+    }
+
+    fun scanThetaSsid() {
+        scope.launch {
+            setInfoText("Scanning SSID...")
+            val ssidList = ThetaBle.scanThetaSsid(null, 10_000)
+            when (ssidList.size) {
+                0 -> setInfoText("Device not found.")
+                else -> {
+                    val message = StringBuilder()
+                    ssidList.forEach {
+                        message.append("ssid: ${it.first}\npassword: ${it.second}\n\n")
+                    }
+                    setInfoText(message.toString())
+                }
             }
         }
     }
