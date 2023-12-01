@@ -421,10 +421,10 @@ PODS:
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
   - SocketRocket (0.6.1)
-  - theta-ble-client-react-native (1.0.0):
+  - theta-ble-client-react-native (1.1.0):
     - React-Core
-    - THETABleClient (= 1.0.0)
-  - THETABleClient (1.0.0)
+    - THETABleClient (= 1.1.0)
+  - THETABleClient (1.1.0)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
@@ -642,8 +642,8 @@ SPEC CHECKSUMS:
   RNDefaultPreference: 08bdb06cfa9188d5da97d4642dac745218d7fb31
   RNScreens: 3c2d122f5e08c192e254c510b212306da97d2581
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
-  theta-ble-client-react-native: f88e25cae7959fa817f30df02481682edcacda46
-  THETABleClient: 3508915ade12b51203dd95ffe641d14b89dd01ab
+  theta-ble-client-react-native: 3267a07bc2d059a2fc2a2fc23d4278ae77be0fc5
+  THETABleClient: dd296a7a94675a69e110ce65890225f47bc79b45
   Yoga: e71803b4c1fff832ccf9b92541e00f9b873119b9
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
