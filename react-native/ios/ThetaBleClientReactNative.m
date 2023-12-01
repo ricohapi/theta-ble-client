@@ -10,6 +10,10 @@ RCT_EXTERN_METHOD(nativeScan:(NSDictionary*)params
                  withResolver:(RCTPromiseResolveBlock)resolve
                  withRejecter:(RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(nativeScanThetaSsid:(NSDictionary*)params
+                  withResolver:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
+
 RCT_EXTERN_METHOD(nativeConnect:(int)id
                  withUuid:(NSString*)uuid
                  withResolver:(RCTPromiseResolveBlock)resolve

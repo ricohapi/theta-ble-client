@@ -9,6 +9,7 @@ import com.ricoh360.thetableclient.service.CameraInformation
 import com.ricoh360.thetableclient.service.CameraStatusCommand
 import com.ricoh360.thetableclient.service.ShootingControlCommand
 import com.ricoh360.thetableclient.service.ThetaService
+import com.ricoh360.thetableclient.service.data.values.ThetaModel
 import kotlinx.coroutines.*
 
 internal const val TIMEOUT_SCAN = 30_000
@@ -21,6 +22,7 @@ internal const val MTU_SIZE = 512
 internal const val ERROR_MESSAGE_NOT_CONNECTED = "Not connected."
 internal const val ERROR_MESSAGE_EMPTY_DATA = "Empty data."
 internal const val ERROR_MESSAGE_UNKNOWN_VALUE = "Unknown value."
+internal const val ERROR_MESSAGE_UNSUPPORTED_VALUE = "Unsupported value."
 
 /**
  * Wrapper of THETA Bluetooth API.
@@ -66,7 +68,17 @@ class ThetaBle internal constructor() {
         /**
          * Scan for nearby THETA.
          *
-         * Not yet open to the public.
+         * @return Found THETA list.
+         * @exception ThetaBleApiException If an error occurs in library.
+         * @exception BluetoothException If an error occurs in bluetooth.
+         */
+        @Throws(Throwable::class)
+        suspend fun scan(): List<ThetaDevice> {
+            return scan(null)
+        }
+
+        /**
+         * Scan for nearby THETA.
          *
          * @param timeout Configuration of timeout.
          * @return Found THETA list.
@@ -74,22 +86,8 @@ class ThetaBle internal constructor() {
          * @exception BluetoothException If an error occurs in bluetooth.
          */
         @Throws(Throwable::class)
-        internal suspend fun scan(timeout: Timeout? = null): List<ThetaDevice> {
+        suspend fun scan(timeout: Timeout?): List<ThetaDevice> {
             return scanImpl(null, timeout ?: Timeout())
-        }
-
-        /**
-         * Scan for nearby THETA.
-         *
-         * Not yet open to the public.
-         *
-         * @return Found THETA list.
-         * @exception ThetaBleApiException If an error occurs in library.
-         * @exception BluetoothException If an error occurs in bluetooth.
-         */
-        @Throws(Throwable::class)
-        internal suspend fun scan(): List<ThetaDevice> {
-            return scan(null)
         }
 
         /**
@@ -145,6 +143,43 @@ class ThetaBle internal constructor() {
                 throw BluetoothException(e)
             }
         }
+
+        /**
+         * Scan for nearby THETA SSID.
+         *
+         * @param model THETA model.
+         * @param timeout Specifies a time period (in milliseconds) required to scan THETA.
+         * @return Found THETA SSID list. (SSID, Default password)[]
+         * @exception ThetaBleApiException If an error occurs in library.
+         * @exception BluetoothException If an error occurs in bluetooth.
+         */
+        @Throws(Throwable::class)
+        suspend fun scanThetaSsid(
+            model: ThetaModel? = null,
+            timeout: Int? = null,
+        ): List<Pair<String, String>> {
+            model?.let {
+                val prefix = ThetaDevice.serialPrefix[it]
+                prefix ?: throw ThetaBleApiException(ERROR_MESSAGE_UNSUPPORTED_VALUE)
+            }
+            val scanTimeout = Timeout(
+                timeoutScan = timeout ?: TIMEOUT_SCAN
+            )
+            val thetaList = scan(scanTimeout)
+            val ssidList = mutableListOf<Pair<String, String>>()
+            thetaList.forEach {
+                when (model) {
+                    null -> {
+                        ssidList.add(it.getSsid(ThetaModel.THETA_X))
+                        ssidList.add(it.getSsid(ThetaModel.THETA_Z1))
+                        ssidList.add(it.getSsid(ThetaModel.THETA_SC2))
+                        ssidList.add(it.getSsid(ThetaModel.THETA_V))
+                    }
+                    else -> ssidList.add(it.getSsid(model))
+                }
+            }
+            return ssidList
+        }
     }
 
     /**
@@ -185,6 +220,16 @@ class ThetaBle internal constructor() {
          */
         val timeout: Timeout = Timeout(),
     ) {
+        companion object {
+            internal val serialPrefix = mapOf(
+                ThetaModel.THETA_V to "YL",
+                ThetaModel.THETA_SC2 to "YP",
+                ThetaModel.THETA_SC2_B to "YP",
+                ThetaModel.THETA_Z1 to "YN",
+                ThetaModel.THETA_X to "YR",
+            )
+        }
+
         internal var scope = CoroutineScope(Dispatchers.Default)
 
         @OptIn(ExperimentalCoroutinesApi::class)
@@ -220,6 +265,20 @@ class ThetaBle internal constructor() {
          * Supported service list
          */
         val serviceList: List<ThetaService> = mutableListOf()
+
+        /**
+         * Acquire THETA SSID.
+         *
+         * @param model THETA model.
+         * @return THETA SSID list. (SSID, Default password)[]
+         * @exception ThetaBleApiException If an error occurs in library.
+         * @exception BluetoothException If an error occurs in bluetooth.
+         */
+        fun getSsid(model: ThetaModel): Pair<String, String> {
+            val prefix = serialPrefix[model]
+            prefix ?: throw ThetaBleApiException(ERROR_MESSAGE_UNSUPPORTED_VALUE)
+            return Pair("THETA$prefix$name.OSC", name)
+        }
 
         /**
          * Acquire THETA service

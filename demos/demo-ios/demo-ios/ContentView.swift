@@ -34,8 +34,6 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             VStack {
-                Text("THETA Client BLE")
-                    .fontWeight(.bold)
                 Group {
                     Button("Connect Wifi") {
                         Task {
@@ -82,29 +80,31 @@ struct ContentView: View {
                     }
                     .buttonStyle(.borderedProminent)
                     
-                    Button("Info") {
-                        Task {
-                            try await thetaBleApi.getInfo()
+                    Group {
+                        Button("Info") {
+                            Task {
+                                try await thetaBleApi.getInfo()
+                            }
                         }
-                    }
-                    .buttonStyle(.borderedProminent)
-                    
-                    NavigationLink(destination: CameraStatusView(thetaBleApi: thetaBleApi)) {
-                        Text("Camera Status")
-                    }
-                    .buttonStyle(.borderedProminent)
-                    
-                    Button("Take Picture") {
-                        Task {
-                            try await thetaBleApi.takePicture()
+                        .buttonStyle(.borderedProminent)
+                        
+                        NavigationLink(destination: CameraStatusView(thetaBleApi: thetaBleApi)) {
+                            Text("Camera Status")
                         }
+                        .buttonStyle(.borderedProminent)
+                        
+                        Button("Take Picture") {
+                            Task {
+                                try await thetaBleApi.takePicture()
+                            }
+                        }
+                        .buttonStyle(.borderedProminent)
+                        
+                        NavigationLink(destination: CameraControlCommandV2View(thetaBleApi: thetaBleApi)) {
+                            Text("Camera Control Command V2")
+                        }
+                        .buttonStyle(.borderedProminent)
                     }
-                    .buttonStyle(.borderedProminent)
-                    
-                    NavigationLink(destination: CameraControlCommandV2View(thetaBleApi: thetaBleApi)) {
-                        Text("Camera Control Command V2")
-                    }
-                    .buttonStyle(.borderedProminent)
                     
                     Button("Disconnect") {
                         Task {
@@ -113,10 +113,21 @@ struct ContentView: View {
                     }
                     .buttonStyle(.borderedProminent)
                     
-                    Text("Information\n\(thetaBleApi.infoText)")
+                    
+                    Button("Scan SSID") {
+                        Task {
+                            try await thetaBleApi.scanSsid()
+                        }
+                    }
+                    .buttonStyle(.borderedProminent)
+                    
+                    ScrollView {
+                        Text("Information\n\(thetaBleApi.infoText)")
+                            .frame(maxHeight: .infinity, alignment: .top)
+                    }
                 }
             }
-            .padding()
+            .navigationBarTitle("THETA Client BLE", displayMode: .inline)
         }
         .onAppear {
             loadDevice()

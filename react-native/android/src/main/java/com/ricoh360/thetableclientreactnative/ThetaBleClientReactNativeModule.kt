@@ -4,6 +4,7 @@ import com.facebook.react.bridge.*
 import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.ricoh360.thetableclient.BleService
 import com.ricoh360.thetableclient.ThetaBle
+import com.ricoh360.thetableclient.service.data.values.ThetaModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -59,16 +60,34 @@ class ThetaBleClientReactNativeModule(reactContext: ReactApplicationContext) :
     launch {
       try {
         val scanParams = toScanParams(params)
-        val device = ThetaBle.scan(scanParams.name, scanParams.timeout)
-
-        counter += 1
-        val id = counter
-        if (device != null) {
-          deviceList[id] = device
-          promise.resolve(id)
-        } else {
-          promise.resolve(0)
+        val scanList = when (scanParams.name) {
+          null -> ThetaBle.scan(scanParams.timeout)
+          else -> {
+            when (val device = ThetaBle.scan(scanParams.name, scanParams.timeout)) {
+              null -> listOf()
+              else -> listOf(device)
+            }
+          }
         }
+        val resultList = fromTheta(deviceCounter + 1, scanList)
+        scanList.forEach {
+          deviceCounter += 1
+          deviceList.put(deviceCounter, it)
+        }
+        promise.resolve(resultList)
+      } catch (e: Throwable) {
+        promise.reject(e)
+      }
+    }
+  }
+
+  @ReactMethod
+  fun nativeScanThetaSsid(params: ReadableMap, promise: Promise) {
+    launch {
+      try {
+        val scanParams = toScanSsidParams(params)
+        val scanList = ThetaBle.scanThetaSsid(scanParams.model, scanParams.timeout)
+        promise.resolve(fromTheta(scanList))
       } catch (e: Throwable) {
         promise.reject(e)
       }
@@ -349,7 +368,7 @@ class ThetaBleClientReactNativeModule(reactContext: ReactApplicationContext) :
     const val EVENT_NOTIFY = "ThetaBleNotify"
 
     var deviceList = mutableMapOf<Int, ThetaBle.ThetaDevice>()
-    var counter = 0
+    var deviceCounter = 0
     var listenerCount = 0
   }
 }

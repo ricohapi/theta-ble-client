@@ -14,7 +14,8 @@ import type {
   ChargingStateEnum, 
   PluginControl, 
   PluginList,
-  PluginOrders, 
+  PluginOrders,
+  ThetaModel, 
 } from '../service';
 
 const ThetaBleClientReactNative = NativeModules.ThetaBleClientReactNative;
@@ -24,12 +25,36 @@ export function addNotifyListener(callback: (event: BaseNotify) => void): Emitte
   return eventEmitter.addListener('ThetaBleNotify', callback);
 }
 
-export async function nativeScan(name: string, timeout?: Timeout): Promise<number> {
-  return ThetaBleClientReactNative.nativeScan({name, timeout});
+interface DeviceListItem {
+  deviceId: number;
+  name: string;
+}
+
+interface ScanParams {
+  name?: string;
+  timeout?: Timeout;
+}
+
+export async function nativeScan(params: ScanParams): Promise<DeviceListItem[]> {
+  return ThetaBleClientReactNative.nativeScan(params);
+}
+
+export async function nativeScanThetaSsid(params: ScanSsidParams): Promise<SsidListItem[]> {
+  return ThetaBleClientReactNative.nativeScanThetaSsid(params);
 }
 
 export async function nativeConnect(id: number, uuid?: string) {
   return ThetaBleClientReactNative.nativeConnect(id, uuid);
+}
+
+interface ScanSsidParams {
+  model?: ThetaModel;
+  timeout?: number;
+}
+
+interface SsidListItem {
+  ssid: string;
+  password: string;
 }
 
 export async function nativeIsConnected(id: number): Promise<boolean> {

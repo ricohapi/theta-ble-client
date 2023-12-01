@@ -10,6 +10,8 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withTimeoutOrNull
 
+internal const val THETA_NAME_LENGTH = 8
+
 internal abstract class BleScanner(
     val timeout: Int,
     val name: String?,
@@ -17,6 +19,15 @@ internal abstract class BleScanner(
 
     abstract fun init()
     abstract val advertisements: Flow<BleAdvertisement>
+
+    fun isThetaName(name: String): Boolean {
+        if (name.length != THETA_NAME_LENGTH) {
+            return false
+        }
+        return name.toCharArray().all {
+            it.isDigit()
+        }
+    }
 
     suspend fun scan(): List<BleAdvertisement> {
 
@@ -31,16 +42,15 @@ internal abstract class BleScanner(
         } else {
             withTimeoutOrNull(timeout.toLong()) {
                 advertisements.collect {
-                    advertisementMap[it.name] = it
-                    println("  find: " + it.name)
+                    if (isThetaName(it.name)) {
+                        advertisementMap[it.name] = it
+                    }
                 }
             }
-            println("advertisementMap size: " + advertisementMap.size)
         }
         val advertisementList = advertisementMap.map {
             it.value
         }
-        println("advertisementList size: " + advertisementList.size)
         return advertisementList
     }
 }
@@ -58,15 +68,17 @@ internal class BleScannerImpl internal constructor(
             }
             filters = name?.let {
                 listOf(Filter.Name(it))
-            } ?: listOf(Filter.Service(uuidFrom(BleService.SERVICE_UUID.uuid)))
+            }
         }
     }
 
     override val advertisements: Flow<BleAdvertisement>
         get() = flow {
             scanner.advertisements.collect { advertisement ->
-                advertisement.name?.let {
-                    emit(newAdvertisement(advertisement))
+                if (!advertisement.uuids.isEmpty()) {
+                    advertisement.name?.let {
+                        emit(newAdvertisement(advertisement))
+                    }
                 }
             }
         }

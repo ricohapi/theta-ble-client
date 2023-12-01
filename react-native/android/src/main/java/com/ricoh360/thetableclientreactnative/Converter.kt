@@ -2,6 +2,7 @@ package com.ricoh360.thetableclientreactnative
 
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReadableMap
+import com.facebook.react.bridge.WritableArray
 import com.facebook.react.bridge.WritableMap
 import com.ricoh360.thetableclient.BleCharacteristic
 import com.ricoh360.thetableclient.ThetaBle
@@ -13,6 +14,7 @@ import com.ricoh360.thetableclient.service.data.values.CameraPower
 import com.ricoh360.thetableclient.service.data.values.ChargingState
 import com.ricoh360.thetableclient.service.data.values.CommandErrorDescription
 import com.ricoh360.thetableclient.service.data.values.PluginPowerStatus
+import com.ricoh360.thetableclient.service.data.values.ThetaModel
 
 const val KEY_TIMEOUT_SCAN = "timeoutScan"
 const val KEY_TIMEOUT_PERIPHERAL = "timeoutPeripheral"
@@ -51,16 +53,53 @@ const val KEY_GPS_DATE_TIME_ZONE = "dateTimeZone"
 const val KEY_GPS_DATUM = "datum"
 const val KEY_EXTERNAL_GPS_INFO = "externalGpsInfo"
 const val KEY_INTERNAL_GPS_INFO = "internalGpsInfo"
+const val KEY_SSID = "ssid"
+const val KEY_PASSWORD = "password"
 
 data class ScanParams(
-  val name: String,
+  val name: String?,
   val timeout: ThetaBle.Timeout?,
 )
 
 fun toScanParams(objects: ReadableMap): ScanParams {
-  val name = objects.getString(KEY_NAME) ?: ""
+  val name = objects.getString(KEY_NAME)
   val timeout = objects.getMap(KEY_TIMEOUT)?.let { toThetaTimeout(it) }
   return ScanParams(name, timeout)
+}
+
+fun fromTheta(firstId: Int, deviceList: List<ThetaBle.ThetaDevice>): WritableArray {
+  val result = Arguments.createArray()
+  deviceList.forEachIndexed { index, element ->
+    val item = Arguments.createMap()
+    item.putInt(KEY_DEVICE_ID, firstId + index)
+    item.putString(KEY_NAME, element.name)
+    result.pushMap(item)
+  }
+  return result
+}
+
+data class ScanSsidParams(
+  val model: ThetaModel?,
+  val timeout: Int?,
+)
+
+fun fromTheta(ssidList: List<Pair<String, String>>): WritableArray {
+  val result = Arguments.createArray()
+  ssidList.forEach {
+    val item = Arguments.createMap()
+    item.putString(KEY_SSID, it.first)
+    item.putString(KEY_PASSWORD, it.second)
+    result.pushMap(item)
+  }
+  return result
+}
+
+fun toScanSsidParams(objects: ReadableMap): ScanSsidParams {
+  val model = objects.getString(ThetaModel.keyName)?.let{ name ->
+    ThetaModel.values().find { it.name == name }
+  }
+  val timeout = if (objects.hasKey(KEY_TIMEOUT)) objects.getInt(KEY_TIMEOUT) else null
+  return ScanSsidParams(model, timeout)
 }
 
 fun toThetaTimeout(objects: ReadableMap): ThetaBle.Timeout {

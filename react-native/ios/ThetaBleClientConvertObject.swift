@@ -46,22 +46,68 @@ let KEY_GPS_DATE_TIME_ZONE = "dateTimeZone"
 let KEY_GPS_DATUM = "datum"
 let KEY_EXTERNAL_GPS_INFO = "externalGpsInfo"
 let KEY_INTERNAL_GPS_INFO = "internalGpsInfo"
+let KEY_SSID = "ssid"
+let KEY_PASSWORD = "password"
 let MESSAGE_UNKNOWN = "unknown"
 
-class ScanParams {
-    let name: String
-    let timeout: ThetaBle.Timeout?
-    init(name: String, timeout: ThetaBle.Timeout?) {
-        self.name = name
-        self.timeout = timeout
+func toKotlinInt(value: Any?) -> KotlinInt? {
+    guard let value = value as? Int else {
+        return nil
     }
+    return KotlinInt(integerLiteral: value)
+}
+
+struct ScanParams {
+    let name: String?
+    let timeout: ThetaBle.Timeout?
 }
 
 func toScanParams(params: [String: Any?]) -> ScanParams {
-    let name = params[KEY_NAME] as? String ?? ""
+    let name = params[KEY_NAME] as? String
     let timeout = toTheta(timeout:params[KEY_TIMEOUT] as? [String : Any?] ?? [:])
     return ScanParams(name: name, timeout: timeout)
 }
+
+func fromTheta(firstId: Int, deviceList: [ThetaBle.ThetaDevice]) -> [[String: Any?]] {
+    let resultList = deviceList.enumerated().map {
+        return [
+            KEY_DEVICE_ID: firstId + $0.offset,
+            KEY_NAME: $0.element.name,
+        ]
+    }
+    return resultList
+}
+
+struct ScanSsidParams {
+    let model: ThetaModel?
+    let timeout: Int?
+}
+
+func fromTheta(ssidList: [KotlinPair<NSString, NSString>]) -> [[String: Any?]] {
+    let resultList = ssidList.reduce([]) { (result, item) -> [[String: Any?]] in
+        var result = result
+        guard let key = item.first as? String,
+              let value = item.second as? String
+        else { return result }
+        
+        result.append([
+            KEY_SSID: key,
+            KEY_PASSWORD: value
+        ])
+        return result
+    }
+    return resultList
+}
+
+func toScanSsidParams(params: [String: Any?]) -> ScanSsidParams {
+    let model = getEnumValue(
+        values: ThetaModel.values(),
+        name: params[ThetaModel.companion.keyName] as? String ?? ""
+    )
+    let timeout = params[KEY_TIMEOUT] as? Int
+    return ScanSsidParams(model: model, timeout: timeout)
+}
+
 
 func toTheta(timeout: [String: Any?]) -> ThetaBle.Timeout {
     let timeoutObject = ThetaBle.Timeout()

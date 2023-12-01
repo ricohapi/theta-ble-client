@@ -9,6 +9,7 @@ import {
   BleServiceEnum,
   CameraInformation,
   ShootingControlCommand,
+  ThetaDevice,
 } from 'theta-ble-client-react-native';
 import { setBleUuidWebApi } from '../../theta-webapi/set-ble-uuid-webapi';
 import { setBleOnWebApi } from '../../theta-webapi/set-ble-on-webapi';
@@ -59,7 +60,7 @@ const MenuScreen = ({ navigation }) => {
           timeoutConnect: 30_000,
           timeoutTakePicture: 10_000,
         },
-      });
+      }) as ThetaDevice | undefined;
       if (device) {
         setInfoText(`Scan. Found device: ${devName}`);
         if (thetaDevice) {
@@ -85,6 +86,7 @@ const MenuScreen = ({ navigation }) => {
       await device.connect(useUuid ? appUuid : undefined);
       setInfoText(`Connected. ${devName}`);
     } catch (error) {
+      console.log(JSON.stringify(error));
       setInfoText(`Error. connect. ${devName}` + error);
     }
   }
@@ -304,7 +306,12 @@ const MenuScreen = ({ navigation }) => {
             disconnect();
           }}
         />
-
+        <Button
+          title="Scan SSID"
+          onPress={() => {
+            navigation.navigate('ScanSsid');
+          }}
+        />
         <Text style={styles.text}>
           Info:{'\n'}
           {infoText}

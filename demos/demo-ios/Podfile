@@ -7,6 +7,6 @@ target 'demo-ios' do
 
   # Pods for demo-ios
   pod 'THETAClient', '1.4.0'
-  pod 'THETABleClient', '1.0.0'
+  pod 'THETABleClient', '1.1.0'
 
 end

@@ -15,9 +15,6 @@ struct CameraControlCommandV2View: View {
     
     var body: some View {
         VStack {
-            Text("Camera Control Command V2")
-                .fontWeight(.bold)
-            
             Button("Get Info") {
                 Task {
                     try? await thetaBleApi.cameraControlCommandV2GetInfo()
@@ -45,12 +42,12 @@ struct CameraControlCommandV2View: View {
                 }
             }
             .buttonStyle(.borderedProminent)
-            
-            Text("Information\n\(thetaBleApi.infoText)")
-                .frame(maxHeight: .infinity, alignment: .top)
+            ScrollView {
+                Text("Information\n\(thetaBleApi.infoText)")
+                    .frame(maxHeight: .infinity, alignment: .top)
+            }
         }
-        .padding()
-        .frame(maxHeight: .infinity)
+        .navigationBarTitle("Camera Control Command V2", displayMode: .inline)
         .onAppear {
             thetaBleApi.setInfoText("")
             if thetaBleApi.checkCameraControlCommandV2() {

@@ -1,4 +1,4 @@
-import { TIMEOUT_CONNECT, TIMEOUT_PERIPHERAL, TIMEOUT_SCAN, TIMEOUT_TAKE_PICTURE, TimeoutObject, scan } from '..';
+import { TIMEOUT_CONNECT, TIMEOUT_PERIPHERAL, TIMEOUT_SCAN, TIMEOUT_TAKE_PICTURE, ThetaDevice, TimeoutObject, scan } from '..';
 import { NativeModules } from 'react-native';
 
 describe('scan', () => {
@@ -9,7 +9,12 @@ describe('scan', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     jest.mocked(thetaBle.nativeScan).mockImplementation(
-      jest.fn(async () => devId),
+      jest.fn(async () => {
+        return [{
+          deviceId: devId,
+          name: devName,
+        }];
+      }),
     );
   });
 
@@ -29,10 +34,43 @@ describe('scan', () => {
     expect(device?.uuid).toBeUndefined();
   });
 
+  test('Call nearby scan normal', async () => {
+    jest.mocked(thetaBle.nativeScan).mockImplementation(
+      jest.fn(async () => {
+        return [
+          {
+            deviceId: 1,
+            name: devName + '1',
+          },
+          {
+            deviceId: 2,
+            name: devName + '2',
+          },
+        ];
+      }),
+    );
+
+    const deviceList = await scan() as ThetaDevice[];
+    expect(deviceList).toBeDefined();
+
+    expect(thetaBle.nativeScan).toHaveBeenCalledWith({
+      name: undefined,
+      timeout: undefined,
+    });
+
+    expect(deviceList?.length).toBe(2);
+    expect(deviceList[0]?.id).toBe(1);
+    expect(deviceList[0]?.name).toBe(devName + '1');
+    expect(deviceList[0]?.uuid).toBeUndefined();
+    expect(deviceList[1]?.id).toBe(2);
+    expect(deviceList[1]?.name).toBe(devName + '2');
+    expect(deviceList[1]?.uuid).toBeUndefined();
+  });
+
   test('Timeout for call scan', async () => {
     jest.mocked(thetaBle.nativeScan).mockImplementation(
       jest.fn(async () => {
-        return 0;
+        return [];  // When timeout to empty.
       }),
     );
 
@@ -48,7 +86,7 @@ describe('scan', () => {
   test('scan with props', async () => {
     jest.mocked(thetaBle.nativeScan).mockImplementation(
       jest.fn(async () => {
-        return 0;
+        return [];
       }),
     );
 
@@ -104,6 +142,7 @@ describe('scan', () => {
         expect(timeout.timeoutPeripheral).toBe(timeoutPeripheral);
         expect(timeout.timeoutConnect).toBe(timeoutConnect);
         expect(timeout.timeoutTakePicture).toBe(timeoutTakePicture);
+        return [];
       }),
     );
     await scan(devName, testValue);

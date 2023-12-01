@@ -9,7 +9,7 @@ internal class MockBleScanner(timeout: Int, name: String?) : BleScanner(timeout,
     companion object {
         const val DEFAULT_NAME = "12345678"
         var onInit: (() -> Unit)? = null
-        var bleList: List<BleAdvertisement?>? = null
+        var bleList: List<String?>? = null
         var scanInterval: Long = 10
     }
 
@@ -19,10 +19,12 @@ internal class MockBleScanner(timeout: Int, name: String?) : BleScanner(timeout,
 
     override val advertisements: Flow<BleAdvertisement>
         get() = flow {
-            val targetList = bleList ?: listOf(newAdvertisement(name ?: DEFAULT_NAME))
+            val targetList = bleList ?: listOf(name ?: DEFAULT_NAME)
             targetList.forEach {
                 delay(scanInterval)
-                it?.run { emit(this) } ?: throw Exception("scan")
+                it ?: throw Exception("scan")
+                val advertisement = newAdvertisement(it)
+                emit(advertisement)
             }
         }
 }
