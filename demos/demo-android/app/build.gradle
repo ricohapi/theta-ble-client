@@ -81,5 +81,5 @@ dependencies {
 
     implementation "com.ricoh360.thetaclient:theta-client:1.5.0"
 
-    implementation "com.ricoh360.thetableclient:theta-ble-client-android:1.0.0"
+    implementation "com.ricoh360.thetableclient:theta-ble-client-android:1.1.0"
 }

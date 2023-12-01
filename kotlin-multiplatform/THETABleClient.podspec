@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
     spec.name                     = 'THETABleClient'
-    spec.version                  = '1.0.0'
+    spec.version                  = '1.1.0'
     spec.homepage                 = 'https://github.com/ricohapi/theta-ble-client'
     spec.source                   = { :http=> ''}
     spec.authors                  = 'Ricoh Co, Ltd.'
