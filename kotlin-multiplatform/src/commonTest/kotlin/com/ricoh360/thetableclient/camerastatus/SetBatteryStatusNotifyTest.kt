@@ -1,15 +1,23 @@
 package com.ricoh360.thetableclient.camerastatus
 
-import com.ricoh360.thetableclient.*
+import com.ricoh360.thetableclient.BleCharacteristic
+import com.ricoh360.thetableclient.ThetaBle
 import com.ricoh360.thetableclient.ble.MockBlePeripheral
 import com.ricoh360.thetableclient.ble.newAdvertisement
+import com.ricoh360.thetableclient.initMock
 import com.ricoh360.thetableclient.service.data.values.ChargingState
+import com.ricoh360.thetableclient.toBytes
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.TimeoutCancellationException
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
-import kotlin.test.*
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 class SetBatteryStatusNotifyTest {
     private val devName = "99999999"
@@ -33,6 +41,7 @@ class SetBatteryStatusNotifyTest {
         val device = ThetaBle.ThetaDevice(newAdvertisement(devName))
 
         val deferred = CompletableDeferred<Unit>()
+        val deferredObserve = CompletableDeferred<Unit>()
 
         val testValue = ChargingState.CHARGED
         assertNotNull(testValue.ble)
@@ -41,18 +50,22 @@ class SetBatteryStatusNotifyTest {
         MockBlePeripheral.onObserve = { characteristic, collect: (ByteArray) -> Unit ->
             if (characteristic.name == "BATTERY_STATUS") {
                 observer = collect
+                deferredObserve.complete(Unit)
             }
         }
 
         device.connect()
-        delay(100)
+
+        withTimeout(1000) {
+            deferredObserve.await()
+        }
 
         device.cameraStatusCommand?.setBatteryStatusNotify { value, error ->
             assertEquals(value, testValue)
             assertNull(error)
             deferred.complete(Unit)
         }
-        val data = testValue.ble?.toBytes() ?: 255.toByte().toBytes()
+        val data = testValue.ble.toBytes()
         observer(data)
         withTimeout(100) {
             deferred.await()
@@ -69,6 +82,7 @@ class SetBatteryStatusNotifyTest {
         val device = ThetaBle.ThetaDevice(newAdvertisement(devName))
 
         var deferred = CompletableDeferred<Unit>()
+        val deferredObserve = CompletableDeferred<Unit>()
 
         val testValue = ChargingState.CHARGING
 
@@ -76,11 +90,15 @@ class SetBatteryStatusNotifyTest {
         MockBlePeripheral.onObserve = { characteristic, collect: (ByteArray) -> Unit ->
             if (characteristic.name == "BATTERY_STATUS") {
                 observer = collect
+                deferredObserve.complete(Unit)
             }
         }
 
         device.connect()
-        delay(100)
+
+        withTimeout(1000) {
+            deferredObserve.await()
+        }
 
         device.cameraStatusCommand?.setBatteryStatusNotify { value, error ->
             assertEquals(value, testValue)
@@ -168,16 +186,21 @@ class SetBatteryStatusNotifyTest {
         val device = ThetaBle.ThetaDevice(newAdvertisement(devName))
 
         val deferred = CompletableDeferred<Unit>()
+        val deferredObserve = CompletableDeferred<Unit>()
 
         lateinit var observer: (ByteArray) -> Unit
         MockBlePeripheral.onObserve = { characteristic, collect: (ByteArray) -> Unit ->
             if (characteristic.name == "BATTERY_STATUS") {
                 observer = collect
+                deferredObserve.complete(Unit)
             }
         }
 
         device.connect()
-        delay(100)
+
+        withTimeout(1000) {
+            deferredObserve.await()
+        }
 
         device.cameraStatusCommand?.setBatteryStatusNotify { value, error ->
             assertTrue(error?.message!!.indexOf("Empty data", 0, true) >= 0, "exception empty")
@@ -200,16 +223,21 @@ class SetBatteryStatusNotifyTest {
         val device = ThetaBle.ThetaDevice(newAdvertisement(devName))
 
         val deferred = CompletableDeferred<Unit>()
+        val deferredObserve = CompletableDeferred<Unit>()
 
         lateinit var observer: (ByteArray) -> Unit
         MockBlePeripheral.onObserve = { characteristic, collect: (ByteArray) -> Unit ->
             if (characteristic.name == "BATTERY_STATUS") {
                 observer = collect
+                deferredObserve.complete(Unit)
             }
         }
 
         device.connect()
-        delay(100)
+
+        withTimeout(1000) {
+            deferredObserve.await()
+        }
 
         device.cameraStatusCommand?.setBatteryStatusNotify { value, error ->
             assertTrue(error?.message!!.indexOf("Unknown value", 0, true) >= 0, "exception empty")
