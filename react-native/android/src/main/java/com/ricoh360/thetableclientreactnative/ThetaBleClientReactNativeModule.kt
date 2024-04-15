@@ -321,6 +321,20 @@ class ThetaBleClientReactNativeModule(reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
+  fun nativeGetFileFormat(id: Int, promise: Promise) {
+    launch {
+      ShootingControlCommandService.getFileFormat(id, promise)
+    }
+  }
+
+  @ReactMethod
+  fun nativeSetFileFormat(id: Int, value: String, promise: Promise) {
+    launch {
+      ShootingControlCommandService.setFileFormat(id, value, promise)
+    }
+  }
+
+  @ReactMethod
   fun nativeTakePicture(id: Int, promise: Promise) {
     ShootingControlCommandService.takePicture(id, promise)
   }

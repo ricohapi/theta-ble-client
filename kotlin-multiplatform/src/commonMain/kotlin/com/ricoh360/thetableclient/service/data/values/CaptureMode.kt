@@ -27,11 +27,11 @@ enum class CaptureMode(internal val ble: Byte?) {
         /**
          * Search by bluetooth value.
          *
-         * @param ble Return value of bluetooth api.
+         * @param bleData Return value of bluetooth api.
          * @return CaptureMode
          */
-        internal fun getFromBle(ble: Byte): CaptureMode? {
-            return values().firstOrNull { it.ble == ble }
+        internal fun getFromBle(bleData: Byte): CaptureMode? {
+            return entries.firstOrNull { it.ble == bleData }
         }
     }
 }

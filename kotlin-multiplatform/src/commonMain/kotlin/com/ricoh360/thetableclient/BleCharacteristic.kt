@@ -80,6 +80,10 @@ enum class BleCharacteristic(val bleService: BleService, val uuid: String) {
         BleService.SHOOTING_CONTROL_COMMAND,
         "D22B7C92-556E-4038-A5EF-A9AD56899B40",
     ),
+    FILE_FORMAT(
+        BleService.SHOOTING_CONTROL_COMMAND,
+        "E8F0EDD1-6C0F-494A-95C3-3244AE0B9A01",
+    ),
     ISO(
         BleService.SHOOTING_CONTROL_COMMAND,
         "ABB94D51-189F-455B-951D-ABE9B0333080",

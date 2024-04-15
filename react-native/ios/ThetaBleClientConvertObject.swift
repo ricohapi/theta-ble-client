@@ -149,7 +149,7 @@ func toNotify(
 }
 
 func toNotifyError(error: KotlinThrowable?) -> [String: Any]? {
-    guard let error = error else {
+    guard let error else {
         return nil
     }
     return [
@@ -225,7 +225,7 @@ func toTheta(pluginControl: [String: Any?]) -> PluginControl? {
         values: PluginPowerStatus.values(),
         name: pluginControl[PluginPowerStatus.companion.keyName] as? String ?? ""
     )
-    guard let pluginControlEnum = pluginControlEnum else {
+    guard let pluginControlEnum else {
         return nil
     }
     if let plugin = pluginControl[KEY_PLUGIN] as? Int {

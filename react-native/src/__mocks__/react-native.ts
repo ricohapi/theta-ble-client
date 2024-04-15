@@ -33,6 +33,8 @@ export const NativeModules  = {
 
     nativeGetCaptureMode: jest.fn(),
     nativeSetCaptureMode: jest.fn(),
+    nativeGetFileFormat: jest.fn(),
+    nativeSetFileFormat: jest.fn(),
     nativeTakePicture: jest.fn(),
 
     nativeCameraControlCommandV2GetInfo: jest.fn(),

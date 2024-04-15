@@ -12,6 +12,7 @@ import type {
   CameraPowerEnum, 
   CaptureModeEnum,
   ChargingStateEnum, 
+  FileFormatEnum, 
   PluginControl, 
   PluginList,
   PluginOrders,
@@ -154,6 +155,14 @@ export async function nativeGetCaptureMode(id: number): Promise<CaptureModeEnum>
 
 export async function nativeSetCaptureMode(id: number, value: CaptureModeEnum) {
   return ThetaBleClientReactNative.nativeSetCaptureMode(id, value);
+}
+
+export async function nativeGetFileFormat(id: number): Promise<FileFormatEnum> {
+  return ThetaBleClientReactNative.nativeGetFileFormat(id);
+}
+
+export async function nativeSetFileFormat(id: number, value: FileFormatEnum) {
+  return ThetaBleClientReactNative.nativeSetFileFormat(id, value);
 }
 
 export async function nativeTakePicture(id: number) {

@@ -59,11 +59,11 @@ enum class CommandErrorDescription(internal val ble: Byte?) {
         /**
          * Search by bluetooth value.
          *
-         * @param ble Return value of bluetooth api.
+         * @param bleData Return value of bluetooth api.
          * @return CommandErrorDescription
          */
-        internal fun getFromBle(ble: Byte): CommandErrorDescription? {
-            return CommandErrorDescription.values().firstOrNull { it.ble == ble }
+        internal fun getFromBle(bleData: Byte): CommandErrorDescription? {
+            return entries.firstOrNull { it.ble == bleData }
         }
     }
 }

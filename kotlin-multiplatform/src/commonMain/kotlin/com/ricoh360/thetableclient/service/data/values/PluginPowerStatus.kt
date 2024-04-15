@@ -24,11 +24,11 @@ enum class PluginPowerStatus(internal val ble: Byte?) {
         /**
          * Search by bluetooth value.
          *
-         * @param ble Return value of bluetooth api.
+         * @param bleData Return value of bluetooth api.
          * @return PluginPowerStatus
          */
-        internal fun getFromBle(ble: Byte): PluginPowerStatus? {
-            return values().firstOrNull { it.ble == ble }
+        internal fun getFromBle(bleData: Byte): PluginPowerStatus? {
+            return entries.firstOrNull { it.ble == bleData }
         }
     }
 }

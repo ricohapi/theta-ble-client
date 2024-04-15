@@ -2,7 +2,7 @@
 
 import type { ThetaDevice } from '../theta-device';
 import { ThetaService } from './theta-service';
-import { BleServiceEnum, CaptureModeEnum } from './values';
+import { BleServiceEnum, CaptureModeEnum, FileFormatEnum } from './values';
 import * as ThetaBleClient from '../native';
 
 /**
@@ -56,6 +56,42 @@ export class ShootingControlCommand extends ThetaService {
     }
   }
 
+  /**
+   * Acquires the recording size (pixels) of the camera.
+   *
+   * Service: 1D0F3602-8DFB-4340-9045-513040DAD991
+   * 
+   * Characteristic: E8F0EDD1-6C0F-494A-95C3-3244AE0B9A01
+   *
+   * @returns File format.
+   */
+  async getFileFormat(): Promise<FileFormatEnum> {
+    return new Promise((resolve, reject) => {
+      ThetaBleClient.nativeGetFileFormat(this.device.id)
+        .then((value) => {
+          resolve(value as FileFormatEnum);
+        })
+        .catch((error) => reject(error));
+    });
+  }
+
+  /**
+   * Set the recording size (pixels) of the camera.
+   *
+   * Service: 1D0F3602-8DFB-4340-9045-513040DAD991
+   * 
+   * Characteristic: E8F0EDD1-6C0F-494A-95C3-3244AE0B9A01
+   * 
+   * @param mode File format.
+   */
+  async setFileFormat(value: FileFormatEnum) {
+    try {
+      return await ThetaBleClient.nativeSetFileFormat(this.device.id, value);
+    } catch(error) {
+      throw error;
+    }
+  }
+  
   /**
    * Instructs the camera to start shooting a still image. Also, acquires the shooting status.
    *

@@ -21,6 +21,7 @@ internal const val MTU_SIZE = 512
 
 internal const val ERROR_MESSAGE_NOT_CONNECTED = "Not connected."
 internal const val ERROR_MESSAGE_EMPTY_DATA = "Empty data."
+internal const val ERROR_MESSAGE_RESERVED_VALUE = "Reserved value."
 internal const val ERROR_MESSAGE_UNKNOWN_VALUE = "Unknown value."
 internal const val ERROR_MESSAGE_UNSUPPORTED_VALUE = "Unsupported value."
 
