@@ -88,6 +88,10 @@ enum class BleCharacteristic(val bleService: BleService, val uuid: String) {
         BleService.SHOOTING_CONTROL_COMMAND,
         "ABB94D51-189F-455B-951D-ABE9B0333080",
     ),
+    MAX_RECORDABLE_TIME(
+        BleService.SHOOTING_CONTROL_COMMAND,
+        "6EABAB73-7F2B-4061-BE7C-1D71D143CB7D",
+    ),
     TAKE_PICTURE(
         BleService.SHOOTING_CONTROL_COMMAND,
         "FEC1805C-8905-4477-B862-BA5E447528A5",

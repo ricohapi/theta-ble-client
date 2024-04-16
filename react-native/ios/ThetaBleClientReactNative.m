@@ -128,6 +128,14 @@ RCT_EXTERN_METHOD(nativeSetFileFormat:(int)id withValue:(NSString*)value
                   withResolver:(RCTPromiseResolveBlock)resolve
                   withRejecter:(RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(nativeGetMaxRecordableTime:(int)id
+                  withResolver:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(nativeSetMaxRecordableTime:(int)id withValue:(NSString*)value
+                  withResolver:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
+
 RCT_EXTERN_METHOD(nativeTakePicture:(int)id
                   withResolver:(RCTPromiseResolveBlock)resolve
                   withRejecter:(RCTPromiseRejectBlock)reject)
