@@ -72,7 +72,7 @@ class CameraControlCommandsService {
             do {
                 let objects = value as? Dictionary<String, Any?> ?? [: ]
                 let thetaValue = toTheta(pluginOrders: objects)
-                guard let thetaValue = thetaValue else {
+                guard let thetaValue else {
                     reject(ERROR_TITLE, "Plugin orders not found. \(value)", nil)
                     return
                 }

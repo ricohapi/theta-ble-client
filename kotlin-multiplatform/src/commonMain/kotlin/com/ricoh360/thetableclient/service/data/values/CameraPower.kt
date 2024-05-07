@@ -27,11 +27,11 @@ enum class CameraPower(internal val ble: Byte?) {
         /**
          * Search by bluetooth value.
          *
-         * @param ble Return value of bluetooth api.
+         * @param bleData Return value of bluetooth api.
          * @return CameraPower
          */
-        internal fun getFromBle(ble: Byte): CameraPower? {
-            return CameraPower.values().firstOrNull { it.ble == ble }
+        internal fun getFromBle(bleData: Byte): CameraPower? {
+            return entries.firstOrNull { it.ble == bleData }
         }
     }
 }

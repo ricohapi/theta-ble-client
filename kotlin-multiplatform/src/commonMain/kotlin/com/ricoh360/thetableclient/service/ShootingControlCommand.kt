@@ -4,12 +4,16 @@ import com.ricoh360.thetableclient.BleCharacteristic
 import com.ricoh360.thetableclient.BleService
 import com.ricoh360.thetableclient.ERROR_MESSAGE_EMPTY_DATA
 import com.ricoh360.thetableclient.ERROR_MESSAGE_NOT_CONNECTED
+import com.ricoh360.thetableclient.ERROR_MESSAGE_RESERVED_VALUE
 import com.ricoh360.thetableclient.ERROR_MESSAGE_UNKNOWN_VALUE
 import com.ricoh360.thetableclient.ThetaBle
 import com.ricoh360.thetableclient.ThetaBle.BluetoothException
 import com.ricoh360.thetableclient.ThetaBle.ThetaBleApiException
 import com.ricoh360.thetableclient.service.data.values.CaptureMode
+import com.ricoh360.thetableclient.service.data.values.FileFormat
+import com.ricoh360.thetableclient.service.data.values.MaxRecordableTime
 import com.ricoh360.thetableclient.toBytes
+import com.ricoh360.thetableclient.toShort
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeout
@@ -77,6 +81,126 @@ class ShootingControlCommand internal constructor(thetaDevice: ThetaBle.ThetaDev
         try {
             val data = value.ble.toBytes()
             peripheral.write(BleCharacteristic.CAPTURE_MODE, data)
+        } catch (e: Throwable) {
+            throw BluetoothException(e)
+        }
+    }
+
+    /**
+     * Acquires the recording size (pixels) of the camera.
+     *
+     * Service: 1D0F3602-8DFB-4340-9045-513040DAD991
+     * Characteristic: E8F0EDD1-6C0F-494A-95C3-3244AE0B9A01
+     *
+     * @return File format.[FileFormat]
+     * @exception ThetaBleApiException If an error occurs in library.
+     * @exception BluetoothException If an error occurs in bluetooth.
+     */
+    @Throws(Throwable::class)
+    suspend fun getFileFormat(): FileFormat {
+        val peripheral =
+            thetaDevice.peripheral ?: throw ThetaBleApiException(
+                ERROR_MESSAGE_NOT_CONNECTED
+            )
+        try {
+            val data = peripheral.read(BleCharacteristic.FILE_FORMAT)
+            if (data.isEmpty()) {
+                throw ThetaBleApiException(ERROR_MESSAGE_EMPTY_DATA)
+            }
+            return FileFormat.getFromBle(data[0])
+                ?: throw ThetaBleApiException("$ERROR_MESSAGE_UNKNOWN_VALUE ${data[0]}")
+        } catch (e: ThetaBleApiException) {
+            throw e
+        } catch (e: Throwable) {
+            throw BluetoothException(e)
+        }
+    }
+
+    /**
+     * Set the recording size (pixels) of the camera.
+     *
+     * Service: 1D0F3602-8DFB-4340-9045-513040DAD991
+     * Characteristic: E8F0EDD1-6C0F-494A-95C3-3244AE0B9A01
+     *
+     * @param value File format.[FileFormat]
+     * @exception ThetaBleApiException If an error occurs in library.
+     * @exception BluetoothException If an error occurs in bluetooth.
+     */
+    @Throws(Throwable::class)
+    suspend fun setFileFormat(value: FileFormat) {
+        val peripheral =
+            thetaDevice.peripheral ?: throw ThetaBleApiException(
+                ERROR_MESSAGE_NOT_CONNECTED
+            )
+
+        if (value == FileFormat.RESERVED) {
+            throw ThetaBleApiException(ERROR_MESSAGE_RESERVED_VALUE)
+        }
+        value.ble ?: throw ThetaBleApiException(
+            ERROR_MESSAGE_UNKNOWN_VALUE
+        )
+
+        try {
+            val data = value.ble.toBytes()
+            peripheral.write(BleCharacteristic.FILE_FORMAT, data)
+        } catch (e: Throwable) {
+            throw BluetoothException(e)
+        }
+    }
+
+    /**
+     * Acquires the maximum recordable time (in seconds) of the camera.
+     *
+     * Service: 1D0F3602-8DFB-4340-9045-513040DAD991
+     * Characteristic: 6EABAB73-7F2B-4061-BE7C-1D71D143CB7D
+     *
+     * @return Maximum recordable time.[MaxRecordableTime]
+     * @exception ThetaBleApiException If an error occurs in library.
+     * @exception BluetoothException If an error occurs in bluetooth.
+     */
+    @Throws(Throwable::class)
+    suspend fun getMaxRecordableTime(): MaxRecordableTime {
+        val peripheral =
+            thetaDevice.peripheral ?: throw ThetaBleApiException(
+                ERROR_MESSAGE_NOT_CONNECTED
+            )
+        try {
+            val data = peripheral.read(BleCharacteristic.MAX_RECORDABLE_TIME)
+            if (data.isEmpty()) {
+                throw ThetaBleApiException(ERROR_MESSAGE_EMPTY_DATA)
+            }
+            val shortValue = data.toShort()
+            return MaxRecordableTime.getFromBle(shortValue)
+                ?: throw ThetaBleApiException("$ERROR_MESSAGE_UNKNOWN_VALUE $shortValue")
+        } catch (e: ThetaBleApiException) {
+            throw e
+        } catch (e: Throwable) {
+            throw BluetoothException(e)
+        }
+    }
+
+    /**
+     * Set the maximum recordable time (in seconds) of the camera.
+     *
+     * Service: 1D0F3602-8DFB-4340-9045-513040DAD991
+     * Characteristic: 6EABAB73-7F2B-4061-BE7C-1D71D143CB7D
+     *
+     * @param value Maximum recordable time.[MaxRecordableTime]
+     * @exception ThetaBleApiException If an error occurs in library.
+     * @exception BluetoothException If an error occurs in bluetooth.
+     */
+    @Throws(Throwable::class)
+    suspend fun setMaxRecordableTime(value: MaxRecordableTime) {
+        val peripheral =
+            thetaDevice.peripheral ?: throw ThetaBleApiException(
+                ERROR_MESSAGE_NOT_CONNECTED
+            )
+        value.ble ?: throw ThetaBleApiException(
+            ERROR_MESSAGE_UNKNOWN_VALUE
+        )
+        try {
+            val data = value.ble.toBytes()
+            peripheral.write(BleCharacteristic.MAX_RECORDABLE_TIME, data)
         } catch (e: Throwable) {
             throw BluetoothException(e)
         }

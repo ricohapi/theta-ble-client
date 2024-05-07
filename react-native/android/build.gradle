@@ -74,7 +74,7 @@ dependencies {
 
   implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3"
 
-  implementation "com.ricoh360.thetableclient:theta-ble-client-android:1.1.0"
+  implementation "com.ricoh360.thetableclient:theta-ble-client-android:1.2.0"
 }
 
 if (isNewArchitectureEnabled()) {

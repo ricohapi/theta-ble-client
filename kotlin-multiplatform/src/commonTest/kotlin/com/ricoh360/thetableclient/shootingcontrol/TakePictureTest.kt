@@ -165,7 +165,10 @@ class TakePictureTest {
             }
         }
 
-        val device = ThetaBle.ThetaDevice(newAdvertisement(devName))
+        val timeout = ThetaBle.Timeout(
+            timeoutTakePicture = 1000
+        )
+        val device = ThetaBle.ThetaDevice(newAdvertisement(devName), timeout)
         device.connect()
 
         device.shootingControlCommand?.takePicture {
@@ -177,7 +180,7 @@ class TakePictureTest {
             deferredWrite.await()
         }
 
-        withTimeout(device.timeout.timeoutTakePicture.toLong() + 100) {
+        withTimeout(timeout.timeoutTakePicture.toLong() + 2000) {
             deferredComplete.await()
         }
         assertTrue(true, "takePicture")

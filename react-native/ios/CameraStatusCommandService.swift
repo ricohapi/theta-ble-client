@@ -164,7 +164,7 @@ class CameraStatusCommandService {
         Task {
             do {
                 let enumValue = getEnumValue(values: CameraPower.values(), name: value)
-                guard let enumValue = enumValue else {
+                guard let enumValue else {
                     reject(ERROR_TITLE, "Camera power not found. \(value)", nil)
                     return
                 }
@@ -287,7 +287,7 @@ class CameraStatusCommandService {
             do {
                 let objects = value as? Dictionary<String, Any?> ?? [: ]
                 let thetaValue = toTheta(pluginControl: objects)
-                guard let thetaValue = thetaValue else {
+                guard let thetaValue else {
                     reject(ERROR_TITLE, "Plugin control not found. \(value)", nil)
                     return
                 }

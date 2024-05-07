@@ -438,6 +438,54 @@ class ThetaBleClientReactNative: RCTEventEmitter {
         }
     }
     
+    @objc(nativeGetFileFormat:withResolver:withRejecter:)
+    func nativeGetFileFormat(id: Int,
+                             resolve: @escaping RCTPromiseResolveBlock,
+                             reject: @escaping RCTPromiseRejectBlock) -> Void
+    {
+        ShootingControlCommandService.getFileFormat(id: id) {value in
+            resolve(value)
+        } reject: { code, message, error  in
+            reject(code, message, error)
+        }
+    }
+    
+    @objc(nativeSetFileFormat:withValue:withResolver:withRejecter:)
+    func nativeSetFileFormat(id: Int, value: String,
+                             resolve: @escaping RCTPromiseResolveBlock,
+                             reject: @escaping RCTPromiseRejectBlock) -> Void
+    {
+        ShootingControlCommandService.setFileFormat(id: id, value: value) {_ in
+            resolve(nil)
+        } reject: { code, message, error  in
+            reject(code, message, error)
+        }
+    }
+    
+    @objc(nativeGetMaxRecordableTime:withResolver:withRejecter:)
+    func nativeGetMaxRecordableTime(id: Int,
+                                    resolve: @escaping RCTPromiseResolveBlock,
+                                    reject: @escaping RCTPromiseRejectBlock) -> Void
+    {
+        ShootingControlCommandService.getMaxRecordableTime(id: id) {value in
+            resolve(value)
+        } reject: { code, message, error  in
+            reject(code, message, error)
+        }
+    }
+    
+    @objc(nativeSetMaxRecordableTime:withValue:withResolver:withRejecter:)
+    func nativeSetMaxRecordableTime(id: Int, value: String,
+                                    resolve: @escaping RCTPromiseResolveBlock,
+                                    reject: @escaping RCTPromiseRejectBlock) -> Void
+    {
+        ShootingControlCommandService.setMaxRecordableTime(id: id, value: value) {_ in
+            resolve(nil)
+        } reject: { code, message, error  in
+            reject(code, message, error)
+        }
+    }
+    
     @objc(nativeTakePicture:withResolver:withRejecter:)
     func nativeTakePicture(id: Int,
                            resolve: @escaping RCTPromiseResolveBlock,

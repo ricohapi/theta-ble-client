@@ -2,7 +2,7 @@
 
 import type { ThetaDevice } from '../theta-device';
 import { ThetaService } from './theta-service';
-import { BleServiceEnum, CaptureModeEnum } from './values';
+import { BleServiceEnum, CaptureModeEnum, FileFormatEnum, MaxRecordableTimeEnum } from './values';
 import * as ThetaBleClient from '../native';
 
 /**
@@ -51,6 +51,78 @@ export class ShootingControlCommand extends ThetaService {
   async setCaptureMode(mode: CaptureModeEnum) {
     try {
       return await ThetaBleClient.nativeSetCaptureMode(this.device.id, mode);
+    } catch(error) {
+      throw error;
+    }
+  }
+
+  /**
+   * Acquires the recording size (pixels) of the camera.
+   *
+   * Service: 1D0F3602-8DFB-4340-9045-513040DAD991
+   * 
+   * Characteristic: E8F0EDD1-6C0F-494A-95C3-3244AE0B9A01
+   *
+   * @returns File format.
+   */
+  async getFileFormat(): Promise<FileFormatEnum> {
+    return new Promise((resolve, reject) => {
+      ThetaBleClient.nativeGetFileFormat(this.device.id)
+        .then((value) => {
+          resolve(value as FileFormatEnum);
+        })
+        .catch((error) => reject(error));
+    });
+  }
+
+  /**
+   * Set the recording size (pixels) of the camera.
+   *
+   * Service: 1D0F3602-8DFB-4340-9045-513040DAD991
+   * 
+   * Characteristic: E8F0EDD1-6C0F-494A-95C3-3244AE0B9A01
+   * 
+   * @param value File format.
+   */
+  async setFileFormat(value: FileFormatEnum) {
+    try {
+      return await ThetaBleClient.nativeSetFileFormat(this.device.id, value);
+    } catch(error) {
+      throw error;
+    }
+  }
+
+  /**
+   * Acquires the maximum recordable time (in seconds) of the camera.
+   *
+   * Service: 1D0F3602-8DFB-4340-9045-513040DAD991
+   * 
+   * Characteristic: 6EABAB73-7F2B-4061-BE7C-1D71D143CB7D
+   *
+   * @returns Maximum recordable time.
+   */
+  async getMaxRecordableTime(): Promise<MaxRecordableTimeEnum> {
+    return new Promise((resolve, reject) => {
+      ThetaBleClient.nativeGetMaxRecordableTime(this.device.id)
+        .then((value) => {
+          resolve(value as MaxRecordableTimeEnum);
+        })
+        .catch((error) => reject(error));
+    });
+  }
+
+  /**
+   * Set the maximum recordable time (in seconds) of the camera.
+   *
+   * Service: 1D0F3602-8DFB-4340-9045-513040DAD991
+   * 
+   * Characteristic: 6EABAB73-7F2B-4061-BE7C-1D71D143CB7D
+   * 
+   * @param value Maximum recordable time.
+   */
+  async setMaxRecordableTime(value: MaxRecordableTimeEnum) {
+    try {
+      return await ThetaBleClient.nativeSetMaxRecordableTime(this.device.id, value);
     } catch(error) {
       throw error;
     }

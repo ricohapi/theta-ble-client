@@ -48,11 +48,115 @@ class ShootingControlCommandService {
         Task {
             do {
                 let enumValue = getEnumValue(values: CaptureMode.values(), name: value)
-                guard let enumValue = enumValue else {
+                guard let enumValue else {
                     reject(ERROR_TITLE, "Capture mode not found. \(value)", nil)
                     return
                 }
                 try await service.setCaptureMode(value: enumValue)
+                resolve(nil)
+            } catch {
+                reject(ERROR_TITLE, error.localizedDescription, error)
+            }
+        }
+    }
+    
+    static func getFileFormat(id: Int,
+                              resolve: @escaping RCTPromiseResolveBlock,
+                              reject: @escaping RCTPromiseRejectBlock) -> Void
+    {
+        guard let device = ThetaBleClientReactNative.deviceList[id] else {
+            reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
+            return
+        }
+        guard let service = device.shootingControlCommand else {
+            reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
+            return
+        }
+        
+        Task {
+            do {
+                let value = try await service.getFileFormat()
+                resolve(value.name)
+            } catch {
+                reject(ERROR_TITLE, error.localizedDescription, error)
+            }
+        }
+    }
+    
+    static func setFileFormat(id: Int,
+                              value: String,
+                              resolve: @escaping RCTPromiseResolveBlock,
+                              reject: @escaping RCTPromiseRejectBlock) -> Void
+    {
+        guard let device = ThetaBleClientReactNative.deviceList[id] else {
+            reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
+            return
+        }
+        guard let service = device.shootingControlCommand else {
+            reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
+            return
+        }
+        
+        Task {
+            do {
+                let enumValue = getEnumValue(values: FileFormat.values(), name: value)
+                guard let enumValue else {
+                    reject(ERROR_TITLE, "File format not found. \(value)", nil)
+                    return
+                }
+                try await service.setFileFormat(value: enumValue)
+                resolve(nil)
+            } catch {
+                reject(ERROR_TITLE, error.localizedDescription, error)
+            }
+        }
+    }
+    
+    static func getMaxRecordableTime(id: Int,
+                                     resolve: @escaping RCTPromiseResolveBlock,
+                                     reject: @escaping RCTPromiseRejectBlock) -> Void
+    {
+        guard let device = ThetaBleClientReactNative.deviceList[id] else {
+            reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
+            return
+        }
+        guard let service = device.shootingControlCommand else {
+            reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
+            return
+        }
+        
+        Task {
+            do {
+                let value = try await service.getMaxRecordableTime()
+                resolve(value.name)
+            } catch {
+                reject(ERROR_TITLE, error.localizedDescription, error)
+            }
+        }
+    }
+    
+    static func setMaxRecordableTime(id: Int,
+                                     value: String,
+                                     resolve: @escaping RCTPromiseResolveBlock,
+                                     reject: @escaping RCTPromiseRejectBlock) -> Void
+    {
+        guard let device = ThetaBleClientReactNative.deviceList[id] else {
+            reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
+            return
+        }
+        guard let service = device.shootingControlCommand else {
+            reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
+            return
+        }
+        
+        Task {
+            do {
+                let enumValue = getEnumValue(values: MaxRecordableTime.values(), name: value)
+                guard let enumValue else {
+                    reject(ERROR_TITLE, "File format not found. \(value)", nil)
+                    return
+                }
+                try await service.setMaxRecordableTime(value: enumValue)
                 resolve(nil)
             } catch {
                 reject(ERROR_TITLE, error.localizedDescription, error)

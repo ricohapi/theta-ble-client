@@ -86,11 +86,14 @@ class ThetaDeviceDisconnectTest {
      */
     @Test
     fun timeoutTest() = runBlocking {
-        val timeoutConnect = TIMEOUT_CONNECT
-        val device = ThetaBle.ThetaDevice(newAdvertisement(devName))
+        val timeoutConnect = 1000
+        val timeout = ThetaBle.Timeout(
+            timeoutConnect = timeoutConnect
+        )
+        val device = ThetaBle.ThetaDevice(newAdvertisement(devName), timeout)
 
         MockBlePeripheral.onDisconnect = {
-            delay(timeoutConnect.toLong() + 100)
+            delay(timeoutConnect.toLong() + 1000)
         }
 
         try {

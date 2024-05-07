@@ -42,11 +42,11 @@ enum class ChargingState(internal val ble: Byte?) : SerialNameEnum {
         /**
          * Search by bluetooth value.
          *
-         * @param ble Return value of bluetooth api.
+         * @param bleData Return value of bluetooth api.
          * @return ChargingState
          */
-        internal fun getFromBle(ble: Byte): ChargingState? {
-            return ChargingState.values().firstOrNull { it.ble == ble }
+        internal fun getFromBle(bleData: Byte): ChargingState? {
+            return entries.firstOrNull { it.ble == bleData }
         }
     }
 }

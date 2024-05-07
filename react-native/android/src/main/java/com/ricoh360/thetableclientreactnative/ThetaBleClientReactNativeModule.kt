@@ -4,7 +4,6 @@ import com.facebook.react.bridge.*
 import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.ricoh360.thetableclient.BleService
 import com.ricoh360.thetableclient.ThetaBle
-import com.ricoh360.thetableclient.service.data.values.ThetaModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -317,6 +316,34 @@ class ThetaBleClientReactNativeModule(reactContext: ReactApplicationContext) :
   fun nativeSetCaptureMode(id: Int, mode: String, promise: Promise) {
     launch {
       ShootingControlCommandService.setCaptureMode(id, mode, promise)
+    }
+  }
+
+  @ReactMethod
+  fun nativeGetFileFormat(id: Int, promise: Promise) {
+    launch {
+      ShootingControlCommandService.getFileFormat(id, promise)
+    }
+  }
+
+  @ReactMethod
+  fun nativeSetFileFormat(id: Int, value: String, promise: Promise) {
+    launch {
+      ShootingControlCommandService.setFileFormat(id, value, promise)
+    }
+  }
+
+  @ReactMethod
+  fun nativeGetMaxRecordableTime(id: Int, promise: Promise) {
+    launch {
+      ShootingControlCommandService.getMaxRecordableTime(id, promise)
+    }
+  }
+
+  @ReactMethod
+  fun nativeSetMaxRecordableTime(id: Int, value: String, promise: Promise) {
+    launch {
+      ShootingControlCommandService.setMaxRecordableTime(id, value, promise)
     }
   }
 

@@ -6,7 +6,11 @@ import com.ricoh360.thetableclient.ble.newAdvertisement
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
-import kotlin.test.*
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class ThetaDeviceConnectTest {
 
@@ -102,11 +106,14 @@ class ThetaDeviceConnectTest {
      */
     @Test
     fun connectTimeoutTest() = runBlocking {
-        val timeoutConnect = TIMEOUT_CONNECT
+        val timeoutConnect = 1000
+        val timeout = ThetaBle.Timeout(
+            timeoutConnect = timeoutConnect
+        )
         MockBlePeripheral.onConnect = {
-            delay(timeoutConnect.toLong() + 100)
+            delay(timeoutConnect.toLong() + 1000)
         }
-        val device = ThetaBle.ThetaDevice(newAdvertisement(devName))
+        val device = ThetaBle.ThetaDevice(newAdvertisement(devName), timeout)
         try {
             device.connect()
             assertTrue(false, "exception connect timeout")

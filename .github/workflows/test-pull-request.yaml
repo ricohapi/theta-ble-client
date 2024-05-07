@@ -1,0 +1,14 @@
+name: pull request unit test
+
+on:
+  workflow_dispatch:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  call-test-kmp:
+    uses: ./.github/workflows/test-kmp.yaml
+  call-test-rn:
+    uses: ./.github/workflows/test-rn.yaml

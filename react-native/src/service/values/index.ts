@@ -5,6 +5,8 @@ export * from './capture-mode';
 export * from './capture-status';
 export * from './charging-state';
 export * from './command-error-description';
+export * from './file-format';
+export * from './max-recordable-time';
 export * from './plugin-power-status';
 export * from './shooting-function';
 export * from './theta-model';

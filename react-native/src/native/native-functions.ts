@@ -12,6 +12,8 @@ import type {
   CameraPowerEnum, 
   CaptureModeEnum,
   ChargingStateEnum, 
+  FileFormatEnum, 
+  MaxRecordableTimeEnum, 
   PluginControl, 
   PluginList,
   PluginOrders,
@@ -154,6 +156,22 @@ export async function nativeGetCaptureMode(id: number): Promise<CaptureModeEnum>
 
 export async function nativeSetCaptureMode(id: number, value: CaptureModeEnum) {
   return ThetaBleClientReactNative.nativeSetCaptureMode(id, value);
+}
+
+export async function nativeGetFileFormat(id: number): Promise<FileFormatEnum> {
+  return ThetaBleClientReactNative.nativeGetFileFormat(id);
+}
+
+export async function nativeSetFileFormat(id: number, value: FileFormatEnum) {
+  return ThetaBleClientReactNative.nativeSetFileFormat(id, value);
+}
+
+export async function nativeGetMaxRecordableTime(id: number): Promise<MaxRecordableTimeEnum> {
+  return ThetaBleClientReactNative.nativeGetMaxRecordableTime(id);
+}
+
+export async function nativeSetMaxRecordableTime(id: number, value: MaxRecordableTimeEnum) {
+  return ThetaBleClientReactNative.nativeSetMaxRecordableTime(id, value);
 }
 
 export async function nativeTakePicture(id: number) {
