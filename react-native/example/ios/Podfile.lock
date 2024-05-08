@@ -329,7 +329,7 @@ PODS:
   - React-jsinspector (0.71.14)
   - React-logger (0.71.14):
     - glog
-  - react-native-safe-area-context (4.7.4):
+  - react-native-safe-area-context (4.10.1):
     - React-Core
   - React-perflogger (0.71.14)
   - React-RCTActionSheet (0.71.14):
@@ -417,14 +417,15 @@ PODS:
     - React-perflogger (= 0.71.14)
   - RNDefaultPreference (1.4.4):
     - React-Core
-  - RNScreens (3.27.0):
+  - RNScreens (3.31.1):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
+    - React-RCTImage
   - SocketRocket (0.6.1)
-  - theta-ble-client-react-native (1.1.0):
+  - theta-ble-client-react-native (1.2.0):
     - React-Core
-    - THETABleClient (= 1.1.0)
-  - THETABleClient (1.1.0)
+    - THETABleClient (= 1.2.0)
+  - THETABleClient (1.2.0)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
@@ -625,7 +626,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 94cfc1788637ceaf8841ef1f69b10cc0d62baadc
   React-jsinspector: 7bf923954b4e035f494b01ac16633963412660d7
   React-logger: 655ff5db8bd922acfbe76a4983ffab048916343e
-  react-native-safe-area-context: 2cd91d532de12acdb0a9cbc8d43ac72a8e4c897c
+  react-native-safe-area-context: dcab599c527c2d7de2d76507a523d20a0b83823d
   React-perflogger: 4987ad83731c23d11813c84263963b0d3028c966
   React-RCTActionSheet: 5ad952b2a9740d87a5bd77280c4bc23f6f89ea0c
   React-RCTAnimation: d2de22af3f536cc80bb5b3918e1a455114d1b985
@@ -640,13 +641,13 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: ffe826b7b1cfbc32a35ed5b64d5886c0ff75f501
   ReactCommon: 7f3dd5e98a9ec627c6b03d26c062bf37ea9fc888
   RNDefaultPreference: 08bdb06cfa9188d5da97d4642dac745218d7fb31
-  RNScreens: 3c2d122f5e08c192e254c510b212306da97d2581
+  RNScreens: 93ae3be2f119d955620f9bbb39ad372adb53b7a9
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
-  theta-ble-client-react-native: 3267a07bc2d059a2fc2a2fc23d4278ae77be0fc5
-  THETABleClient: dd296a7a94675a69e110ce65890225f47bc79b45
+  theta-ble-client-react-native: f963e1dbc4397d2881fdcde2fccd39e5fa423e4d
+  THETABleClient: 92e7d86bc00a6f6efedf671b23c06fd13b44a075
   Yoga: e71803b4c1fff832ccf9b92541e00f9b873119b9
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
 PODFILE CHECKSUM: 819229ade253150f7fe38870905e91c5f0ea70c4
 
-COCOAPODS: 1.12.0
+COCOAPODS: 1.15.2
