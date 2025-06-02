@@ -3,7 +3,6 @@ package com.ricoh360.thetableclient.transferred
 import com.ricoh360.thetableclient.service.data.NumberAsIntSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
 @Serializable

@@ -189,6 +189,7 @@ enum class BleCharacteristic(val bleService: BleService, val uuid: String) {
     ),
 
     ;
+
     companion object {
 
         val keyName: String

@@ -8,7 +8,7 @@ import Foundation
 class ThetaInfo {
     let model: String
     let serialNumber: String
-    
+
     init(model: String, serialNumber: String) {
         self.model = model
         self.serialNumber = serialNumber
@@ -25,18 +25,18 @@ func getThetaInfo() async throws -> ThetaInfo? {
             return nil
         }
         do {
-            let object = try JSONSerialization.jsonObject(with: data, options: []) as! Dictionary<String, Any>
+            let object = try JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
             let model = object["model"] as? String
             let serialNumber = object["serialNumber"] as? String
             if let model, let serialNumber {
                 return ThetaInfo(model: model, serialNumber: serialNumber)
             }
-        } catch let error {
+        } catch {
             print(error)
         }
-    } catch let error {
+    } catch {
         print(error)
     }
-    
+
     return nil
 }

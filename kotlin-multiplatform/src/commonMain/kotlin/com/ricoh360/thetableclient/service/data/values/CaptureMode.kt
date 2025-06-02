@@ -5,6 +5,7 @@ package com.ricoh360.thetableclient.service.data.values
  */
 enum class CaptureMode(internal val value: String?, internal val ble: Byte?) {
     UNKNOWN(null, null),
+
     /**
      * Still image shooting mode.
      */

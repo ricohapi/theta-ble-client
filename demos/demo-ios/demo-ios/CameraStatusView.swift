@@ -9,7 +9,6 @@ import SwiftUI
 import THETABleClient
 
 struct CameraStatusView: View {
-
     @ObservedObject var thetaBleApi: ThetaBleApi
 
     var body: some View {
@@ -106,6 +105,6 @@ struct CameraStatusView: View {
 
 struct CameraStatusView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView( thetaBleApi: ThetaBleApi())
+        ContentView(thetaBleApi: ThetaBleApi())
     }
 }

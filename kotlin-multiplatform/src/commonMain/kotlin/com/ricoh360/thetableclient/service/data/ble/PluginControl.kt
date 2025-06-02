@@ -39,7 +39,7 @@ data class PluginControl(
     }
 
     internal fun toBleData(): ByteArray {
-        pluginControl.ble?:throw ThetaBle.ThetaBleApiException(ERROR_MESSAGE_UNKNOWN_VALUE)
+        pluginControl.ble ?: throw ThetaBle.ThetaBleApiException(ERROR_MESSAGE_UNKNOWN_VALUE)
         return when (plugin) {
             null -> {
                 val result = ByteArray(1)

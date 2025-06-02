@@ -67,7 +67,7 @@ enum class ThetaModel(
         val keyName: String
             get() = "model"
 
-            /**
+        /**
          * Get THETA model
          *
          * @param model Theta model got by [CameraControlCommandV2.getInfo]
@@ -75,15 +75,15 @@ enum class ThetaModel(
          * @return ThetaModel
          */
         internal fun get(model: String?, serialNumber: String? = null): ThetaModel {
-                return serialNumber?.firstOrNull()?.let { firstChar ->
-                    entries.filter { it.firstCharOfSerialNumber != null }.firstOrNull {
-                        it.value == model && it.firstCharOfSerialNumber == firstChar
-                    }
+            return serialNumber?.firstOrNull()?.let { firstChar ->
+                entries.filter { it.firstCharOfSerialNumber != null }.firstOrNull {
+                    it.value == model && it.firstCharOfSerialNumber == firstChar
                 }
-                    ?: run { // In case of serialNumber is null or either model or serialNumber is not matched.
-                        entries.sortedWith(compareBy<ThetaModel> { it.value }.thenBy { it.firstCharOfSerialNumber })
-                            .firstOrNull { it.value == model } ?: UNKNOWN
-                    }
             }
+                ?: run { // In case of serialNumber is null or either model or serialNumber is not matched.
+                    entries.sortedWith(compareBy<ThetaModel> { it.value }.thenBy { it.firstCharOfSerialNumber })
+                        .firstOrNull { it.value == model } ?: UNKNOWN
+                }
+        }
     }
 }

@@ -18,16 +18,16 @@ class ThetaBleApi: ObservableObject {
     @Published var batteryStatus: ChargingState?
     @Published var cameraPower: CameraPower?
     @Published var pluginControl: PluginControl?
-    
+
     var thetaDevice: ThetaBle.ThetaDevice?
     var devName: String = ""
-    
+
     func setInfoText(_ value: String) {
         DispatchQueue.main.async {
             self.infoText = value
         }
     }
-    
+
     func scan(name: String) async throws {
         do {
             setInfoText("Scanning...")
@@ -38,9 +38,9 @@ class ThetaBleApi: ObservableObject {
                 timeoutTakePicture: 10000
             )
             let device = try await ThetaBle.Companion.shared.scan(name: name, timeout: timeout)
-            if let device = device {
+            if let device {
                 thetaDevice = device
-                
+
                 setInfoText("Scan. Found device: \(name)")
                 devName = name
             } else {
@@ -50,7 +50,7 @@ class ThetaBleApi: ObservableObject {
             setInfoText("Error. scan device.")
         }
     }
-    
+
     func connect(uuid: String?) async -> Bool {
         guard let device = thetaDevice else {
             setInfoText(MESSAGE_ERROR_NO_DEVICE)
@@ -69,7 +69,7 @@ class ThetaBleApi: ObservableObject {
         }
         return true
     }
-    
+
     func setNotifications(device: ThetaBle.ThetaDevice) {
         guard let service = device.cameraStatusCommand else {
             setInfoText(MESSAGE_ERROR_UNSUPPORTED)
@@ -81,7 +81,7 @@ class ThetaBleApi: ObservableObject {
         setCameraPowerNotify(service: service)
         setPluginControlNotify(service: service)
     }
-    
+
     func setBatteryLevelNotify(service: CameraStatusCommand) {
         do {
             try service.setBatteryLevelNotify { level, error in
@@ -98,10 +98,10 @@ class ThetaBleApi: ObservableObject {
             setInfoText("Not support battery level notification")
         }
     }
-    
+
     func setBatteryStatusNotify(service: CameraStatusCommand) {
         do {
-            try service.setBatteryStatusNotify {status, error in
+            try service.setBatteryStatusNotify { status, error in
                 if error != nil {
                     self.setInfoText("Error battery status notification")
                 } else {
@@ -115,7 +115,7 @@ class ThetaBleApi: ObservableObject {
             setInfoText("Not support battery status notification")
         }
     }
-    
+
     func setCameraPowerNotify(service: CameraStatusCommand) {
         do {
             try service.setCameraPowerNotify { power, error in
@@ -132,10 +132,10 @@ class ThetaBleApi: ObservableObject {
             setInfoText("Not support camera power notification")
         }
     }
-    
+
     func setCommandErrorDescriptionNotify(service: CameraStatusCommand) {
         do {
-            try service.setCommandErrorDescriptionNotify {value, error in
+            try service.setCommandErrorDescriptionNotify { value, error in
                 if error != nil {
                     self.setInfoText("Error command error notification")
                 } else {
@@ -146,7 +146,7 @@ class ThetaBleApi: ObservableObject {
             setInfoText("Not support command error notification")
         }
     }
-    
+
     func setPluginControlNotify(service: CameraStatusCommand) {
         do {
             try service.setPluginControlNotify { plugin, error in
@@ -163,7 +163,7 @@ class ThetaBleApi: ObservableObject {
             setInfoText("Not support plugin control notification")
         }
     }
-    
+
     func updateBatteryLevel() async throws {
         guard let device = thetaDevice else {
             setInfoText(MESSAGE_ERROR_NO_DEVICE)
@@ -182,7 +182,7 @@ class ThetaBleApi: ObservableObject {
             setInfoText("Error.")
         }
     }
-    
+
     func updateBatteryStatus() async throws {
         guard let device = thetaDevice else {
             setInfoText(MESSAGE_ERROR_NO_DEVICE)
@@ -201,7 +201,7 @@ class ThetaBleApi: ObservableObject {
             setInfoText("Error.")
         }
     }
-    
+
     func updateCameraPower() async throws {
         guard let device = thetaDevice else {
             setInfoText(MESSAGE_ERROR_NO_DEVICE)
@@ -220,7 +220,7 @@ class ThetaBleApi: ObservableObject {
             setInfoText("Error.")
         }
     }
-    
+
     func setCameraPower(value: CameraPower) async throws {
         guard let device = thetaDevice else {
             setInfoText(MESSAGE_ERROR_NO_DEVICE)
@@ -236,7 +236,7 @@ class ThetaBleApi: ObservableObject {
             setInfoText("Error.")
         }
     }
-    
+
     func updatePluginControl() async throws {
         guard let device = thetaDevice else {
             setInfoText(MESSAGE_ERROR_NO_DEVICE)
@@ -255,7 +255,7 @@ class ThetaBleApi: ObservableObject {
             setInfoText("Error.")
         }
     }
-    
+
     func getFirstPlugin() async -> Int32? {
         guard let device = thetaDevice else {
             setInfoText(MESSAGE_ERROR_NO_DEVICE)
@@ -271,7 +271,7 @@ class ThetaBleApi: ObservableObject {
             return nil
         }
     }
-    
+
     func setPluginControl(value: PluginPowerStatus) async throws {
         guard let device = thetaDevice else {
             setInfoText(MESSAGE_ERROR_NO_DEVICE)
@@ -281,21 +281,23 @@ class ThetaBleApi: ObservableObject {
             setInfoText(MESSAGE_ERROR_UNSUPPORTED)
             return
         }
-        if let pluginControl = pluginControl {
+        if let pluginControl {
             do {
                 if value == PluginPowerStatus.stop {
                     try await service.setPluginControl(value: PluginControl(pluginControl: value, plugin: nil))
                 } else {
                     if let firstPlugin = await getFirstPlugin(), pluginControl.plugin != nil {
                         try await service.setPluginControl(value:
-                                                            PluginControl(
-                                                                pluginControl: value,
-                                                                plugin: KotlinInt(int: firstPlugin)))
+                            PluginControl(
+                                pluginControl: value,
+                                plugin: KotlinInt(int: firstPlugin)
+                            ))
                     } else {
                         try await service.setPluginControl(value:
-                                                            PluginControl(
-                                                                pluginControl: value,
-                                                                plugin: nil))
+                            PluginControl(
+                                pluginControl: value,
+                                plugin: nil
+                            ))
                     }
                 }
             } catch {
@@ -304,9 +306,8 @@ class ThetaBleApi: ObservableObject {
         } else {
             setInfoText("Error. Not yet acquired.")
         }
-        
     }
-    
+
     func disconnect() async throws {
         guard let device = thetaDevice else {
             setInfoText(MESSAGE_ERROR_NO_DEVICE)
@@ -321,7 +322,7 @@ class ThetaBleApi: ObservableObject {
             setInfoText("Error. disconnect.")
         }
     }
-    
+
     func getInfo() async throws {
         guard let device = thetaDevice else {
             setInfoText(MESSAGE_ERROR_NO_DEVICE)
@@ -338,7 +339,7 @@ class ThetaBleApi: ObservableObject {
             let serial = try await service.getSerialNumber()
             let wlanMac = try await service.getWlanMacAddress()
             let bleMac = try await service.getBluetoothMacAddress()
-            
+
             setInfoText(
                 " firmware: \(firmware)\n maker: \(manuName)\n model: \(model)\n serial: \(serial)\n wlan: \(wlanMac)\n ble: \(bleMac)."
             )
@@ -346,7 +347,7 @@ class ThetaBleApi: ObservableObject {
             setInfoText("Error. Get Information.")
         }
     }
-    
+
     func takePicture() async throws {
         guard let device = thetaDevice else {
             setInfoText(MESSAGE_ERROR_NO_DEVICE)
@@ -357,36 +358,37 @@ class ThetaBleApi: ObservableObject {
             return
         }
         do {
-            if (try await service.getCaptureMode() != .image) {
+            if try await (service.getCaptureMode() != .image) {
                 setInfoText("Change capture mode...")
                 try await service.setCaptureMode(value: .image)
-                
+
                 // Wait a little or you'll fail
                 try await Task.sleep(nanoseconds: 1 * 1000 * 1000 * 1000)
             }
-            
+
             class Callback: KotlinSuspendFunction1 {
                 let thetaBleApi: ThetaBleApi
                 init(thetaBleApi: ThetaBleApi) {
                     self.thetaBleApi = thetaBleApi
                 }
+
                 func invoke(p1: Any?) async throws -> Any? {
                     if p1 == nil {
-                        await self.thetaBleApi.setInfoText("End take a picture.")
+                        await thetaBleApi.setInfoText("End take a picture.")
                     } else {
-                        await self.thetaBleApi.setInfoText("End take a picture. error:\(p1 ?? "unknown")")
+                        await thetaBleApi.setInfoText("End take a picture. error:\(p1 ?? "unknown")")
                     }
                     return nil
                 }
             }
-            
+
             setInfoText("Start take a picture")
             try service.takePicture(complete: Callback(thetaBleApi: self))
         } catch {
             setInfoText("Error. Take a picture.")
         }
     }
-    
+
     func checkCameraControlCommandV2() -> Bool {
         guard let device = thetaDevice, device.cameraControlCommandV2 != nil else {
             return false
@@ -413,23 +415,23 @@ class ThetaBleApi: ObservableObject {
         do {
             let thetaInfo = try await service.getInfo()
             let text = """
-info
-manufacturer: \(thetaInfo.manufacturer)
-model: \(thetaInfo.model.name)
-serialNumber: \(thetaInfo.serialNumber)
-wlanMacAddress: \(thetaInfo.wlanMacAddress ?? "")
-bluetoothMacAddress: \(thetaInfo.bluetoothMacAddress ?? "")
-firmwareVersion: \(thetaInfo.firmwareVersion)
-uptime: \(thetaInfo.uptime)
-"""
-            
+            info
+            manufacturer: \(thetaInfo.manufacturer)
+            model: \(thetaInfo.model.name)
+            serialNumber: \(thetaInfo.serialNumber)
+            wlanMacAddress: \(thetaInfo.wlanMacAddress ?? "")
+            bluetoothMacAddress: \(thetaInfo.bluetoothMacAddress ?? "")
+            firmwareVersion: \(thetaInfo.firmwareVersion)
+            uptime: \(thetaInfo.uptime)
+            """
+
             setInfoText(text)
         } catch {
             setInfoText("Error. Get info.")
         }
     }
-    
-    func getStateString(thetaState: ThetaState) -> String{
+
+    func getStateString(thetaState: ThetaState) -> String {
         var text = ""
         if let batteryLevel = thetaState.batteryLevel {
             text += "batteryLevel: \(batteryLevel)\n"
@@ -472,7 +474,7 @@ uptime: \(thetaInfo.uptime)
         }
         return text
     }
-    
+
     func cameraControlCommandV2GetState() async throws {
         guard let device = thetaDevice else {
             setInfoText(MESSAGE_ERROR_NO_DEVICE)
@@ -489,11 +491,11 @@ uptime: \(thetaInfo.uptime)
             setInfoText("Error. Get state.")
         }
     }
-    
-    func getGpsInfoString(gpsInfo: GpsInfo, leftMargin: Int) -> String{
+
+    func getGpsInfoString(gpsInfo: GpsInfo, leftMargin: Int) -> String {
         var text = ""
         let margin = String(repeating: " ", count: leftMargin)
-        
+
         if let lat = gpsInfo.lat {
             text += margin + "lat: \(lat)\n"
         }
@@ -509,10 +511,10 @@ uptime: \(thetaInfo.uptime)
         if let datum = gpsInfo.datum {
             text += margin + "datum: \(datum)\n"
         }
-        
+
         return text
     }
-    
+
     func cameraControlCommandV2GetState2() async throws {
         guard let device = thetaDevice else {
             setInfoText(MESSAGE_ERROR_NO_DEVICE)
@@ -542,7 +544,7 @@ uptime: \(thetaInfo.uptime)
             setInfoText("Error. Get state2.")
         }
     }
-    
+
     func cameraControlCommandV2ClearStateNotify() {
         guard let device = thetaDevice else {
             return
@@ -552,7 +554,7 @@ uptime: \(thetaInfo.uptime)
         }
         try? service.setStateNotify()
     }
-    
+
     func cameraControlCommandV2SetStateNotify() {
         guard let device = thetaDevice else {
             return

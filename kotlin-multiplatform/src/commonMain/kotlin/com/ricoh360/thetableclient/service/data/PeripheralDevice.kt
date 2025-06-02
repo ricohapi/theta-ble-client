@@ -6,7 +6,7 @@ import com.ricoh360.thetableclient.transferred.Peripheral
 /**
  * Peripheral Device
  */
-data class PeripheralDevice internal constructor (
+data class PeripheralDevice internal constructor(
     internal var _device: String,
     internal var _macAddress: String,
     internal var _pairing: Boolean,

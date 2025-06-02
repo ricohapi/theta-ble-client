@@ -10,7 +10,7 @@ import THETABleClient
 class CameraStatusCommandService {
     static func getBatteryLevel(id: Int,
                                 resolve: @escaping RCTPromiseResolveBlock,
-                                reject: @escaping RCTPromiseRejectBlock) -> Void
+                                reject: @escaping RCTPromiseRejectBlock)
     {
         guard let device = ThetaBleClientReactNative.deviceList[id] else {
             reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
@@ -20,7 +20,7 @@ class CameraStatusCommandService {
             reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
             return
         }
-        
+
         Task {
             do {
                 let value = try await service.getBatteryLevel()
@@ -30,12 +30,12 @@ class CameraStatusCommandService {
             }
         }
     }
-    
+
     static func setBatteryLevelNotify(id: Int,
                                       enable: Bool,
                                       sendEvent: @escaping ([String: Any]) -> Void,
                                       resolve: @escaping () -> Void,
-                                      reject: @escaping RCTPromiseRejectBlock) -> Void
+                                      reject: @escaping RCTPromiseRejectBlock)
     {
         guard let device = ThetaBleClientReactNative.deviceList[id] else {
             reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
@@ -45,7 +45,7 @@ class CameraStatusCommandService {
             reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
             return
         }
-        
+
         do {
             if enable {
                 try service.setBatteryLevelNotify { value, error in
@@ -65,10 +65,10 @@ class CameraStatusCommandService {
             reject(ERROR_TITLE, error.localizedDescription, error)
         }
     }
-    
+
     static func getBatteryStatus(id: Int,
                                  resolve: @escaping RCTPromiseResolveBlock,
-                                 reject: @escaping RCTPromiseRejectBlock) -> Void
+                                 reject: @escaping RCTPromiseRejectBlock)
     {
         guard let device = ThetaBleClientReactNative.deviceList[id] else {
             reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
@@ -78,7 +78,7 @@ class CameraStatusCommandService {
             reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
             return
         }
-        
+
         Task {
             do {
                 let value = try await service.getBatteryStatus()
@@ -88,12 +88,12 @@ class CameraStatusCommandService {
             }
         }
     }
-    
+
     static func setBatteryStatusNotify(id: Int,
                                        enable: Bool,
                                        sendEvent: @escaping ([String: Any]) -> Void,
                                        resolve: @escaping () -> Void,
-                                       reject: @escaping RCTPromiseRejectBlock) -> Void
+                                       reject: @escaping RCTPromiseRejectBlock)
     {
         guard let device = ThetaBleClientReactNative.deviceList[id] else {
             reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
@@ -103,7 +103,7 @@ class CameraStatusCommandService {
             reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
             return
         }
-        
+
         do {
             if enable {
                 try service.setBatteryStatusNotify { value, error in
@@ -123,10 +123,10 @@ class CameraStatusCommandService {
             reject(ERROR_TITLE, error.localizedDescription, error)
         }
     }
-    
+
     static func getCameraPower(id: Int,
                                resolve: @escaping RCTPromiseResolveBlock,
-                               reject: @escaping RCTPromiseRejectBlock) -> Void
+                               reject: @escaping RCTPromiseRejectBlock)
     {
         guard let device = ThetaBleClientReactNative.deviceList[id] else {
             reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
@@ -136,7 +136,7 @@ class CameraStatusCommandService {
             reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
             return
         }
-        
+
         Task {
             do {
                 let value = try await service.getCameraPower()
@@ -146,11 +146,11 @@ class CameraStatusCommandService {
             }
         }
     }
-    
+
     static func setCameraPower(id: Int,
                                value: String,
                                resolve: @escaping RCTPromiseResolveBlock,
-                               reject: @escaping RCTPromiseRejectBlock) -> Void
+                               reject: @escaping RCTPromiseRejectBlock)
     {
         guard let device = ThetaBleClientReactNative.deviceList[id] else {
             reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
@@ -160,7 +160,7 @@ class CameraStatusCommandService {
             reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
             return
         }
-        
+
         Task {
             do {
                 let enumValue = getEnumValue(values: CameraPower.values(), name: value)
@@ -175,12 +175,12 @@ class CameraStatusCommandService {
             }
         }
     }
-    
+
     static func setCameraPowerNotify(id: Int,
                                      enable: Bool,
                                      sendEvent: @escaping ([String: Any]) -> Void,
                                      resolve: @escaping () -> Void,
-                                     reject: @escaping RCTPromiseRejectBlock) -> Void
+                                     reject: @escaping RCTPromiseRejectBlock)
     {
         guard let device = ThetaBleClientReactNative.deviceList[id] else {
             reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
@@ -190,7 +190,7 @@ class CameraStatusCommandService {
             reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
             return
         }
-        
+
         do {
             if enable {
                 try service.setCameraPowerNotify { value, error in
@@ -210,12 +210,12 @@ class CameraStatusCommandService {
             reject(ERROR_TITLE, error.localizedDescription, error)
         }
     }
-    
+
     static func setCommandErrorDescriptionNotify(id: Int,
                                                  enable: Bool,
                                                  sendEvent: @escaping ([String: Any]) -> Void,
                                                  resolve: @escaping () -> Void,
-                                                 reject: @escaping RCTPromiseRejectBlock) -> Void
+                                                 reject: @escaping RCTPromiseRejectBlock)
     {
         guard let device = ThetaBleClientReactNative.deviceList[id] else {
             reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
@@ -225,7 +225,7 @@ class CameraStatusCommandService {
             reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
             return
         }
-        
+
         do {
             if enable {
                 try service.setCommandErrorDescriptionNotify { value, error in
@@ -245,10 +245,10 @@ class CameraStatusCommandService {
             reject(ERROR_TITLE, error.localizedDescription, error)
         }
     }
-    
+
     static func getPluginControl(id: Int,
                                  resolve: @escaping RCTPromiseResolveBlock,
-                                 reject: @escaping RCTPromiseRejectBlock) -> Void
+                                 reject: @escaping RCTPromiseRejectBlock)
     {
         guard let device = ThetaBleClientReactNative.deviceList[id] else {
             reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
@@ -258,7 +258,7 @@ class CameraStatusCommandService {
             reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
             return
         }
-        
+
         Task {
             do {
                 let value = try await service.getPluginControl()
@@ -268,11 +268,11 @@ class CameraStatusCommandService {
             }
         }
     }
-    
+
     static func setPluginControl(id: Int,
                                  value: Any,
                                  resolve: @escaping RCTPromiseResolveBlock,
-                                 reject: @escaping RCTPromiseRejectBlock) -> Void
+                                 reject: @escaping RCTPromiseRejectBlock)
     {
         guard let device = ThetaBleClientReactNative.deviceList[id] else {
             reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
@@ -282,10 +282,10 @@ class CameraStatusCommandService {
             reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
             return
         }
-        
+
         Task {
             do {
-                let objects = value as? Dictionary<String, Any?> ?? [: ]
+                let objects = value as? [String: Any?] ?? [:]
                 let thetaValue = toTheta(pluginControl: objects)
                 guard let thetaValue else {
                     reject(ERROR_TITLE, "Plugin control not found. \(value)", nil)
@@ -298,12 +298,12 @@ class CameraStatusCommandService {
             }
         }
     }
-    
+
     static func setPluginControlNotify(id: Int,
                                        enable: Bool,
                                        sendEvent: @escaping ([String: Any]) -> Void,
                                        resolve: @escaping () -> Void,
-                                       reject: @escaping RCTPromiseRejectBlock) -> Void
+                                       reject: @escaping RCTPromiseRejectBlock)
     {
         guard let device = ThetaBleClientReactNative.deviceList[id] else {
             reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
@@ -313,7 +313,7 @@ class CameraStatusCommandService {
             reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
             return
         }
-        
+
         do {
             if enable {
                 try service.setPluginControlNotify { value, error in

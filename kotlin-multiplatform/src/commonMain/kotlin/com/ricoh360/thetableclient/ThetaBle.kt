@@ -192,9 +192,11 @@ class ThetaBle internal constructor() {
                                 ssidList.add(it.getSsid(ThetaModel.THETA_SC2))
                                 ssidList.add(it.getSsid(ThetaModel.THETA_V))
                             }
+
                             else -> ssidList.add(it.getSsid(thetaModel))
                         }
                     }
+
                     else -> ssidList.add(it.getSsid(model))
                 }
             }
@@ -310,7 +312,7 @@ class ThetaBle internal constructor() {
             if (!model.supported) {
                 throw ThetaBleApiException(ERROR_MESSAGE_UNSUPPORTED_VALUE)
             }
-            val number =name.takeLast(8)
+            val number = name.takeLast(8)
             return Pair("THETA${model.prefix}$number.OSC", number)
         }
 
@@ -466,7 +468,7 @@ class ThetaBle internal constructor() {
                 }
                 val peripheral = peripheral ?: throw BluetoothException("Error. get peripheral ")
 
-                uuid?: run {
+                uuid ?: run {
                     // THETA X or later. Pairing with THETA
                     peripheral.tryBond()
                 }

@@ -50,7 +50,7 @@ object BluetoothControlCommandService {
         promise.reject(Exception(ERROR_MESSAGE_UNSUPPORTED_SERVICE))
         return
       }
-      service.scanPeripheralDeviceStart(timeout, object: BluetoothControlCommand.ScanCallback {
+      service.scanPeripheralDeviceStart(timeout, object : BluetoothControlCommand.ScanCallback {
         override fun onCompleted(peripheralDeviceList: List<PeripheralDevice>) {
           super.onCompleted(peripheralDeviceList)
           sendNotifyEvent(

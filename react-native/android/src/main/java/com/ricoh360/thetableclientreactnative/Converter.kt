@@ -101,7 +101,7 @@ fun fromTheta(ssidList: List<Pair<String, String>>): WritableArray {
 }
 
 fun toScanSsidParams(objects: ReadableMap): ScanSsidParams {
-  val model = objects.getString(ThetaModel.keyName)?.let{ name ->
+  val model = objects.getString(ThetaModel.keyName)?.let { name ->
     ThetaModel.values().find { it.name == name }
   }
   val timeout = if (objects.hasKey(KEY_TIMEOUT)) objects.getInt(KEY_TIMEOUT) else null
