@@ -56,6 +56,7 @@ object CameraControlCommandsService {
       }
       val result = toThetaPluginOrders(value)
       service.setPluginOrders(result)
+      promise.resolve(null)
     } catch (e: Throwable) {
       promise.reject(e)
     }

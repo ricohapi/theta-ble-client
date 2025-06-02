@@ -1,16 +1,12 @@
 package com.ricoh360.thetableclient.ble
 
-import com.benasher44.uuid.uuidFrom
 import com.juul.kable.Filter
 import com.juul.kable.Scanner
 import com.juul.kable.logs.Logging
-import com.ricoh360.thetableclient.BleService
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withTimeoutOrNull
-
-internal const val THETA_NAME_LENGTH = 8
 
 internal abstract class BleScanner(
     val timeout: Int,
@@ -21,12 +17,9 @@ internal abstract class BleScanner(
     abstract val advertisements: Flow<BleAdvertisement>
 
     fun isThetaName(name: String): Boolean {
-        if (name.length != THETA_NAME_LENGTH) {
-            return false
-        }
-        return name.toCharArray().all {
-            it.isDigit()
-        }
+        // 12345678 or AA12345678
+        val regex = Regex("^[A-Z]{2}[0-9]{8}\$|^[0-9]{8}\$")
+        return name.matches(regex)
     }
 
     suspend fun scan(): List<BleAdvertisement> {
@@ -75,7 +68,7 @@ internal class BleScannerImpl internal constructor(
     override val advertisements: Flow<BleAdvertisement>
         get() = flow {
             scanner.advertisements.collect { advertisement ->
-                if (!advertisement.uuids.isEmpty()) {
+                if (advertisement.uuids.isNotEmpty()) {
                     advertisement.name?.let {
                         emit(newAdvertisement(advertisement))
                     }

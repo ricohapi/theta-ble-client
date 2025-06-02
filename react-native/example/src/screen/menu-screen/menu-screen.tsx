@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { Button, Stack } from '@react-native-material/core';
-import { PermissionsAndroid, Platform, Text } from 'react-native';
+import { Platform, Text } from 'react-native';
 import styles from './styles';
 import {
   scan,
@@ -10,18 +10,23 @@ import {
   CameraInformation,
   ShootingControlCommand,
   ThetaDevice,
-} from 'theta-ble-client-react-native';
+} from '../../modules/theta-ble-client';
 import { setBleUuidWebApi } from '../../theta-webapi/set-ble-uuid-webapi';
 import { setBleOnWebApi } from '../../theta-webapi/set-ble-on-webapi';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDeviceContext } from '../../device-context';
-import { getThetaInfoWebApi } from '../../theta-webapi/get-theta-info-webapi';
+import { ThetaInfo, getThetaInfoWebApi } from '../../theta-webapi/get-theta-info-webapi';
 import DefaultPreference from 'react-native-default-preference';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../../App';
+import { requestMultiple, PERMISSIONS } from 'react-native-permissions';
 
 const KEY_LAST_DEVICE_NAME = 'lastDeviceName';
 const KEY_LAST_USE_UUID = 'lastUseUuid';
 
-const MenuScreen = ({ navigation }) => {
+const MenuScreen: React.FC<
+NativeStackScreenProps<RootStackParamList, 'Menu'>
+> = ({ navigation }) => {
   const appUuid = '6BEDD7A3-4E01-4FE4-9DFB-03BFF23ECFD3';
 
   const [infoText, setInfoText] = React.useState('Init');
@@ -35,13 +40,13 @@ const MenuScreen = ({ navigation }) => {
     }
     try {
       if (Platform.Version > 30) {
-        await PermissionsAndroid.requestMultiple([
-          PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
-          PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
+        await requestMultiple([
+          PERMISSIONS.ANDROID.BLUETOOTH_CONNECT,
+          PERMISSIONS.ANDROID.BLUETOOTH_SCAN,
         ]);
       } else {
-        await PermissionsAndroid.requestMultiple([
-          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        await requestMultiple([
+          PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
         ]);
       }
     } catch (err) {
@@ -172,6 +177,11 @@ const MenuScreen = ({ navigation }) => {
     }
   }
 
+  function getBleThetaName(info: ThetaInfo): string {
+    const prefix = info.model === 'RICOH360 THETA A1' ? 'AA' : '';
+    return prefix + info.serialNumber;
+  }
+
   async function connectWifi() {
     let deviceName: string | undefined;
     try {
@@ -181,7 +191,7 @@ const MenuScreen = ({ navigation }) => {
         setInfoText('Error. wifi connect');
         return;
       }
-      deviceName = thetaInfo.serialNumber;
+      deviceName = getBleThetaName(thetaInfo);
       setDevName(deviceName);
       setUseUuid(false);
       setInfoText(`wifi connected. ${thetaInfo.serialNumber}`);
@@ -301,6 +311,18 @@ const MenuScreen = ({ navigation }) => {
           }}
         />
         <Button
+          title="Bluetooth Control Command"
+          onPress={() => {
+            navigation.navigate('BluetoothControlCommand');
+          }}
+        />
+        <Button
+          title="WLAN Control Command V2"
+          onPress={() => {
+            navigation.navigate('WlanControlCommandV2');
+          }}
+        />
+        <Button
           title="Disconnect"
           onPress={() => {
             disconnect();
@@ -321,3 +343,4 @@ const MenuScreen = ({ navigation }) => {
   );
 };
 export default MenuScreen;
+

@@ -90,7 +90,7 @@ describe('scan', () => {
       }),
     );
 
-    const timeout = new TimeoutObject({timeoutScan: 100});
+    const timeout = new TimeoutObject({ timeoutScan: 100 });
     const device = await scan({
       name: devName,
       timeout,
@@ -124,10 +124,10 @@ describe('scan', () => {
   });
 
   test.each([
-    [new TimeoutObject({timeoutScan: 100}), 100, TIMEOUT_PERIPHERAL, TIMEOUT_CONNECT, TIMEOUT_TAKE_PICTURE],
-    [new TimeoutObject({timeoutPeripheral: 100}), TIMEOUT_SCAN, 100, TIMEOUT_CONNECT, TIMEOUT_TAKE_PICTURE],
-    [new TimeoutObject({timeoutConnect: 100}), TIMEOUT_SCAN, TIMEOUT_PERIPHERAL, 100, TIMEOUT_TAKE_PICTURE],
-    [new TimeoutObject({timeoutTakePicture: 100}), TIMEOUT_SCAN, TIMEOUT_PERIPHERAL, TIMEOUT_CONNECT, 100],
+    [new TimeoutObject({ timeoutScan: 100 }), 100, TIMEOUT_PERIPHERAL, TIMEOUT_CONNECT, TIMEOUT_TAKE_PICTURE],
+    [new TimeoutObject({ timeoutPeripheral: 100 }), TIMEOUT_SCAN, 100, TIMEOUT_CONNECT, TIMEOUT_TAKE_PICTURE],
+    [new TimeoutObject({ timeoutConnect: 100 }), TIMEOUT_SCAN, TIMEOUT_PERIPHERAL, 100, TIMEOUT_TAKE_PICTURE],
+    [new TimeoutObject({ timeoutTakePicture: 100 }), TIMEOUT_SCAN, TIMEOUT_PERIPHERAL, TIMEOUT_CONNECT, 100],
   ])('set timeout', async (
     testValue,
     timeoutScan,
@@ -137,7 +137,7 @@ describe('scan', () => {
   ) => {
 
     jest.mocked(thetaBle.nativeScan).mockImplementation(
-      jest.fn(async ({timeout}) => {
+      jest.fn(async ({ timeout }) => {
         expect(timeout.timeoutScan).toBe(timeoutScan);
         expect(timeout.timeoutPeripheral).toBe(timeoutPeripheral);
         expect(timeout.timeoutConnect).toBe(timeoutConnect);

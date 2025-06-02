@@ -383,6 +383,149 @@ class ThetaBleClientReactNativeModule(reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
+  fun nativeCameraControlCommandV2GetOptions(id: Int, optionNames: ReadableArray, promise: Promise) {
+    launch {
+      CameraControlCommandV2Service.getOptions(id, optionNames, promise)
+    }
+  }
+
+  @ReactMethod
+  fun nativeCameraControlCommandV2GetOptionsByString(id: Int, optionNames: ReadableArray, promise: Promise) {
+    launch {
+      CameraControlCommandV2Service.getOptionsByString(id, optionNames, promise)
+    }
+  }
+
+  @ReactMethod
+  fun nativeCameraControlCommandV2SetOptions(id: Int, options: ReadableMap, promise: Promise) {
+    launch {
+      CameraControlCommandV2Service.setOptions(id, options, promise)
+    }
+  }
+
+  @ReactMethod
+  fun nativeCameraControlCommandV2ReleaseShutter(id: Int, promise: Promise) {
+    launch {
+      CameraControlCommandV2Service.releaseShutter(id, promise)
+    }
+  }
+
+  @ReactMethod
+  fun nativeBluetoothControlCommandScanPeripheralDevice(id: Int, timeout: Int, promise: Promise) {
+    launch {
+      BluetoothControlCommandService.scanPeripheralDevice(id, timeout, promise)
+    }
+  }
+
+  @ReactMethod
+  fun nativeBluetoothControlCommandScanPeripheralDeviceStart(
+    id: Int,
+    timeout: Int,
+    promise: Promise
+  ) {
+    launch {
+      BluetoothControlCommandService.scanPeripheralDeviceStart(id, timeout, promise) {
+        sendNotifyEvent(it)
+      }
+    }
+  }
+
+  @ReactMethod
+  fun nativeBluetoothControlCommandScanPeripheralDeviceStop(id: Int, promise: Promise) {
+    launch {
+      BluetoothControlCommandService.scanPeripheralDeviceStop(id, promise)
+    }
+  }
+
+  @ReactMethod
+  fun nativeBluetoothControlCommandConnectPeripheralDevice(
+    id: Int,
+    macAddress: String,
+    promise: Promise
+  ) {
+    launch {
+      BluetoothControlCommandService.connectPeripheralDevice(id, macAddress, promise)
+    }
+  }
+
+  @ReactMethod
+  fun nativeBluetoothControlCommandDeletePeripheralDevice(
+    id: Int,
+    macAddress: String,
+    promise: Promise
+  ) {
+    launch {
+      BluetoothControlCommandService.deletePeripheralDevice(id, macAddress, promise)
+    }
+  }
+
+  @ReactMethod
+  fun nativeWlanControlCommandV2SetNetworkType(id: Int, value: String, promise: Promise) {
+    launch {
+      WlanControlCommandV2Service.setNetworkType(id, value, promise)
+    }
+  }
+
+  @ReactMethod
+  fun nativeWlanControlCommandV2SetNetworkTypeNotify(id: Int, enable: Boolean, promise: Promise) {
+    launch {
+      WlanControlCommandV2Service.setNetworkTypeNotify(id, enable, promise) {
+        sendNotifyEvent(it)
+      }
+    }
+  }
+
+  @ReactMethod
+  fun nativeWlanControlCommandV2GetConnectedWifiInfo(id: Int, promise: Promise) {
+    launch {
+      WlanControlCommandV2Service.getConnectedWifiInfo(id, promise)
+    }
+  }
+
+  @ReactMethod
+  fun nativeWlanControlCommandV2SetConnectedWifiInfoNotify(id: Int, enable: Boolean, promise: Promise) {
+    launch {
+      WlanControlCommandV2Service.setConnectedWifiInfoNotify(id, enable, promise) {
+        sendNotifyEvent(it)
+      }
+    }
+  }
+
+  @ReactMethod
+  fun nativeWlanControlCommandV2ScanSsidStart(
+    id: Int,
+    timeout: Int,
+    promise: Promise
+  ) {
+    launch {
+      WlanControlCommandV2Service.scanSsidStart(id, timeout, promise) {
+        sendNotifyEvent(it)
+      }
+    }
+  }
+
+  @ReactMethod
+  fun nativeWlanControlCommandV2ScanSsidStop(id: Int, promise: Promise) {
+    launch {
+      WlanControlCommandV2Service.scanSsidStop(id, promise)
+    }
+  }
+
+  @ReactMethod
+  fun nativeWlanControlCommandV2SetAccessPointDynamically(id: Int, params: ReadableMap, promise: Promise) {
+    launch {
+      WlanControlCommandV2Service.setAccessPointDynamically(id, params, promise)
+    }
+  }
+
+  @ReactMethod
+  fun nativeWlanControlCommandV2SetAccessPointStatically(id: Int, params: ReadableMap, promise: Promise) {
+    launch {
+      WlanControlCommandV2Service.setAccessPointStatically(id, params, promise)
+    }
+  }
+
+  @ReactMethod
   fun nativeReleaseDevice(id: Int, promise: Promise) {
     deviceList[id]?.let {
       deviceList.remove(id)

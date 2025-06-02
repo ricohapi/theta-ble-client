@@ -3,14 +3,27 @@ package com.ricoh360.thetableclient
 import com.ricoh360.thetableclient.ble.BleAdvertisement
 import com.ricoh360.thetableclient.ble.BlePeripheral
 import com.ricoh360.thetableclient.ble.getScanner
+import com.ricoh360.thetableclient.service.BluetoothControlCommand
 import com.ricoh360.thetableclient.service.CameraControlCommandV2
 import com.ricoh360.thetableclient.service.CameraControlCommands
 import com.ricoh360.thetableclient.service.CameraInformation
 import com.ricoh360.thetableclient.service.CameraStatusCommand
 import com.ricoh360.thetableclient.service.ShootingControlCommand
 import com.ricoh360.thetableclient.service.ThetaService
+import com.ricoh360.thetableclient.service.WlanControlCommandV2
+import com.ricoh360.thetableclient.service.data.values.ApplicationError
 import com.ricoh360.thetableclient.service.data.values.ThetaModel
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.newSingleThreadContext
+import kotlinx.coroutines.withTimeout
+import kotlinx.coroutines.withTimeoutOrNull
 
 internal const val TIMEOUT_SCAN = 30_000
 internal const val TIMEOUT_PERIPHERAL = 1_000
@@ -159,9 +172,8 @@ class ThetaBle internal constructor() {
             model: ThetaModel? = null,
             timeout: Int? = null,
         ): List<Pair<String, String>> {
-            model?.let {
-                val prefix = ThetaDevice.serialPrefix[it]
-                prefix ?: throw ThetaBleApiException(ERROR_MESSAGE_UNSUPPORTED_VALUE)
+            if (model?.supported == false) {
+                throw ThetaBleApiException(ERROR_MESSAGE_UNSUPPORTED_VALUE)
             }
             val scanTimeout = Timeout(
                 timeoutScan = timeout ?: TIMEOUT_SCAN
@@ -169,12 +181,19 @@ class ThetaBle internal constructor() {
             val thetaList = scan(scanTimeout)
             val ssidList = mutableListOf<Pair<String, String>>()
             thetaList.forEach {
+                val thetaModel = it.model
                 when (model) {
                     null -> {
-                        ssidList.add(it.getSsid(ThetaModel.THETA_X))
-                        ssidList.add(it.getSsid(ThetaModel.THETA_Z1))
-                        ssidList.add(it.getSsid(ThetaModel.THETA_SC2))
-                        ssidList.add(it.getSsid(ThetaModel.THETA_V))
+                        when (thetaModel) {
+                            null -> {
+                                ssidList.add(it.getSsid(ThetaModel.THETA_A1))
+                                ssidList.add(it.getSsid(ThetaModel.THETA_X))
+                                ssidList.add(it.getSsid(ThetaModel.THETA_Z1))
+                                ssidList.add(it.getSsid(ThetaModel.THETA_SC2))
+                                ssidList.add(it.getSsid(ThetaModel.THETA_V))
+                            }
+                            else -> ssidList.add(it.getSsid(thetaModel))
+                        }
                     }
                     else -> ssidList.add(it.getSsid(model))
                 }
@@ -202,6 +221,12 @@ class ThetaBle internal constructor() {
     class ThetaBleSerializationException(message: String) : ThetaBleException(message)
 
     /**
+     * Thrown if an error occurs on web api response.
+     */
+    class ThetaApplicationErrorException(val applicationError: ApplicationError) :
+        ThetaBleException(applicationError.message)
+
+    /**
      * Thrown if an error occurs on bluetooth.
      */
     class BluetoothException : ThetaBleException {
@@ -221,16 +246,6 @@ class ThetaBle internal constructor() {
          */
         val timeout: Timeout = Timeout(),
     ) {
-        companion object {
-            internal val serialPrefix = mapOf(
-                ThetaModel.THETA_V to "YL",
-                ThetaModel.THETA_SC2 to "YP",
-                ThetaModel.THETA_SC2_B to "YP",
-                ThetaModel.THETA_Z1 to "YN",
-                ThetaModel.THETA_X to "YR",
-            )
-        }
-
         internal var scope = CoroutineScope(Dispatchers.Default)
 
         @OptIn(ExperimentalCoroutinesApi::class)
@@ -257,6 +272,22 @@ class ThetaBle internal constructor() {
             get() = advertisement.name
 
         /**
+         * THETA model
+         *
+         * Returns the THETA model corresponding to the name prefix.
+         */
+        val model: ThetaModel?
+            get() {
+                if (name.length == 10) {
+                    return ThetaModel.entries.filter { it != ThetaModel.UNKNOWN }
+                        .firstOrNull {
+                            name.startsWith(it.prefix)
+                        }
+                }
+                return null
+            }
+
+        /**
          * UUID used for authentication
          */
         val uuid: String?
@@ -271,14 +302,16 @@ class ThetaBle internal constructor() {
          * Acquire THETA SSID.
          *
          * @param model THETA model.
-         * @return THETA SSID list. (SSID, Default password)[]
+         * @return THETA SSID. (SSID, Default password)[]
          * @exception ThetaBleApiException If an error occurs in library.
          * @exception BluetoothException If an error occurs in bluetooth.
          */
         fun getSsid(model: ThetaModel): Pair<String, String> {
-            val prefix = serialPrefix[model]
-            prefix ?: throw ThetaBleApiException(ERROR_MESSAGE_UNSUPPORTED_VALUE)
-            return Pair("THETA$prefix$name.OSC", name)
+            if (!model.supported) {
+                throw ThetaBleApiException(ERROR_MESSAGE_UNSUPPORTED_VALUE)
+            }
+            val number =name.takeLast(8)
+            return Pair("THETA${model.prefix}$number.OSC", number)
         }
 
         /**
@@ -315,6 +348,13 @@ class ThetaBle internal constructor() {
          * Camera Control Command v2 Service
          */
         var cameraControlCommandV2: CameraControlCommandV2? = null
+
+        /**
+         * Bluetooth Control Command Service
+         */
+        var bluetoothControlCommand: BluetoothControlCommand? = null
+
+        var wlanControlCommandV2: WlanControlCommandV2? = null
 
         internal suspend fun createPeripheral(): BlePeripheral {
             val deferred = CompletableDeferred<BlePeripheral>()
@@ -381,6 +421,18 @@ class ThetaBle internal constructor() {
                 (serviceList as MutableList).add(service)
                 cameraControlCommandV2 = service
             }
+
+            if (peripheral.contain(BleService.BLUETOOTH_CONTROL_COMMAND)) {
+                val service = BluetoothControlCommand(this)
+                (serviceList as MutableList).add(service)
+                bluetoothControlCommand = service
+            }
+
+            if (peripheral.contain(BleService.WLAN_CONTROL_COMMAND_V2)) {
+                val service = WlanControlCommandV2(this)
+                (serviceList as MutableList).add(service)
+                wlanControlCommandV2 = service
+            }
         }
 
         /**
@@ -414,6 +466,10 @@ class ThetaBle internal constructor() {
                 }
                 val peripheral = peripheral ?: throw BluetoothException("Error. get peripheral ")
 
+                uuid?: run {
+                    // THETA X or later. Pairing with THETA
+                    peripheral.tryBond()
+                }
                 withTimeout(timeout.timeoutConnect.toLong()) {
                     peripheral.connect()
                 }

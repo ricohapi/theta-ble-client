@@ -2,6 +2,27 @@ import { NativeModules } from 'react-native';
 import { ThetaDevice } from '../../theta-device';
 import { CameraPowerEnum, CameraStatusCommand } from '../../service';
 
+describe('CameraPowerEnum', () => {
+  const data: [CameraPowerEnum, string][] = [
+    [CameraPowerEnum.UNKNOWN, 'UNKNOWN'],
+    [CameraPowerEnum.OFF, 'OFF'],
+    [CameraPowerEnum.ON, 'ON'],
+    [CameraPowerEnum.SLEEP, 'SLEEP'],
+    [CameraPowerEnum.POWER_SAVING, 'POWER_SAVING'],
+    [CameraPowerEnum.SILENT_MODE, 'SILENT_MODE'],
+  ];
+
+  test('length', () => {
+    expect(data.length).toBe(Object.keys(CameraPowerEnum).length);
+  });
+
+  test('data', () => {
+    data.forEach((item) => {
+      expect(item[0]).toBe(item[1]);
+    });
+  });
+});
+
 describe('Camera Power', () => {
   const devId = 99;
   const devName = '0123456789';

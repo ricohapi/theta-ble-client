@@ -3,12 +3,14 @@ import { useDeviceContext } from '../../device-context';
 import {
   BleServiceEnum,
   CameraControlCommandV2,
-} from 'theta-ble-client-react-native';
+} from '../../modules/theta-ble-client';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import styles from './styles';
 import { Alert, ScrollView, Text, View } from 'react-native';
 import { Item, ItemListView } from '../../components/ui/item-list';
 import Button from '../../components/ui/button';
+import { RootStackParamList } from '../../App';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 const ERROR_MESSAGE_NO_DEVICE = 'No device.';
 const ERROR_MESSAGE_NOT_CONNECTED = 'Not connected.';
@@ -25,7 +27,9 @@ function getJsonString(object: any) {
   return JSON.stringify(JSON.parse(JSON.stringify(object)), null, 2);
 }
 
-const CameraControlCommandV2Screen = ({ navigation }) => {
+const CameraControlCommandV2Screen: React.FC<
+  NativeStackScreenProps<RootStackParamList, 'CameraControlCommandV2'>
+> = ({ navigation }) => {
   const { thetaDevice } = useDeviceContext();
   const [service, setService] = React.useState<CameraControlCommandV2>();
   const [selectedCommand, setSelectedCommand] = React.useState<CommandItem>();
@@ -43,7 +47,7 @@ const CameraControlCommandV2Screen = ({ navigation }) => {
             const result = await service.getInfo();
             return `OK getInfo()\n${getJsonString(result)}`;
           } catch (error) {
-            return JSON.stringify(error);
+            return JSON.stringify(error, null, 2);
           }
         },
       },
@@ -59,7 +63,7 @@ const CameraControlCommandV2Screen = ({ navigation }) => {
             const result = await service.getState();
             return `OK getState()\n${getJsonString(result)}`;
           } catch (error) {
-            return JSON.stringify(error);
+            return JSON.stringify(error, null, 2);
           }
         },
       },
@@ -75,7 +79,7 @@ const CameraControlCommandV2Screen = ({ navigation }) => {
             const result = await service.getState2();
             return `OK getState2()\n${getJsonString(result)}`;
           } catch (error) {
-            return JSON.stringify(error);
+            return JSON.stringify(error, null, 2);
           }
         },
       },
@@ -90,14 +94,42 @@ const CameraControlCommandV2Screen = ({ navigation }) => {
           try {
             await service.setStateNotify((state, error) => {
               if (error) {
-                setMessage(JSON.stringify(error));
+                setMessage(JSON.stringify(error, null, 2));
               } else {
                 setMessage(`Notify state:\n${getJsonString(state)}`);
               }
             });
             return 'OK setStateNotify()';
           } catch (error) {
-            return JSON.stringify(error);
+            return JSON.stringify(error, null, 2);
+          }
+        },
+      },
+    },
+    {
+      name: 'Options screen',
+      value: {
+        commandFunction: async () => {
+          if (service == null) {
+            return ERROR_MESSAGE_UNSUPPORTED;
+          }
+          navigation.navigate('Options');
+          return '';
+        },
+      },
+    },
+    {
+      name: 'releaseShutter',
+      value: {
+        commandFunction: async () => {
+          if (service == null) {
+            return ERROR_MESSAGE_UNSUPPORTED;
+          }
+          try {
+            await service.releaseShutter();
+            return 'OK';
+          } catch (error) {
+            return JSON.stringify(error, null, 2);
           }
         },
       },

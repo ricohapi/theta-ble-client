@@ -1,4 +1,4 @@
-interface ThetaInfo {
+export interface ThetaInfo {
   model: string;
   serialNumber: string;
 }

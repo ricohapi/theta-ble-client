@@ -2,6 +2,8 @@ package com.ricoh360.thetableclientreactnative
 
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Promise
+import com.facebook.react.bridge.ReadableArray
+import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.WritableMap
 import com.ricoh360.thetableclient.BleCharacteristic
 import com.ricoh360.thetableclient.service.data.GpsInfo
@@ -106,6 +108,83 @@ object CameraControlCommandV2Service {
       }
       val value = service.getState2()
       promise.resolve(fromTheta(value))
+    } catch (e: Throwable) {
+      promise.reject(e)
+    }
+  }
+
+  suspend fun getOptions(id: Int, optionNames: ReadableArray, promise: Promise) {
+    try {
+      val device = ThetaBleClientReactNativeModule.deviceList[id]
+      if (device == null) {
+        promise.reject(Exception(ERROR_MESSAGE_DEVICE_NOT_FOUND))
+        return
+      }
+      val service = device.cameraControlCommandV2
+      if (service == null) {
+        promise.reject(Exception(ERROR_MESSAGE_UNSUPPORTED_SERVICE))
+        return
+      }
+      val value = service.getOptions(toGetOptionsParam(optionNames))
+      promise.resolve(fromTheta(value))
+    } catch (e: Throwable) {
+      promise.reject(e)
+    }
+  }
+
+  suspend fun getOptionsByString(id: Int, optionNames: ReadableArray, promise: Promise) {
+    try {
+      val device = ThetaBleClientReactNativeModule.deviceList[id]
+      if (device == null) {
+        promise.reject(Exception(ERROR_MESSAGE_DEVICE_NOT_FOUND))
+        return
+      }
+      val service = device.cameraControlCommandV2
+      if (service == null) {
+        promise.reject(Exception(ERROR_MESSAGE_UNSUPPORTED_SERVICE))
+        return
+      }
+      val value = service.getOptionsByString(toGetOptionsByStringParam(optionNames))
+      val writableMap = convertMapToWritableMap(value)
+      promise.resolve(writableMap)
+    } catch (e: Throwable) {
+      promise.reject(e)
+    }
+  }
+
+  suspend fun setOptions(id: Int, options: ReadableMap, promise: Promise) {
+    try {
+      val device = ThetaBleClientReactNativeModule.deviceList[id]
+      if (device == null) {
+        promise.reject(Exception(ERROR_MESSAGE_DEVICE_NOT_FOUND))
+        return
+      }
+      val service = device.cameraControlCommandV2
+      if (service == null) {
+        promise.reject(Exception(ERROR_MESSAGE_UNSUPPORTED_SERVICE))
+        return
+      }
+      service.setOptions(toSetOptionsParam(options))
+      promise.resolve(null)
+    } catch (e: Throwable) {
+      promise.reject(e)
+    }
+  }
+
+  suspend fun releaseShutter(id: Int, promise: Promise) {
+    try {
+      val device = ThetaBleClientReactNativeModule.deviceList[id]
+      if (device == null) {
+        promise.reject(Exception(ERROR_MESSAGE_DEVICE_NOT_FOUND))
+        return
+      }
+      val service = device.cameraControlCommandV2
+      if (service == null) {
+        promise.reject(Exception(ERROR_MESSAGE_UNSUPPORTED_SERVICE))
+        return
+      }
+      service.releaseShutter()
+      promise.resolve(null)
     } catch (e: Throwable) {
       promise.reject(e)
     }

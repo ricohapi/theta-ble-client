@@ -31,6 +31,11 @@ struct ContentView: View {
         }
     }
 
+    func getBleThetaName(info: ThetaInfo) -> String {
+        let prefix = info.model == "RICOH360 THETA A1" ? "AA" : ""
+        return prefix + info.serialNumber.suffix(8)
+    }
+
     var body: some View {
         NavigationView {
             VStack {
@@ -42,11 +47,11 @@ struct ContentView: View {
                                 thetaBleApi.setInfoText("Error. Connect THETA for wifi.")
                                 return
                             }
-                            guard let info = try? await theta.getThetaInfo() else {
+                            guard let info = try? await getThetaInfo() else {
                                 thetaBleApi.setInfoText("Error. Get THETA info.")
                                 return
                             }
-                            devName = info.serialNumber.suffix(8).description
+                            devName = getBleThetaName(info: info)
                             if let name = try? await theta.setBluetoothDevice(uuid: uuid) {
                                 useUuid = true
                                 devName = name

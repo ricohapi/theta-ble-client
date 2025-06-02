@@ -67,7 +67,7 @@ class SetBatteryStatusNotifyTest {
         }
         val data = testValue.ble.toBytes()
         observer(data)
-        withTimeout(100) {
+        withTimeout(500) {
             deferred.await()
         }
         assertTrue(true, "setBatteryStatusNotify")

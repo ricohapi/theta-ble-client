@@ -7,13 +7,32 @@ import MenuScreen from './screen/menu-screen';
 import CameraStatusScreen from './screen/camera-status-screen';
 import CameraControlCommandV2Screen from './screen/camera-control-command-v2';
 import ScanSsidScreen from './screen/scan-ssid-screen';
+import OptionsScreen from './screen/camera-control-command-v2/options-screen';
+import BluetoothControlCommandScreen from './screen/bluetooth-control-command';
+import WlanControlCommandV2Screen from './screen/wlan-control-command-v2';
+import WlanSsidScreen from './screen/wlan-control-command-v2/wlan-ssid-screen';
+import SetAccessPointScreen from './screen/wlan-control-command-v2/set-access-point-screen';
 
-const Stack = createNativeStackNavigator();
+export type RootStackParamList = {
+  Menu: undefined;
+  BluetoothControlCommand: undefined;
+  CameraStatus: undefined;
+  CameraControlCommandV2: undefined;
+  Options: undefined;
+  ScanSsid: undefined;
+  WlanControlCommandV2: undefined;
+  WlanSsid: undefined;
+  WlanSetAccessPoint:
+    | undefined
+    | {
+        ssid?: string;
+      };
+};
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const RootStack = () => {
   return (
     <Stack.Navigator
-      initialRouteName="<Menu>"
       screenOptions={{
         headerStyle: {
           backgroundColor: '#265366',
@@ -37,6 +56,31 @@ const RootStack = () => {
         options={{ title: 'CameraControlCommandV2' }}
         name="CameraControlCommandV2"
         component={CameraControlCommandV2Screen}
+      />
+      <Stack.Screen
+        options={{ title: 'BluetoothControlCommand' }}
+        name="BluetoothControlCommand"
+        component={BluetoothControlCommandScreen}
+      />
+      <Stack.Screen
+        options={{ title: 'WlanControlCommandV2' }}
+        name="WlanControlCommandV2"
+        component={WlanControlCommandV2Screen}
+      />
+      <Stack.Screen
+        options={{ title: 'WLAN Scan SSID' }}
+        name="WlanSsid"
+        component={WlanSsidScreen}
+      />
+      <Stack.Screen
+        options={{ title: 'Set AccessPoint' }}
+        name="WlanSetAccessPoint"
+        component={SetAccessPointScreen}
+      />
+      <Stack.Screen
+        options={{ title: 'Options' }}
+        name="Options"
+        component={OptionsScreen}
       />
       <Stack.Screen
         options={{ title: 'Scan SSID' }}

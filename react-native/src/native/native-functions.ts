@@ -7,17 +7,28 @@ import type { BaseNotify } from '../theta-device/notify';
 import type {
   Timeout,
 } from '../values';
-import type { ThetaInfo, ThetaState, ThetaState2 } from '../service/data';
-import type { 
-  CameraPowerEnum, 
+import type {
+  ConnectedWifiInfo,
+  PeripheralDevice,
+  Proxy,
+  ThetaInfo,
+  ThetaOptions,
+  ThetaState,
+  ThetaState2,
+} from '../service/data';
+import {
+  CameraPowerEnum,
   CaptureModeEnum,
-  ChargingStateEnum, 
-  FileFormatEnum, 
-  MaxRecordableTimeEnum, 
-  PluginControl, 
+  ChargingStateEnum,
+  FileFormatEnum,
+  MaxRecordableTimeEnum,
+  NetworkTypeEnum,
+  OptionName,
+  PluginControl,
   PluginList,
   PluginOrders,
-  ThetaModel, 
+  ThetaModel,
+  WifiSecurityModeEnum,
 } from '../service';
 
 const ThetaBleClientReactNative = NativeModules.ThetaBleClientReactNative;
@@ -82,7 +93,7 @@ export async function nativeGetManufacturerName(id: number): Promise<string> {
 export async function nativeGetModelNumber(id: number): Promise<string> {
   return ThetaBleClientReactNative.nativeGetModelNumber(id);
 }
-  
+
 export async function nativeGetSerialNumber(id: number): Promise<string> {
   return ThetaBleClientReactNative.nativeGetSerialNumber(id);
 }
@@ -192,6 +203,90 @@ export async function nativeCameraControlCommandV2SetStateNotify(id: number, ena
 
 export async function nativeCameraControlCommandV2GetState2(id: number): Promise<ThetaState2> {
   return ThetaBleClientReactNative.nativeCameraControlCommandV2GetState2(id);
+}
+
+export async function nativeCameraControlCommandV2GetOptions(id: number, optionNames: OptionName[]): Promise<ThetaOptions> {
+  return ThetaBleClientReactNative.nativeCameraControlCommandV2GetOptions(id, optionNames);
+}
+
+export async function nativeCameraControlCommandV2GetOptionsByString(id: number, optionNames: string[]): Promise<Map<string, unknown>> {
+  return ThetaBleClientReactNative.nativeCameraControlCommandV2GetOptionsByString(id, optionNames);
+}
+
+export async function nativeCameraControlCommandV2SetOptions(id: number, options: ThetaOptions) {
+  return ThetaBleClientReactNative.nativeCameraControlCommandV2SetOptions(id, options);
+}
+
+export async function nativeCameraControlCommandV2ReleaseShutter(id: number) {
+  return ThetaBleClientReactNative.nativeCameraControlCommandV2ReleaseShutter(id);
+}
+
+export async function nativeBluetoothControlCommandScanPeripheralDevice(id: number, timeout: number): Promise<PeripheralDevice[]> {
+  return ThetaBleClientReactNative.nativeBluetoothControlCommandScanPeripheralDevice(id, timeout);
+}
+
+export async function nativeBluetoothControlCommandScanPeripheralDeviceStart(id: number, timeout: number) {
+  return ThetaBleClientReactNative.nativeBluetoothControlCommandScanPeripheralDeviceStart(id, timeout);
+}
+
+export async function nativeBluetoothControlCommandScanPeripheralDeviceStop(id: number) {
+  return ThetaBleClientReactNative.nativeBluetoothControlCommandScanPeripheralDeviceStop(id);
+}
+
+export async function nativeBluetoothControlCommandConnectPeripheralDevice(id: number, macAddress: string) {
+  return ThetaBleClientReactNative.nativeBluetoothControlCommandConnectPeripheralDevice(id, macAddress);
+}
+
+export async function nativeBluetoothControlCommandDeletePeripheralDevice(id: number, macAddress: string) {
+  return ThetaBleClientReactNative.nativeBluetoothControlCommandDeletePeripheralDevice(id, macAddress);
+}
+
+export async function nativeWlanControlCommandV2SetNetworkType(id: number, networkType: NetworkTypeEnum) {
+  return ThetaBleClientReactNative.nativeWlanControlCommandV2SetNetworkType(id, networkType);
+}
+
+export async function nativeWlanControlCommandV2SetNetworkTypeNotify(id: number, enable: boolean) {
+  return ThetaBleClientReactNative.nativeWlanControlCommandV2SetNetworkTypeNotify(id, enable);
+}
+
+export async function nativeWlanControlCommandV2GetConnectedWifiInfo(id: number): Promise<ConnectedWifiInfo> {
+  return ThetaBleClientReactNative.nativeWlanControlCommandV2GetConnectedWifiInfo(id);
+}
+
+export async function nativeWlanControlCommandV2SetConnectedWifiInfoNotify(id: number, enable: boolean) {
+  return ThetaBleClientReactNative.nativeWlanControlCommandV2SetConnectedWifiInfoNotify(id, enable);
+}
+
+export async function nativeWlanControlCommandV2ScanSsidStart(id: number, timeout: number) {
+  return ThetaBleClientReactNative.nativeWlanControlCommandV2ScanSsidStart(id, timeout);
+}
+
+export async function nativeWlanControlCommandV2ScanSsidStop(id: number) {
+  return ThetaBleClientReactNative.nativeWlanControlCommandV2ScanSsidStop(id);
+}
+
+export interface SetAccessPointParams {
+  ssid: string,
+  ssidStealth?: boolean,
+  security?: WifiSecurityModeEnum,
+  password?: string,
+  connectionPriority?: number,
+  ipAddress?: string,
+  subnetMask?: string,
+  defaultGateway?: string,
+  proxy?: Proxy,
+}
+
+export async function nativeWlanControlCommandV2SetAccessPointDynamically(
+  id: number, params: SetAccessPointParams,
+) {
+  return ThetaBleClientReactNative.nativeWlanControlCommandV2SetAccessPointDynamically(id, params);
+}
+
+export async function nativeWlanControlCommandV2SetAccessPointStatically(
+  id: number, params: SetAccessPointParams,
+) {
+  return ThetaBleClientReactNative.nativeWlanControlCommandV2SetAccessPointStatically(id, params);
 }
 
 export async function nativeReleaseDevice(id: number) {

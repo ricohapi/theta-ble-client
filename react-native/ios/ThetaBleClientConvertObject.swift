@@ -48,6 +48,11 @@ let KEY_EXTERNAL_GPS_INFO = "externalGpsInfo"
 let KEY_INTERNAL_GPS_INFO = "internalGpsInfo"
 let KEY_SSID = "ssid"
 let KEY_PASSWORD = "password"
+let KEY_USE = "use"
+let KEY_URL = "url"
+let KEY_PORT = "port"
+let KEY_USER_ID = "userid"
+
 let MESSAGE_UNKNOWN = "unknown"
 
 func toKotlinInt(value: Any?) -> KotlinInt? {
@@ -137,7 +142,28 @@ func toNotify(
         KEY_DEVICE_ID: deviceId,
         BleCharacteristic.companion.keyName: characteristic.name,
     ] as [String: Any]
-    if let error = error {
+    if let error {
+        result[KEY_ERROR] = error
+        return result
+    }
+    if let params = params {
+        result[KEY_PARAMS] = params
+        return result
+    }
+    return result
+}
+
+func toNotify(
+    deviceId: Int,
+    characteristic: BleCharacteristic,
+    params: [[String: Any?]]?,
+    error: [String: Any?]?
+) -> [String: Any] {
+    var result = [
+        KEY_DEVICE_ID: deviceId,
+        BleCharacteristic.companion.keyName: characteristic.name,
+    ] as [String: Any]
+    if let error {
         result[KEY_ERROR] = error
         return result
     }
@@ -303,4 +329,13 @@ func fromTheta(gpsInfo: GpsInfo) -> [String: Any?] {
         result[KEY_GPS_DATUM] = datum
     }
     return result
+}
+
+func toProxy(params: [String: Any?]) -> Proxy? {
+  let use = params[KEY_USE] as? Bool ?? false
+  let url = params[KEY_URL] as? String
+  let port = toKotlinInt(value: params[KEY_PORT] as Any?)
+  let userid = params[KEY_USER_ID] as? String
+  let password = params[KEY_PASSWORD] as? String
+  return Proxy(use: use, url: url, port: port, userid: userid, password: password)
 }

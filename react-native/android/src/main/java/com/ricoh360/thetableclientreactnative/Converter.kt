@@ -7,6 +7,7 @@ import com.facebook.react.bridge.WritableMap
 import com.ricoh360.thetableclient.BleCharacteristic
 import com.ricoh360.thetableclient.ThetaBle
 import com.ricoh360.thetableclient.service.data.GpsInfo
+import com.ricoh360.thetableclient.service.data.Proxy
 import com.ricoh360.thetableclient.service.data.ble.PluginControl
 import com.ricoh360.thetableclient.service.data.ble.PluginList
 import com.ricoh360.thetableclient.service.data.ble.PluginOrders
@@ -15,6 +16,7 @@ import com.ricoh360.thetableclient.service.data.values.ChargingState
 import com.ricoh360.thetableclient.service.data.values.CommandErrorDescription
 import com.ricoh360.thetableclient.service.data.values.PluginPowerStatus
 import com.ricoh360.thetableclient.service.data.values.ThetaModel
+import java.lang.IllegalArgumentException
 
 const val KEY_TIMEOUT_SCAN = "timeoutScan"
 const val KEY_TIMEOUT_PERIPHERAL = "timeoutPeripheral"
@@ -55,6 +57,10 @@ const val KEY_EXTERNAL_GPS_INFO = "externalGpsInfo"
 const val KEY_INTERNAL_GPS_INFO = "internalGpsInfo"
 const val KEY_SSID = "ssid"
 const val KEY_PASSWORD = "password"
+const val KEY_USE = "use"
+const val KEY_URL = "url"
+const val KEY_PORT = "port"
+const val KEY_USER_ID = "userid"
 
 data class ScanParams(
   val name: String?,
@@ -134,6 +140,25 @@ fun toNotify(
   }
   params?.run {
     objects.putMap(KEY_PARAMS, params)
+  }
+  return objects
+}
+
+fun toNotify(
+  deviceId: Int,
+  characteristic: BleCharacteristic,
+  params: WritableArray?,
+  error: Throwable?,
+): WritableMap {
+  val objects = Arguments.createMap()
+  objects.putInt(KEY_DEVICE_ID, deviceId)
+  objects.putString(BleCharacteristic.keyName, characteristic.name)
+  error?.run {
+    setNotifyError(objects, this)
+    return objects
+  }
+  params?.run {
+    objects.putArray(KEY_PARAMS, params)
   }
   return objects
 }
@@ -237,4 +262,28 @@ fun fromTheta(value: GpsInfo): WritableMap {
     result.putString(KEY_GPS_DATUM, it)
   }
   return result
+}
+
+fun toProxy(objects: ReadableMap): Proxy {
+  val use = if (objects.hasKey(KEY_USE)) {
+    objects.getBoolean(KEY_USE)
+  } else {
+    throw IllegalArgumentException(KEY_USE)
+  }
+  val url = objects.getString(KEY_URL)
+  val port = if (objects.hasKey(KEY_PORT)) {
+    objects.getInt(KEY_PORT)
+  } else {
+    null
+  }
+  val userid = objects.getString(KEY_USER_ID)
+  val password = objects.getString(KEY_PASSWORD)
+
+  return Proxy(
+    use = use,
+    url = url,
+    port = port,
+    userid = userid,
+    password = password,
+  )
 }

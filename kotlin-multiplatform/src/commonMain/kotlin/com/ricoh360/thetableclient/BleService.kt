@@ -48,5 +48,9 @@ enum class BleService(
         "B6AC7A7E-8C01-4A52-B188-68D53DF53EA2",
         "Camera Control Command v2"
     ),
+    WLAN_CONTROL_COMMAND_V2(
+        "3C6FEEB6-F335-4F93-A4BB-495F926DB409",
+        "WLAN Control Command v2"
+    ),
     ;
 }

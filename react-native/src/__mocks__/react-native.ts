@@ -43,6 +43,24 @@ export const NativeModules  = {
     nativeCameraControlCommandV2GetState: jest.fn(),
     nativeCameraControlCommandV2SetStateNotify: jest.fn(),
     nativeCameraControlCommandV2GetState2: jest.fn(),
+    nativeCameraControlCommandV2GetOptions: jest.fn(),
+    nativeCameraControlCommandV2SetOptions: jest.fn(),
+    nativeCameraControlCommandV2ReleaseShutter: jest.fn(),
+  
+    nativeBluetoothControlCommandScanPeripheralDevice: jest.fn(),
+    nativeBluetoothControlCommandScanPeripheralDeviceStart: jest.fn(),
+    nativeBluetoothControlCommandScanPeripheralDeviceStop: jest.fn(),
+    nativeBluetoothControlCommandConnectPeripheralDevice: jest.fn(),
+    nativeBluetoothControlCommandDeletePeripheralDevice: jest.fn(),
+
+    nativeWlanControlCommandV2SetNetworkType: jest.fn(),
+    nativeWlanControlCommandV2SetNetworkTypeNotify: jest.fn(),
+    nativeWlanControlCommandV2GetConnectedWifiInfo: jest.fn(),
+    nativeWlanControlCommandV2SetConnectedWifiInfoNotify: jest.fn(),
+    nativeWlanControlCommandV2ScanSsidStart: jest.fn(),
+    nativeWlanControlCommandV2ScanSsidStop: jest.fn(),
+    nativeWlanControlCommandV2SetAccessPointDynamically: jest.fn(),
+    nativeWlanControlCommandV2SetAccessPointStatically: jest.fn(),
   },
 };
 

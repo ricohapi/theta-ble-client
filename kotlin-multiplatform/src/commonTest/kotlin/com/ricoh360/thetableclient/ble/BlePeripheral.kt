@@ -2,6 +2,7 @@ package com.ricoh360.thetableclient.ble
 
 import com.ricoh360.thetableclient.BleCharacteristic
 import com.ricoh360.thetableclient.BleService
+import kotlinx.coroutines.delay
 
 internal class MockBlePeripheral(override val name: String) : BlePeripheral {
     companion object {
@@ -14,6 +15,7 @@ internal class MockBlePeripheral(override val name: String) : BlePeripheral {
             null
         var onContain: ((characteristic: BleCharacteristic) -> Boolean)? = null
         var supportedServiceList: List<BleService>? = null
+        var onTryBond: (() -> Unit)? = null
     }
 
     override suspend fun connect() {
@@ -41,6 +43,11 @@ internal class MockBlePeripheral(override val name: String) : BlePeripheral {
         collect: ((ByteArray) -> Unit),
     ) {
         onObserve?.let { it(characteristic, collect) }
+
+        // wait for cancel observe
+        while (true) {
+            delay(1)
+        }
     }
 
     override fun contain(characteristic: BleCharacteristic): Boolean {
@@ -51,5 +58,9 @@ internal class MockBlePeripheral(override val name: String) : BlePeripheral {
 
     override fun contain(service: BleService): Boolean {
         return supportedServiceList?.contains(service) ?: true
+    }
+
+    override fun tryBond() {
+        onTryBond?.let { it() }
     }
 }

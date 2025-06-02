@@ -63,7 +63,11 @@ kotlin {
                 implementation("com.goncalossilva:resources:0.4.0")
             }
         }
-        val androidMain by getting
+        val androidMain by getting {
+            dependencies {
+                implementation("androidx.startup:startup-runtime:1.1.1")
+            }
+        }
         val androidUnitTest by getting
         val iosX64Main by getting
         val iosArm64Main by getting
@@ -88,7 +92,7 @@ kotlin {
 
 android {
     namespace = "com.ricoh360.thetableclient"
-    compileSdk = 33
+    compileSdk = 34
     defaultConfig {
         minSdk = 26
         setProperty("archivesBaseName", "theta-ble-client")

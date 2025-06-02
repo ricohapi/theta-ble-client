@@ -8,112 +8,212 @@
 import THETABleClient
 
 class CameraControlCommandV2Service {
-    static func getInfo(id: Int,
+  static func getInfo(id: Int,
+                      resolve: @escaping ([String: Any?]) -> Void,
+                      reject: @escaping (String, String, Error?) -> Void) {
+    guard let device = ThetaBleClientReactNative.deviceList[id] else {
+      reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
+      return
+    }
+    guard let service = device.cameraControlCommandV2 else {
+      reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
+      return
+    }
+    
+    Task {
+      do {
+        let thetaInfo = try await service.getInfo()
+        resolve(fromTheta(thetaInfo: thetaInfo))
+      } catch {
+        reject(ERROR_TITLE, error.localizedDescription, error)
+      }
+    }
+  }
+  
+  static func getState(id: Int,
+                       resolve: @escaping ([String: Any?]) -> Void,
+                       reject: @escaping (String, String, Error?) -> Void) {
+    guard let device = ThetaBleClientReactNative.deviceList[id] else {
+      reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
+      return
+    }
+    guard let service = device.cameraControlCommandV2 else {
+      reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
+      return
+    }
+    
+    Task {
+      do {
+        let thetaState = try await service.getState()
+        resolve(fromTheta(thetaState: thetaState))
+      } catch {
+        reject(ERROR_TITLE, error.localizedDescription, error)
+      }
+    }
+  }
+  
+  static func setStateNotify(id: Int,
+                             enable: Bool,
+                             sendEvent: @escaping ([String: Any]) -> Void,
+                             resolve: @escaping () -> Void,
+                             reject: @escaping (String, String, Error?) -> Void
+  ) {
+    guard let device = ThetaBleClientReactNative.deviceList[id] else {
+      reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
+      return
+    }
+    guard let service = device.cameraControlCommandV2 else {
+      reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
+      return
+    }
+    do {
+      if enable {
+        try service.setStateNotify { state, error in
+          let params = { () -> [String: Any?]? in
+            guard let state else {
+              return nil
+            }
+            return fromTheta(thetaState: state)
+          }()
+          sendEvent(
+            toNotify(
+              deviceId: id,
+              characteristic: BleCharacteristic.notifyState,
+              params: params,
+              error: toNotifyError(error: error)
+            )
+          )
+        }
+      } else {
+        try service.setStateNotify()
+      }
+      resolve()
+    } catch {
+      reject(ERROR_TITLE, error.localizedDescription, error)
+    }
+  }
+  
+  static func getState2(id: Int,
                         resolve: @escaping ([String: Any?]) -> Void,
                         reject: @escaping (String, String, Error?) -> Void) {
-        guard let device = ThetaBleClientReactNative.deviceList[id] else {
-            reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
-            return
-        }
-        guard let service = device.cameraControlCommandV2 else {
-            reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
-            return
-        }
-        
-        Task {
-            do {
-                let thetaInfo = try await service.getInfo()
-                resolve(fromTheta(thetaInfo: thetaInfo))
-            } catch {
-                reject(ERROR_TITLE, error.localizedDescription, error)
-            }
-        }
+    guard let device = ThetaBleClientReactNative.deviceList[id] else {
+      reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
+      return
+    }
+    guard let service = device.cameraControlCommandV2 else {
+      reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
+      return
     }
     
-    static func getState(id: Int,
+    Task {
+      do {
+        let thetaState2 = try await service.getState2()
+        resolve(fromTheta(thetaState2: thetaState2))
+      } catch {
+        reject(ERROR_TITLE, error.localizedDescription, error)
+      }
+    }
+  }
+  
+  static func getOptions(id: Int,
+                         optionNames: [Any],
                          resolve: @escaping ([String: Any?]) -> Void,
                          reject: @escaping (String, String, Error?) -> Void) {
-        guard let device = ThetaBleClientReactNative.deviceList[id] else {
-            reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
-            return
-        }
-        guard let service = device.cameraControlCommandV2 else {
-            reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
-            return
-        }
-        
-        Task {
-            do {
-                let thetaState = try await service.getState()
-                resolve(fromTheta(thetaState: thetaState))
-            } catch {
-                reject(ERROR_TITLE, error.localizedDescription, error)
-            }
-        }
+    guard let device = ThetaBleClientReactNative.deviceList[id] else {
+      reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
+      return
     }
-    
-    static func setStateNotify(id: Int,
-                        enable: Bool,
-                        sendEvent: @escaping ([String: Any]) -> Void,
-                        resolve: @escaping () -> Void,
-                        reject: @escaping (String, String, Error?) -> Void
-    ) {
-        guard let device = ThetaBleClientReactNative.deviceList[id] else {
-            reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
-            return
-        }
-        guard let service = device.cameraControlCommandV2 else {
-            reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
-            return
-        }
-        do {
-            if enable {
-                try service.setStateNotify { state, error in
-                    let params = { () -> [String: Any?]? in
-                        guard let state else {
-                            return nil
-                        }
-                        return fromTheta(thetaState: state)
-                    }()
-                    sendEvent(
-                        toNotify(
-                            deviceId: id,
-                            characteristic: BleCharacteristic.notifyState,
-                            params: params,
-                            error: toNotifyError(error: error)
-                        )
-                    )
-                }
-            } else {
-                try service.setStateNotify()
-            }
-            resolve()
-        } catch {
-            reject(ERROR_TITLE, error.localizedDescription, error)
-        }
+    guard let service = device.cameraControlCommandV2 else {
+      reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
+      return
     }
-
-    static func getState2(id: Int,
-                          resolve: @escaping ([String: Any?]) -> Void,
-                          reject: @escaping (String, String, Error?) -> Void) {
-        guard let device = ThetaBleClientReactNative.deviceList[id] else {
-            reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
-            return
-        }
-        guard let service = device.cameraControlCommandV2 else {
-            reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
-            return
-        }
-        
-        Task {
-            do {
-                let thetaState2 = try await service.getState2()
-                resolve(fromTheta(thetaState2: thetaState2))
-            } catch {
-                reject(ERROR_TITLE, error.localizedDescription, error)
-            }
-        }
+    guard let optionNames = optionNames as? [String] else {
+      reject(ERROR_TITLE, MESSAGE_NO_ARGUMENT, nil)
+      return
     }
+    let params = toGetOptionsParam(optionNames: optionNames)
+    service.getOptions(optionNames: params) { options, error in
+      if let error {
+        reject(ERROR_TITLE, error.localizedDescription, error)
+      } else if let options {
+        resolve(fromTheta(thetaOptions: options))
+      } else {
+        reject(ERROR_TITLE, MESSAGE_NO_RESULT, nil)
+      }
+    }
+  }
+  
+  static func getOptionsByString(id: Int,
+                                 optionNames: [String],
+                                 resolve: @escaping ([String: Any?]) -> Void,
+                                 reject: @escaping (String, String, Error?) -> Void) {
+    guard let device = ThetaBleClientReactNative.deviceList[id] else {
+      reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
+      return
+    }
+    guard let service = device.cameraControlCommandV2 else {
+      reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
+      return
+    }
+    service.getOptionsByString(optionNames: optionNames) { values, error in
+      if let error {
+        reject(ERROR_TITLE, error.localizedDescription, error)
+      } else if let values {
+        resolve(values)
+      } else {
+        reject(ERROR_TITLE, MESSAGE_NO_RESULT, nil)
+      }
+    }
+  }
+  
+  static func setOptions(id: Int,
+                         options: [AnyHashable: Any],
+                         resolve: @escaping RCTPromiseResolveBlock,
+                         reject: @escaping RCTPromiseRejectBlock) -> Void
+  {
+    guard let device = ThetaBleClientReactNative.deviceList[id] else {
+      reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
+      return
+    }
+    guard let service = device.cameraControlCommandV2 else {
+      reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
+      return
+    }
+    guard let options = options as? [String: Any] else {
+      reject(ERROR_TITLE, MESSAGE_NO_ARGUMENT, nil)
+      return
+    }
+    Task {
+      do {
+        try await service.setOptions(options: toSetOptionsParam(options: options))
+        resolve(nil)
+      } catch {
+        reject(ERROR_TITLE, error.localizedDescription, error)
+      }
+    }
+  }
+  
+  static func releaseShutter(id: Int,
+                             resolve: @escaping RCTPromiseResolveBlock,
+                             reject: @escaping RCTPromiseRejectBlock) -> Void
+  {
+      guard let device = ThetaBleClientReactNative.deviceList[id] else {
+          reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
+          return
+      }
+      guard let service = device.cameraControlCommandV2 else {
+          reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
+          return
+      }
+      Task {
+          do {
+              try await service.releaseShutter()
+              resolve(nil)
+          } catch {
+              reject(ERROR_TITLE, error.localizedDescription, error)
+          }
+      }
+  }
 }
 
 func fromTheta(thetaInfo: ThetaInfo) -> [String: Any?] {

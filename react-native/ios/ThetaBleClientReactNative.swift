@@ -3,6 +3,12 @@ import THETABleClient
 let ERROR_TITLE = "Error"
 let ERROR_MESSAGE_DEVICE_NOT_FOUND = "Device not found."
 let ERROR_MESSAGE_UNSUPPORTED_SERVICE = "Unsupported service."
+let MESSAGE_NO_ARGUMENT = "No Argument."
+let MESSAGE_NO_RESULT = "No result."
+
+enum ThetaClientError: Error {
+    case invalidArgument(String)
+}
 
 @objc(ThetaBleClientReactNative)
 class ThetaBleClientReactNative: RCTEventEmitter {
@@ -551,7 +557,247 @@ class ThetaBleClientReactNative: RCTEventEmitter {
             reject(code, message, error)
         }
     }
+
+    @objc(nativeCameraControlCommandV2GetOptions:withOptionNames:withResolver:withRejecter:)
+    func nativeCameraControlCommandV2GetOptions(id: Int,
+                                                optionNames: [Any],
+                                                resolve: @escaping RCTPromiseResolveBlock,
+                                                reject: @escaping RCTPromiseRejectBlock) -> Void
+    {
+        CameraControlCommandV2Service.getOptions(id: id, optionNames: optionNames) { options in
+            resolve(options)
+        } reject: {code, message, error in
+            reject(code, message, error)
+        }
+    }
+  
+  @objc(nativeCameraControlCommandV2GetOptionsByString:withOptionNames:withResolver:withRejecter:)
+  func nativeCameraControlCommandV2GetOptionsByString(id: Int,
+                                                      optionNames: [String],
+                                                      resolve: @escaping RCTPromiseResolveBlock,
+                                                      reject: @escaping RCTPromiseRejectBlock) -> Void
+  {
+      CameraControlCommandV2Service.getOptionsByString(id: id, optionNames: optionNames) { options in
+          resolve(options)
+      } reject: {code, message, error in
+          reject(code, message, error)
+      }
+  }
     
+    @objc(nativeCameraControlCommandV2SetOptions:withOptions:withResolver:withRejecter:)
+    func nativeCameraControlCommandV2SetOptions(id: Int,
+                                                options: [AnyHashable: Any],
+                                                resolve: @escaping RCTPromiseResolveBlock,
+                                                reject: @escaping RCTPromiseRejectBlock) -> Void
+    {
+        CameraControlCommandV2Service.setOptions(id: id, options: options) { options in
+            resolve(options)
+        } reject: {code, message, error in
+            reject(code, message, error)
+        }
+    }
+
+    @objc(nativeCameraControlCommandV2ReleaseShutter:withResolver:withRejecter:)
+    func nativeCameraControlCommandV2ReleaseShutter(id: Int,
+                                                    resolve: @escaping RCTPromiseResolveBlock,
+                                                    reject: @escaping RCTPromiseRejectBlock) -> Void
+    {
+        CameraControlCommandV2Service.releaseShutter(id: id) {_ in
+            resolve(nil)
+        } reject: {code, message, error in
+            reject(code, message, error)
+        }
+    }
+
+    @objc(nativeBluetoothControlCommandScanPeripheralDevice:withTimeout:withResolver:withRejecter:)
+    func nativeBluetoothControlCommandScanPeripheralDevice(id: Int,
+                                                           timeout: Int,
+                                                           resolve: @escaping RCTPromiseResolveBlock,
+                                                           reject: @escaping RCTPromiseRejectBlock) -> Void
+    {
+        BluetoothControlCommandService.scanPeripheralDevice(id: id, timeout: Int32(timeout)) { deviceList in
+            resolve(deviceList)
+        } reject: { code, message, error in
+            reject(code, message, error)
+        }
+    }
+    
+    @objc(nativeBluetoothControlCommandScanPeripheralDeviceStart:withTimeout:withResolver:withRejecter:)
+    func nativeBluetoothControlCommandScanPeripheralDeviceStart(id: Int,
+                                                                timeout: Int,
+                                                                resolve: @escaping RCTPromiseResolveBlock,
+                                                                reject: @escaping RCTPromiseRejectBlock) -> Void
+    {
+        
+        BluetoothControlCommandService.scanPeripheralDeviceStart(id: id, timeout: Int32(timeout)) { body in
+            self.sendEvent(
+                withName: ThetaBleClientReactNative.EVENT_NOTIFY,
+                body: body
+            )
+        } resolve: { _ in
+            resolve(nil)
+        } reject: { code, message, error in
+            reject(code, message, error)
+        }
+    }
+
+    @objc(nativeBluetoothControlCommandScanPeripheralDeviceStop:withResolver:withRejecter:)
+    func nativeBluetoothControlCommandScanPeripheralDeviceStop(id: Int,
+                                                resolve: @escaping RCTPromiseResolveBlock,
+                                                reject: @escaping RCTPromiseRejectBlock) -> Void
+    {
+        BluetoothControlCommandService.scanPeripheralDeviceStop(id: id) { _ in
+            resolve(nil)
+        } reject: {code, message, error in
+            reject(code, message, error)
+        }
+    }
+
+    @objc(nativeBluetoothControlCommandConnectPeripheralDevice:withMacAddress:withResolver:withRejecter:)
+    func nativeBluetoothControlCommandConnectPeripheralDevice(id: Int,
+                                                              macAddress: String,
+                                                              resolve: @escaping RCTPromiseResolveBlock,
+                                                              reject: @escaping RCTPromiseRejectBlock) -> Void
+    {
+        BluetoothControlCommandService.connectPeripheralDevice(id: id, macAddress: macAddress) { _ in
+            resolve(nil)
+        } reject: {code, message, error in
+            reject(code, message, error)
+        }
+    }
+    
+    @objc(nativeBluetoothControlCommandDeletePeripheralDevice:withMacAddress:withResolver:withRejecter:)
+    func nativeBluetoothControlCommandDeletePeripheralDevice(id: Int,
+                                                             macAddress: String,
+                                                             resolve: @escaping RCTPromiseResolveBlock,
+                                                             reject: @escaping RCTPromiseRejectBlock) -> Void
+    {
+        BluetoothControlCommandService.deletePeripheralDevice(id: id, macAddress: macAddress) { _ in
+            resolve(nil)
+        } reject: {code, message, error in
+            reject(code, message, error)
+        }
+    }
+
+    @objc(nativeWlanControlCommandV2SetNetworkType:withNetworkType:withResolver:withRejecter:)
+    func nativeWlanControlCommandV2SetNetworkType(id: Int,
+                                                  networkType: String,
+                                                  resolve: @escaping RCTPromiseResolveBlock,
+                                                  reject: @escaping RCTPromiseRejectBlock) -> Void
+    {
+        WlanControlCommandV2Service.setNetworkType(id: id, value: networkType) {_ in
+            resolve(nil)
+        } reject: { code, message, error  in
+            reject(code, message, error)
+        }
+    }
+
+    @objc(nativeWlanControlCommandV2SetNetworkTypeNotify:withEnable:withResolver:withRejecter:)
+    func nativeWlanControlCommandV2SetNetworkTypeNotify(id: Int,
+                                                        enable: Bool,
+                                                        resolve: @escaping RCTPromiseResolveBlock,
+                                                        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        WlanControlCommandV2Service.setNetworkTypeNotify(id: id, enable: enable) { body in
+            self.sendEvent(
+                withName: ThetaBleClientReactNative.EVENT_NOTIFY,
+                body: body
+            )
+        } resolve: {
+            resolve(nil)
+        } reject: { code, message, error in
+            reject(code, message, error)
+        }
+    }
+
+    @objc(nativeWlanControlCommandV2GetConnectedWifiInfo:withResolver:withRejecter:)
+    func nativeWlanControlCommandV2GetConnectedWifiInfo(id: Int,
+                                                        resolve: @escaping RCTPromiseResolveBlock,
+                                                        reject: @escaping RCTPromiseRejectBlock) -> Void
+    {
+        WlanControlCommandV2Service.getConnectedWifiInfo(id: id) { value in
+            resolve(value)
+        } reject: { code, message, error  in
+            reject(code, message, error)
+        }
+    }
+
+    @objc(nativeWlanControlCommandV2SetConnectedWifiInfoNotify:withEnable:withResolver:withRejecter:)
+    func nativeWlanControlCommandV2SetConnectedWifiInfoNotify(id: Int,
+                                                              enable: Bool,
+                                                              resolve: @escaping RCTPromiseResolveBlock,
+                                                              reject: @escaping RCTPromiseRejectBlock
+    ) {
+        WlanControlCommandV2Service.setConnectedWifiInfoNotify(id: id, enable: enable) { body in
+            self.sendEvent(
+                withName: ThetaBleClientReactNative.EVENT_NOTIFY,
+                body: body
+            )
+        } resolve: {
+            resolve(nil)
+        } reject: { code, message, error in
+            reject(code, message, error)
+        }
+    }
+
+    @objc(nativeWlanControlCommandV2ScanSsidStart:withTimeout:withResolver:withRejecter:)
+    func nativeWlanControlCommandV2ScanSsidStart(id: Int,
+                                                 timeout: Int,
+                                                 resolve: @escaping RCTPromiseResolveBlock,
+                                                 reject: @escaping RCTPromiseRejectBlock) -> Void
+    {
+        WlanControlCommandV2Service.scanSsidStart(id: id, timeout: Int32(timeout)) { body in
+            self.sendEvent(
+                withName: ThetaBleClientReactNative.EVENT_NOTIFY,
+                body: body
+            )
+        } resolve: { _ in
+            resolve(nil)
+        } reject: { code, message, error in
+            reject(code, message, error)
+        }
+    }
+
+    @objc(nativeWlanControlCommandV2ScanSsidStop:withResolver:withRejecter:)
+    func nativeWlanControlCommandV2ScanSsidStop(id: Int,
+                                                resolve: @escaping RCTPromiseResolveBlock,
+                                                reject: @escaping RCTPromiseRejectBlock) -> Void
+    {
+        WlanControlCommandV2Service.scanSsidStop(id: id) { _ in
+            resolve(nil)
+        } reject: {code, message, error in
+            reject(code, message, error)
+        }
+    }
+
+    @objc(nativeWlanControlCommandV2SetAccessPointDynamically:withParams:withResolver:withRejecter:)
+    func nativeWlanControlCommandV2SetAccessPointDynamically(id: Int,
+                                                             params: [AnyHashable: Any],
+                                                             resolve: @escaping RCTPromiseResolveBlock,
+                                                             reject: @escaping RCTPromiseRejectBlock) -> Void
+    {
+        let accessPointParams = params as? [String: Any] ?? [:]
+        WlanControlCommandV2Service.setAccessPointDynamically(id: id, params: accessPointParams) { _ in
+            resolve(nil)
+        } reject: {code, message, error in
+            reject(code, message, error)
+        }
+    }
+    
+    @objc(nativeWlanControlCommandV2SetAccessPointStatically:withParams:withResolver:withRejecter:)
+    func nativeWlanControlCommandV2SetAccessPointStatically(id: Int,
+                                                            params: [AnyHashable: Any],
+                                                            resolve: @escaping RCTPromiseResolveBlock,
+                                                            reject: @escaping RCTPromiseRejectBlock) -> Void
+    {
+        let accessPointParams = params as? [String: Any] ?? [:]
+        WlanControlCommandV2Service.setAccessPointStatically(id: id, params: accessPointParams) { _ in
+            resolve(nil)
+        } reject: {code, message, error in
+            reject(code, message, error)
+        }
+    }
+
     @objc(nativeReleaseDevice:withResolver:withRejecter:)
     func nativeReleaseDevice(id: Int,
                              resolve: @escaping RCTPromiseResolveBlock,

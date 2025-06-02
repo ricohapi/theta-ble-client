@@ -573,7 +573,26 @@ uptime: \(thetaInfo.uptime)
             setInfoText("Error. Set state notify.")
         }
     }
-    
+
+    func cameraControlCommandV2GetOptions() async throws {
+        guard let device = thetaDevice else {
+            setInfoText(MESSAGE_ERROR_NO_DEVICE)
+            return
+        }
+        guard let service = device.cameraControlCommandV2 else {
+            setInfoText("Unsupported CameraControlCommandV2.")
+            return
+        }
+        do {
+            let thetaOptions = try await service.getOptions(optionNames: [OptionName.capturemode])
+            var text = "options captureMode:\n"
+            text += thetaOptions.captureMode?.name ?? "nil"
+            setInfoText(text)
+        } catch {
+            setInfoText("Error. Get state2.")
+        }
+    }
+
     func scanSsid() async throws {
         do {
             setInfoText("Scanning...")

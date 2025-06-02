@@ -10,6 +10,7 @@ import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class ThetaDeviceConnectTest {
@@ -185,5 +186,19 @@ class ThetaDeviceConnectTest {
         } catch (e: Throwable) {
             assertTrue(false, "exception authBluetoothDevice. ${e.message}")
         }
+    }
+
+    @Test
+    fun callTryBondTest() = runBlocking {
+        var isTryBond = false
+        MockBlePeripheral.onTryBond = {
+            isTryBond = true
+        }
+        val device = ThetaBle.ThetaDevice(newAdvertisement(devName))
+        device.connect(testUuid)
+        assertFalse(isTryBond)
+
+        device.connect()
+        assertTrue(isTryBond)
     }
 }

@@ -1,6 +1,10 @@
-import type { CameraPowerEnum,
+import type {
+  CameraPowerEnum,
   ChargingStateEnum,
   CommandErrorDescriptionEnum,
+  ConnectedWifiInfo,
+  NetworkTypeEnum,
+  PeripheralDevice,
   PluginControl,
   ThetaState,
 } from '../service';
@@ -48,4 +52,29 @@ export interface PluginControlNotify extends BaseNotify {
 
 export interface ThetaStateNotify extends BaseNotify {
   params?: ThetaState,
+}
+
+export interface ScanPeripheralDeviceNotify extends BaseNotify {
+  params?: PeripheralDevice,
+}
+
+export interface ScanPeripheralDeviceCompletedNotify extends BaseNotify {
+  params?: PeripheralDevice[],
+}
+
+export interface NetworkTypeNotify extends BaseNotify {
+  params?: {
+    networkType: NetworkTypeEnum
+  },
+}
+
+export interface ConnectedWifiInfoNotify extends BaseNotify {
+  params?: ConnectedWifiInfo,
+}
+
+export interface ScanSsidNotify extends BaseNotify {
+  params?: {
+    ssid?: string,
+    ssidList?: string[],
+  },
 }

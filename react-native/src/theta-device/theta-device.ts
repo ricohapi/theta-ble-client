@@ -7,11 +7,13 @@ import type {
 import * as ThetaBleClient from '../native';
 import {
   BleServiceEnum,
+  BluetoothControlCommand,
   CameraControlCommandV2,
   CameraControlCommands,
   CameraInformation,
   CameraStatusCommand, 
   ShootingControlCommand,
+  WlanControlCommandV2,
   type ThetaService,
 } from '../service';
 
@@ -117,6 +119,10 @@ export class ThetaDevice {
       return new CameraStatusCommand(this);
     case BleServiceEnum.SHOOTING_CONTROL_COMMAND:
       return new ShootingControlCommand(this);
+    case BleServiceEnum.BLUETOOTH_CONTROL_COMMAND:
+      return new BluetoothControlCommand(this);
+    case BleServiceEnum.WLAN_CONTROL_COMMAND_V2:
+      return new WlanControlCommandV2(this);
     default:
       break;
     }

@@ -21,4 +21,5 @@ fun initMock() {
     MockBlePeripheral.onObserve = null
     MockBlePeripheral.onContain = null
     MockBlePeripheral.supportedServiceList = null
+    MockBlePeripheral.onTryBond = null
 }

@@ -1,0 +1,30 @@
+{
+  "_cameraPower": "on",
+  "captureMode": "image",
+  "_defaultWifiPassword": "10010011",
+  "_networkType": "AP",
+  "_password": "password123",
+  "_ssid": "ssid123",
+  "_username": "adminUser",
+  "_wlanAntennaConfig": "MIMO",
+  "_wlanFrequency": 2.4,
+  "_accessInfo": {
+    "ssid": "test_ssid",
+    "ipAddress": "10.0.0.222",
+    "subnetMask": "255.255.255.0",
+    "defaultGateway": "10.0.0.2",
+    "proxyURL": "proxy-url",
+    "frequency": "2.4",
+    "wlanSignalStrength": -51,
+    "wlanSignalLevel": 4,
+    "lteSignalStrength": 0,
+    "lteSignalLevel": 0,
+    "_dhcpLeaseAddress": [
+      {
+        "ipAddress": "10.0.0.3",
+        "macAddress": "58:38:79:9f:00:00",
+        "hostName": "host_name"
+      }
+    ]
+  }
+}

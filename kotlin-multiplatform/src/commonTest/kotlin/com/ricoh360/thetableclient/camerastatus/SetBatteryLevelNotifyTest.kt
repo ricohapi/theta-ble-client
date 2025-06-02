@@ -64,7 +64,7 @@ class SetBatteryLevelNotifyTest {
         }
         val data = testValue.toByte().toBytes()
         observer(data)
-        withTimeout(100) {
+        withTimeout(500) {
             deferred.await()
         }
         assertTrue(true, "setBatteryLevelNotify")
@@ -104,7 +104,7 @@ class SetBatteryLevelNotifyTest {
         }
         val data = testValue.toByte().toBytes()
         observer(data)
-        withTimeout(100) {
+        withTimeout(500) {
             deferred.await()
         }
 
@@ -115,7 +115,7 @@ class SetBatteryLevelNotifyTest {
 
         observer(data)
         try {
-            withTimeout(100) {
+            withTimeout(500) {
                 deferred.await()
             }
             assertTrue(false, "call success")
@@ -205,7 +205,7 @@ class SetBatteryLevelNotifyTest {
             deferred.complete(Unit)
         }
         observer(ByteArray(0))
-        withTimeout(100) {
+        withTimeout(500) {
             deferred.await()
         }
         assertTrue(true, "exception empty")

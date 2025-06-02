@@ -3,6 +3,11 @@
  */
 export const CameraPowerEnum = {
   /**
+   *  Undefined value
+   */
+  UNKNOWN: 'UNKNOWN',
+
+  /**
    * Camera power off.
    */
   OFF: 'OFF',
@@ -16,6 +21,18 @@ export const CameraPowerEnum = {
    * Camera sleep.
    */
   SLEEP: 'SLEEP',
+
+  /**
+   * Power on, power saving mode. Camera is closed.
+   * Unavailable parameter when plugin is running. In this case, invalidParameterValue error will be returned.
+   */
+  POWER_SAVING: 'POWER_SAVING',
+
+  /**
+   * Power on, silent mode. LCD/LED is turned off.
+   * Unavailable parameter when plugin is running. In this case, invalidParameterValue error will be returned.
+   */
+  SILENT_MODE: 'SILENT_MODE',
 } as const;
 
 /** type definition of CameraPowerEnum */
