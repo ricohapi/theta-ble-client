@@ -44,7 +44,7 @@ class ThetaViewModel : ViewModel() {
     private var thetaDevice: ThetaBle.ThetaDevice? = null
 
     fun getBleThetaName(info: ThetaInfo): String {
-        return when(info.model) {
+        return when (info.model) {
             "RICOH360 THETA A1" -> "AA" + info.serialNumber.takeLast(8)
             else -> info.serialNumber.takeLast(8)
         }
@@ -376,6 +376,7 @@ class ThetaViewModel : ViewModel() {
             null
         }
     }
+
     fun setPluginControl(value: PluginPowerStatus) {
         scope.launch {
             val device = thetaDevice

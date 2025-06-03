@@ -19,11 +19,11 @@ let KEY_IP_ADDRESS = "ipAddress"
 let KEY_SUBNET_MASK = "subnetMask"
 let KEY_DEFAULT_GATEWAY = "defaultGateway"
 
-class WlanControlCommandV2Service {
+enum WlanControlCommandV2Service {
     static func setNetworkType(id: Int,
                                value: String,
                                resolve: @escaping RCTPromiseResolveBlock,
-                               reject: @escaping RCTPromiseRejectBlock) -> Void
+                               reject: @escaping RCTPromiseRejectBlock)
     {
         guard let device = ThetaBleClientReactNative.deviceList[id] else {
             reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
@@ -33,7 +33,7 @@ class WlanControlCommandV2Service {
             reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
             return
         }
-        
+
         Task {
             do {
                 let enumValue = getEnumValue(values: NetworkType.values(), name: value)
@@ -48,12 +48,12 @@ class WlanControlCommandV2Service {
             }
         }
     }
-    
+
     static func setNetworkTypeNotify(id: Int,
                                      enable: Bool,
                                      sendEvent: @escaping ([String: Any]) -> Void,
                                      resolve: @escaping () -> Void,
-                                     reject: @escaping RCTPromiseRejectBlock) -> Void
+                                     reject: @escaping RCTPromiseRejectBlock)
     {
         guard let device = ThetaBleClientReactNative.deviceList[id] else {
             reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
@@ -63,7 +63,7 @@ class WlanControlCommandV2Service {
             reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
             return
         }
-        
+
         do {
             if enable {
                 try service.setNetworkTypeNotify { value, error in
@@ -83,10 +83,10 @@ class WlanControlCommandV2Service {
             reject(ERROR_TITLE, error.localizedDescription, error)
         }
     }
-    
+
     static func getConnectedWifiInfo(id: Int,
                                      resolve: @escaping RCTPromiseResolveBlock,
-                                     reject: @escaping RCTPromiseRejectBlock) -> Void
+                                     reject: @escaping RCTPromiseRejectBlock)
     {
         guard let device = ThetaBleClientReactNative.deviceList[id] else {
             reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
@@ -96,7 +96,7 @@ class WlanControlCommandV2Service {
             reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
             return
         }
-        
+
         Task {
             do {
                 let value = try await service.getConnectedWifiInfo()
@@ -106,12 +106,12 @@ class WlanControlCommandV2Service {
             }
         }
     }
-    
+
     static func setConnectedWifiInfoNotify(id: Int,
                                            enable: Bool,
                                            sendEvent: @escaping ([String: Any]) -> Void,
                                            resolve: @escaping () -> Void,
-                                           reject: @escaping RCTPromiseRejectBlock) -> Void
+                                           reject: @escaping RCTPromiseRejectBlock)
     {
         guard let device = ThetaBleClientReactNative.deviceList[id] else {
             reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
@@ -121,7 +121,7 @@ class WlanControlCommandV2Service {
             reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
             return
         }
-        
+
         do {
             if enable {
                 try service.setConnectedWifiInfoNotify { value, error in
@@ -141,12 +141,12 @@ class WlanControlCommandV2Service {
             reject(ERROR_TITLE, error.localizedDescription, error)
         }
     }
-    
+
     static func scanSsidStart(id: Int,
                               timeout: Int32,
                               sendEvent: @escaping ([String: Any]) -> Void,
                               resolve: @escaping RCTPromiseResolveBlock,
-                              reject: @escaping RCTPromiseRejectBlock) -> Void
+                              reject: @escaping RCTPromiseRejectBlock)
     {
         guard let device = ThetaBleClientReactNative.deviceList[id] else {
             reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
@@ -156,16 +156,17 @@ class WlanControlCommandV2Service {
             reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
             return
         }
-        
+
         Task {
             do {
-                class Callback : WlanControlCommandV2ScanCallback {
+                class Callback: WlanControlCommandV2ScanCallback {
                     let deviceId: Int
                     let sendEvent: ([String: Any]) -> Void
                     init(deviceId: Int, sendEvent: @escaping ([String: Any]) -> Void) {
                         self.deviceId = deviceId
                         self.sendEvent = sendEvent
                     }
+
                     func onCompleted(ssidList: [String]) {
                         sendEvent(
                             toNotify(
@@ -176,7 +177,7 @@ class WlanControlCommandV2Service {
                             )
                         )
                     }
-                    
+
                     func onNotify(ssid: String) {
                         sendEvent(
                             toNotify(
@@ -195,10 +196,10 @@ class WlanControlCommandV2Service {
             }
         }
     }
-    
+
     static func scanSsidStop(id: Int,
                              resolve: @escaping RCTPromiseResolveBlock,
-                             reject: @escaping RCTPromiseRejectBlock) -> Void
+                             reject: @escaping RCTPromiseRejectBlock)
     {
         guard let device = ThetaBleClientReactNative.deviceList[id] else {
             reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
@@ -208,7 +209,7 @@ class WlanControlCommandV2Service {
             reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
             return
         }
-        
+
         Task {
             do {
                 try await service.scanSsidStop()
@@ -222,7 +223,7 @@ class WlanControlCommandV2Service {
     static func setAccessPointDynamically(id: Int,
                                           params: [String: Any],
                                           resolve: @escaping RCTPromiseResolveBlock,
-                                          reject: @escaping RCTPromiseRejectBlock) -> Void
+                                          reject: @escaping RCTPromiseRejectBlock)
     {
         guard let device = ThetaBleClientReactNative.deviceList[id] else {
             reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
@@ -232,7 +233,7 @@ class WlanControlCommandV2Service {
             reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
             return
         }
-        
+
         Task {
             do {
                 let base = try toSetAccessPointBasicParams(params: params)
@@ -242,18 +243,19 @@ class WlanControlCommandV2Service {
                     security: base.security,
                     password: base.password,
                     connectionPriority: base.connectionPriority,
-                    proxy: base.proxy)
+                    proxy: base.proxy
+                )
                 resolve(nil)
             } catch {
                 reject(ERROR_TITLE, error.localizedDescription, error)
             }
         }
     }
-    
+
     static func setAccessPointStatically(id: Int,
                                          params: [String: Any],
                                          resolve: @escaping RCTPromiseResolveBlock,
-                                         reject: @escaping RCTPromiseRejectBlock) -> Void
+                                         reject: @escaping RCTPromiseRejectBlock)
     {
         guard let device = ThetaBleClientReactNative.deviceList[id] else {
             reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
@@ -263,7 +265,7 @@ class WlanControlCommandV2Service {
             reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
             return
         }
-        
+
         Task {
             do {
                 let base = try toSetAccessPointBasicParams(params: params)
@@ -277,7 +279,8 @@ class WlanControlCommandV2Service {
                     ipAddress: statically.ipAddress,
                     subnetMask: statically.subnetMask,
                     defaultGateway: statically.defaultGateway,
-                    proxy: base.proxy)
+                    proxy: base.proxy
+                )
                 resolve(nil)
             } catch {
                 reject(ERROR_TITLE, error.localizedDescription, error)
@@ -296,8 +299,7 @@ func toNetworkTypeNotify(
     return toNotify(deviceId: deviceId,
                     characteristic: BleCharacteristic.writeSetNetworkType,
                     params: paramsInfo,
-                    error: errorInfo
-    )
+                    error: errorInfo)
 }
 
 func fromTheta(connectedInfo: ConnectedInfo) -> [String: Any?] {
@@ -328,17 +330,15 @@ func toConnectedWifiInfoNotify(
     value: ConnectedWifiInfo?,
     error: KotlinThrowable?
 ) -> [String: Any] {
-    
-    var paramsInfo: [String: Any?]? = nil
-    if let value = value {
+    var paramsInfo: [String: Any?]?
+    if let value {
         paramsInfo = fromTheta(connectedWifiInfo: value)
     }
     let errorInfo = toNotifyError(error: error)
     return toNotify(deviceId: deviceId,
                     characteristic: BleCharacteristic.notificationConnectedWifiInfo,
                     params: paramsInfo,
-                    error: errorInfo
-    )
+                    error: errorInfo)
 }
 
 func fromTheta(ssid: String?, ssidList: [String]?) -> [String: Any?] {
@@ -388,7 +388,7 @@ func toSetAccessPointBasicParams(params: [String: Any?]) throws -> SetAccessPoin
         }
         return nil
     }()
-    
+
     return SetAccessPointBaseParams(
         ssid: ssid,
         ssidStealth: ssidStealth,
@@ -409,7 +409,7 @@ func toSetAccessPointStaticallyParams(params: [String: Any?]) throws -> SetAcces
     guard let defaultGateway = params[KEY_DEFAULT_GATEWAY] as? String else {
         throw ThetaClientError.invalidArgument(KEY_DEFAULT_GATEWAY)
     }
-    
+
     return SetAccessPointStaticallyParams(
         ipAddress: ipAddress,
         subnetMask: subnetMask,

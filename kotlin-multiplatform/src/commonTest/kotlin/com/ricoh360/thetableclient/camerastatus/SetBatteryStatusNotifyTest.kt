@@ -105,7 +105,7 @@ class SetBatteryStatusNotifyTest {
             assertNull(error)
             deferred.complete(Unit)
         }
-        val data = testValue.ble?.toBytes()?: 255.toByte().toBytes()
+        val data = testValue.ble?.toBytes() ?: 255.toByte().toBytes()
         observer(data)
         withTimeout(100) {
             deferred.await()

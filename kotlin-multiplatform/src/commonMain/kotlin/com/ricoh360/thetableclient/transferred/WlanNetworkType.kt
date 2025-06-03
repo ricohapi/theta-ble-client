@@ -10,7 +10,7 @@ internal data class WlanNetworkType(
 ) {
     companion object {
         fun decode(jsonString: String): NetworkType {
-            val json = Json {  ignoreUnknownKeys = true}
+            val json = Json { ignoreUnknownKeys = true }
             val data = json.decodeFromString(jsonString) as WlanNetworkType
             return NetworkType.getFromValue(data.type)
         }

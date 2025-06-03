@@ -7,9 +7,14 @@ import com.ricoh360.thetableclient.service.CameraControlCommands
 import com.ricoh360.thetableclient.service.CameraInformation
 import com.ricoh360.thetableclient.service.CameraStatusCommand
 import com.ricoh360.thetableclient.service.ShootingControlCommand
-import kotlinx.coroutines.*
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
-import kotlin.test.*
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 
 class ThetaDeviceServiceTest {
     private val devName = "99999999"

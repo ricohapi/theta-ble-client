@@ -1,12 +1,18 @@
 package com.ricoh360.thetableclient.camerastatus
 
-import com.ricoh360.thetableclient.*
+import com.ricoh360.thetableclient.ThetaBle
 import com.ricoh360.thetableclient.ble.MockBlePeripheral
 import com.ricoh360.thetableclient.ble.newAdvertisement
+import com.ricoh360.thetableclient.initMock
 import com.ricoh360.thetableclient.service.data.ble.PluginControl
 import com.ricoh360.thetableclient.service.data.values.PluginPowerStatus
+import com.ricoh360.thetableclient.toBytes
 import kotlinx.coroutines.runBlocking
-import kotlin.test.*
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class GetPluginControlTest {
     private val devName = "99999999"

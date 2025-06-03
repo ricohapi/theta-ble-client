@@ -1,16 +1,23 @@
 package com.ricoh360.thetableclient.cameracontrolv2
 
 import com.goncalossilva.resources.Resource
-import com.ricoh360.thetableclient.*
+import com.ricoh360.thetableclient.BleCharacteristic
+import com.ricoh360.thetableclient.ThetaBle
 import com.ricoh360.thetableclient.ble.MockBlePeripheral
 import com.ricoh360.thetableclient.ble.newAdvertisement
+import com.ricoh360.thetableclient.initMock
 import com.ricoh360.thetableclient.service.data.values.CameraError
 import com.ricoh360.thetableclient.service.data.values.CaptureStatus
 import com.ricoh360.thetableclient.service.data.values.ChargingState
 import com.ricoh360.thetableclient.service.data.values.ShootingFunction
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
-import kotlin.test.*
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 
 class GetStateTest {
     private val devName = "99999999"

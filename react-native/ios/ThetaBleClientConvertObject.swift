@@ -1,5 +1,5 @@
 //
-//  ThetaBleClientConvertEnum.swift
+//  ThetaBleClientConvertObject.swift
 //  ThetaBleClientReactNative
 //
 //  Created on 2023/03/20.
@@ -69,13 +69,13 @@ struct ScanParams {
 
 func toScanParams(params: [String: Any?]) -> ScanParams {
     let name = params[KEY_NAME] as? String
-    let timeout = toTheta(timeout:params[KEY_TIMEOUT] as? [String : Any?] ?? [:])
+    let timeout = toTheta(timeout: params[KEY_TIMEOUT] as? [String: Any?] ?? [:])
     return ScanParams(name: name, timeout: timeout)
 }
 
 func fromTheta(firstId: Int, deviceList: [ThetaBle.ThetaDevice]) -> [[String: Any?]] {
     let resultList = deviceList.enumerated().map {
-        return [
+        [
             KEY_DEVICE_ID: firstId + $0.offset,
             KEY_NAME: $0.element.name,
         ]
@@ -89,15 +89,15 @@ struct ScanSsidParams {
 }
 
 func fromTheta(ssidList: [KotlinPair<NSString, NSString>]) -> [[String: Any?]] {
-    let resultList = ssidList.reduce([]) { (result, item) -> [[String: Any?]] in
+    let resultList = ssidList.reduce([]) { result, item -> [[String: Any?]] in
         var result = result
         guard let key = item.first as? String,
               let value = item.second as? String
         else { return result }
-        
+
         result.append([
             KEY_SSID: key,
-            KEY_PASSWORD: value
+            KEY_PASSWORD: value,
         ])
         return result
     }
@@ -112,7 +112,6 @@ func toScanSsidParams(params: [String: Any?]) -> ScanSsidParams {
     let timeout = params[KEY_TIMEOUT] as? Int
     return ScanSsidParams(model: model, timeout: timeout)
 }
-
 
 func toTheta(timeout: [String: Any?]) -> ThetaBle.Timeout {
     let timeoutObject = ThetaBle.Timeout()
@@ -146,7 +145,7 @@ func toNotify(
         result[KEY_ERROR] = error
         return result
     }
-    if let params = params {
+    if let params {
         result[KEY_PARAMS] = params
         return result
     }
@@ -167,7 +166,7 @@ func toNotify(
         result[KEY_ERROR] = error
         return result
     }
-    if let params = params {
+    if let params {
         result[KEY_PARAMS] = params
         return result
     }
@@ -180,7 +179,7 @@ func toNotifyError(error: KotlinThrowable?) -> [String: Any]? {
     }
     return [
         KEY_MESSAGE: error.message ?? MESSAGE_UNKNOWN,
-        KEY_PARAMS: String(describing: type(of: error))
+        KEY_PARAMS: String(describing: type(of: error)),
     ]
 }
 
@@ -190,8 +189,7 @@ func toBatteryLevelNotify(deviceId: Int, value: KotlinInt?, error: KotlinThrowab
     return toNotify(deviceId: deviceId,
                     characteristic: BleCharacteristic.batteryLevel,
                     params: paramsInfo,
-                    error: errorInfo
-    )
+                    error: errorInfo)
 }
 
 func toBatteryStatusNotify(
@@ -204,8 +202,7 @@ func toBatteryStatusNotify(
     return toNotify(deviceId: deviceId,
                     characteristic: BleCharacteristic.batteryStatus,
                     params: paramsInfo,
-                    error: errorInfo
-    )
+                    error: errorInfo)
 }
 
 func toCameraPowerNotify(
@@ -218,8 +215,7 @@ func toCameraPowerNotify(
     return toNotify(deviceId: deviceId,
                     characteristic: BleCharacteristic.cameraPower,
                     params: paramsInfo,
-                    error: errorInfo
-    )
+                    error: errorInfo)
 }
 
 func toCommandErrorDescriptionNotify(
@@ -232,8 +228,7 @@ func toCommandErrorDescriptionNotify(
     return toNotify(deviceId: deviceId,
                     characteristic: BleCharacteristic.commandErrorDescription,
                     params: paramsInfo,
-                    error: errorInfo
-    )
+                    error: errorInfo)
 }
 
 func fromTheta(pluginControl: PluginControl) -> [String: Any?] {
@@ -277,8 +272,7 @@ func toPluginControlNotify(
     return toNotify(deviceId: deviceId,
                     characteristic: BleCharacteristic.pluginControl,
                     params: paramsInfo,
-                    error: errorInfo
-    )
+                    error: errorInfo)
 }
 
 func fromTheta(pluginList: PluginList) -> [String: Any?] {
@@ -291,7 +285,7 @@ func fromTheta(pluginList: PluginList) -> [String: Any?] {
 }
 
 func fromTheta(pluginOrders: PluginOrders) -> [String: Any?] {
-    return [
+    [
         KEY_FIRST: Int(pluginOrders.first),
         KEY_SECOND: Int(pluginOrders.second),
         KEY_THIRD: Int(pluginOrders.third),
@@ -332,10 +326,10 @@ func fromTheta(gpsInfo: GpsInfo) -> [String: Any?] {
 }
 
 func toProxy(params: [String: Any?]) -> Proxy? {
-  let use = params[KEY_USE] as? Bool ?? false
-  let url = params[KEY_URL] as? String
-  let port = toKotlinInt(value: params[KEY_PORT] as Any?)
-  let userid = params[KEY_USER_ID] as? String
-  let password = params[KEY_PASSWORD] as? String
-  return Proxy(use: use, url: url, port: port, userid: userid, password: password)
+    let use = params[KEY_USE] as? Bool ?? false
+    let url = params[KEY_URL] as? String
+    let port = toKotlinInt(value: params[KEY_PORT] as Any?)
+    let userid = params[KEY_USER_ID] as? String
+    let password = params[KEY_PASSWORD] as? String
+    return Proxy(use: use, url: url, port: port, userid: userid, password: password)
 }

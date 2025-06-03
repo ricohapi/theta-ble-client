@@ -16,7 +16,7 @@ internal class BleObserveManager(
 ) {
     val notifyList = mutableMapOf<BleCharacteristic, ((data: ByteArray) -> Unit)?>()
     val scopeList = mutableMapOf<BleCharacteristic, Job>()
-    val onCancelList = mutableMapOf<BleCharacteristic, ()-> Unit>()
+    val onCancelList = mutableMapOf<BleCharacteristic, () -> Unit>()
 
     init {
         registerBleObservers(characteristicList)

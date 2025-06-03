@@ -12,7 +12,7 @@ internal data class Peripheral(
 ) {
     companion object {
         fun decode(jsonString: String): Peripheral {
-            val json = Json {  ignoreUnknownKeys = true}
+            val json = Json { ignoreUnknownKeys = true }
             return json.decodeFromString(jsonString)
         }
     }

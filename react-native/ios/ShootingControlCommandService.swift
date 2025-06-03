@@ -10,7 +10,7 @@ import THETABleClient
 class ShootingControlCommandService {
     static func getCaptureMode(id: Int,
                                resolve: @escaping RCTPromiseResolveBlock,
-                               reject: @escaping RCTPromiseRejectBlock) -> Void
+                               reject: @escaping RCTPromiseRejectBlock)
     {
         guard let device = ThetaBleClientReactNative.deviceList[id] else {
             reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
@@ -20,7 +20,7 @@ class ShootingControlCommandService {
             reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
             return
         }
-        
+
         Task {
             do {
                 let value = try await service.getCaptureMode()
@@ -30,11 +30,11 @@ class ShootingControlCommandService {
             }
         }
     }
-    
+
     static func setCaptureMode(id: Int,
                                value: String,
                                resolve: @escaping RCTPromiseResolveBlock,
-                               reject: @escaping RCTPromiseRejectBlock) -> Void
+                               reject: @escaping RCTPromiseRejectBlock)
     {
         guard let device = ThetaBleClientReactNative.deviceList[id] else {
             reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
@@ -44,7 +44,7 @@ class ShootingControlCommandService {
             reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
             return
         }
-        
+
         Task {
             do {
                 let enumValue = getEnumValue(values: CaptureMode.values(), name: value)
@@ -59,10 +59,10 @@ class ShootingControlCommandService {
             }
         }
     }
-    
+
     static func getFileFormat(id: Int,
                               resolve: @escaping RCTPromiseResolveBlock,
-                              reject: @escaping RCTPromiseRejectBlock) -> Void
+                              reject: @escaping RCTPromiseRejectBlock)
     {
         guard let device = ThetaBleClientReactNative.deviceList[id] else {
             reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
@@ -72,7 +72,7 @@ class ShootingControlCommandService {
             reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
             return
         }
-        
+
         Task {
             do {
                 let value = try await service.getFileFormat()
@@ -82,11 +82,11 @@ class ShootingControlCommandService {
             }
         }
     }
-    
+
     static func setFileFormat(id: Int,
                               value: String,
                               resolve: @escaping RCTPromiseResolveBlock,
-                              reject: @escaping RCTPromiseRejectBlock) -> Void
+                              reject: @escaping RCTPromiseRejectBlock)
     {
         guard let device = ThetaBleClientReactNative.deviceList[id] else {
             reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
@@ -96,7 +96,7 @@ class ShootingControlCommandService {
             reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
             return
         }
-        
+
         Task {
             do {
                 let enumValue = getEnumValue(values: FileFormat.values(), name: value)
@@ -111,10 +111,10 @@ class ShootingControlCommandService {
             }
         }
     }
-    
+
     static func getMaxRecordableTime(id: Int,
                                      resolve: @escaping RCTPromiseResolveBlock,
-                                     reject: @escaping RCTPromiseRejectBlock) -> Void
+                                     reject: @escaping RCTPromiseRejectBlock)
     {
         guard let device = ThetaBleClientReactNative.deviceList[id] else {
             reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
@@ -124,7 +124,7 @@ class ShootingControlCommandService {
             reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
             return
         }
-        
+
         Task {
             do {
                 let value = try await service.getMaxRecordableTime()
@@ -134,11 +134,11 @@ class ShootingControlCommandService {
             }
         }
     }
-    
+
     static func setMaxRecordableTime(id: Int,
                                      value: String,
                                      resolve: @escaping RCTPromiseResolveBlock,
-                                     reject: @escaping RCTPromiseRejectBlock) -> Void
+                                     reject: @escaping RCTPromiseRejectBlock)
     {
         guard let device = ThetaBleClientReactNative.deviceList[id] else {
             reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
@@ -148,7 +148,7 @@ class ShootingControlCommandService {
             reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
             return
         }
-        
+
         Task {
             do {
                 let enumValue = getEnumValue(values: MaxRecordableTime.values(), name: value)
@@ -163,10 +163,10 @@ class ShootingControlCommandService {
             }
         }
     }
-    
+
     static func takePicture(id: Int,
                             resolve: @escaping RCTPromiseResolveBlock,
-                            reject: @escaping RCTPromiseRejectBlock) -> Void
+                            reject: @escaping RCTPromiseRejectBlock)
     {
         guard let device = ThetaBleClientReactNative.deviceList[id] else {
             reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
@@ -176,7 +176,7 @@ class ShootingControlCommandService {
             reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
             return
         }
-        
+
         class Callback: KotlinSuspendFunction1 {
             let resolve: RCTPromiseResolveBlock
             let reject: RCTPromiseRejectBlock
@@ -187,19 +187,20 @@ class ShootingControlCommandService {
                 self.resolve = resolve
                 self.reject = reject
             }
+
             func invoke(p1: Any?) async throws -> Any? {
                 if p1 == nil {
-                    self.resolve(nil)
+                    resolve(nil)
                 } else {
                     let errorClass = String(describing: type(of: p1))
-                    self.reject(ERROR_TITLE,
-                                (p1 as? NSError)?.localizedDescription ?? "unknown " + errorClass,
-                                p1 as? NSError)
+                    reject(ERROR_TITLE,
+                           (p1 as? NSError)?.localizedDescription ?? "unknown " + errorClass,
+                           p1 as? NSError)
                 }
                 return nil
             }
         }
-        
+
         do {
             try service.takePicture(complete: Callback(resolve: resolve, reject: reject))
         } catch {
