@@ -15,4 +15,5 @@ export * from './shooting-function';
 export * from './wifi-security-mode';
 export * from './wlan-antenna-config';
 export * from './wlan-frequency';
+export * from './wlan-password-state';
 export * from './theta-model';

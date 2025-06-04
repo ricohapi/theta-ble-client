@@ -1,4 +1,4 @@
-import { ConnectedInfo } from './connected-info';
+import type { ConnectedInfo } from './connected-info';
 
 /**
  * Wi-Fi connection status (Wifi connection, SSID, Internet access)

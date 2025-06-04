@@ -4,6 +4,7 @@ import com.ricoh360.thetableclient.BleCharacteristic
 import com.ricoh360.thetableclient.BleService
 import com.ricoh360.thetableclient.ERROR_MESSAGE_EMPTY_DATA
 import com.ricoh360.thetableclient.ERROR_MESSAGE_NOT_CONNECTED
+import com.ricoh360.thetableclient.ERROR_MESSAGE_UNKNOWN_VALUE
 import com.ricoh360.thetableclient.TIMEOUT_SCAN
 import com.ricoh360.thetableclient.ThetaBle
 import com.ricoh360.thetableclient.ThetaBle.BluetoothException
@@ -12,6 +13,7 @@ import com.ricoh360.thetableclient.service.data.ConnectedWifiInfo
 import com.ricoh360.thetableclient.service.data.Proxy
 import com.ricoh360.thetableclient.service.data.values.NetworkType
 import com.ricoh360.thetableclient.service.data.values.WifiSecurityMode
+import com.ricoh360.thetableclient.service.data.values.WlanPasswordState
 import com.ricoh360.thetableclient.transferred.CameraConnectedWifiInfo
 import com.ricoh360.thetableclient.transferred.NotifySsid
 import com.ricoh360.thetableclient.transferred.SetAccessPointParams
@@ -451,5 +453,35 @@ class WlanControlCommandV2 internal constructor(thetaDevice: ThetaBle.ThetaDevic
             defaultGateway = defaultGateway,
             proxy = proxy,
         )
+    }
+
+    /**
+     * Read WLAN password state.
+     *
+     * Service: 3C6FEEB6-F335-4F93-A4BB-495F926DB409
+     * Characteristic: E522112A-5689-4901-0803-0520637DC895
+     *
+     * @return start-up status
+     * @exception ThetaBleApiException If an error occurs in library.
+     * @exception BluetoothException If an error occurs in bluetooth.
+     */
+    @Throws(Throwable::class)
+    suspend fun getWlanPasswordState(): WlanPasswordState {
+        val peripheral =
+            thetaDevice.peripheral ?: throw ThetaBleApiException(
+                ERROR_MESSAGE_NOT_CONNECTED
+            )
+        try {
+            val data = peripheral.read(BleCharacteristic.WLAN_PASSWORD_STATE)
+            if (data.isEmpty()) {
+                throw ThetaBleApiException(ERROR_MESSAGE_EMPTY_DATA)
+            }
+            return WlanPasswordState.getFromBle(data[0])
+                ?: throw ThetaBleApiException("$ERROR_MESSAGE_UNKNOWN_VALUE ${data[0]}")
+        } catch (e: ThetaBleApiException) {
+            throw e
+        } catch (e: Throwable) {
+            throw BluetoothException(e)
+        }
     }
 }

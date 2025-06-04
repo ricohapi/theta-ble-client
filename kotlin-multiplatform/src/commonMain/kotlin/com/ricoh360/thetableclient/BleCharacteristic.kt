@@ -188,6 +188,10 @@ enum class BleCharacteristic(val bleService: BleService, val uuid: String) {
         "01DFF9FF-00FA-44DD-AA6A-71D5E537ABCF",
     ),
 
+    WLAN_PASSWORD_STATE(
+        BleService.WLAN_CONTROL_COMMAND_V2,
+        "E522112A-5689-4901-0803-0520637DC895",
+    ),
     ;
 
     companion object {

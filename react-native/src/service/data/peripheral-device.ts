@@ -1,4 +1,4 @@
-import { PeripheralDeviceStatusEnum } from '../values';
+import type { PeripheralDeviceStatusEnum } from '../values';
 
 /**
  * Peripheral Device

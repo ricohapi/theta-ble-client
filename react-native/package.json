@@ -31,6 +31,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"**/*.{ts,tsx}\"",
     "lint:fix": "eslint --fix \"**/*.{ts,tsx}\"",
+    "lint:type": "tsc --incremental --noEmit",
     "prepack": "bob build",
     "release": "release-it",
     "example": "yarn --cwd example",

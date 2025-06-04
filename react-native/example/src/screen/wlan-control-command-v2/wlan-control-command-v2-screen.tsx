@@ -159,6 +159,21 @@ const WlanControlCommandV2Screen: React.FC<
     setConnectedWifiInfoNotify();
   };
 
+  const onGetWlanPasswordState = async () => {
+    if (service == null) {
+      setMessage(ERROR_MESSAGE_UNSUPPORTED);
+      return;
+    }
+    try {
+      const value = await service.getWlanPasswordState();
+      const newMessage = `getWlanPasswordState OK.\n${value}`;
+      console.log(newMessage);
+      setMessage(newMessage);
+    } catch (error) {
+      setMessage(JSON.stringify(error, null, 2));
+    }
+  };
+
   React.useEffect(() => {
     initService();
     return () => {
@@ -229,21 +244,20 @@ const WlanControlCommandV2Screen: React.FC<
           }}
         />
       </View>
+      <View style={styles.buttonViewContainerLayout}>
+        <Text style={styles.labelText}>WlanPasswordState</Text>
+        <Button
+          style={styles.button}
+          title="Get"
+          onPress={onGetWlanPasswordState}
+        />
+      </View>
       <ScrollView
         style={styles.messageArea}
         ref={scrollViewRef}
       >
         <Text style={styles.messageText}>{message}</Text>
       </ScrollView>
-      <View style={styles.buttonViewContainerLayout}>
-        <Button
-          style={styles.button}
-          title="Scan SSID"
-          onPress={() => {
-            navigation.navigate('WlanSsid');
-          }}
-        />
-      </View>
     </SafeAreaView>
   );
 };

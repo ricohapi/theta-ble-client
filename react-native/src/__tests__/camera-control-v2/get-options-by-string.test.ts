@@ -100,7 +100,7 @@ describe('CameraControlCommandV2 getOptions', () => {
 
     expect(optionMap._wlanFrequency).toBe(2.4);
 
-    const accessInfo = optionMap._accessInfo;
+    const accessInfo = optionMap._accessInfo as Record<string, unknown> | undefined;
     expect(accessInfo).toBeDefined();
     expect(accessInfo?.ssid).toBe('test_ssid');
     expect(accessInfo?.ipAddress).toBe('10.0.0.222');
@@ -112,8 +112,10 @@ describe('CameraControlCommandV2 getOptions', () => {
     expect(accessInfo?.wlanSignalLevel).toBe(4);
     expect(accessInfo?.lteSignalStrength).toBe(0);
     expect(accessInfo?.lteSignalLevel).toBe(0);
-    expect(accessInfo?._dhcpLeaseAddress?.length).toBe(1);
-    const dhcpLeaseAddress = accessInfo?._dhcpLeaseAddress?.at(0);
+    
+    const dhcpLeaseAddresses = accessInfo?._dhcpLeaseAddress as Record<string, unknown>[];
+    expect(dhcpLeaseAddresses?.length).toBe(1);
+    const dhcpLeaseAddress = dhcpLeaseAddresses?.at(0);
     expect(dhcpLeaseAddress).toBeDefined();
     expect(dhcpLeaseAddress?.ipAddress).toBe('10.0.0.3');
     expect(dhcpLeaseAddress?.macAddress).toBe('58:38:79:9f:00:00');

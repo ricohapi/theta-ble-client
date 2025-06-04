@@ -1,5 +1,5 @@
 import type { CameraPowerEnum, CaptureModeEnum, NetworkTypeEnum, WlanAntennaConfigEnum, WlanFrequencyEnum } from '../values';
-import { AccessInfo } from './access-info';
+import type { AccessInfo } from './access-info';
 
 /** camera setting options */
 export interface ThetaOptions {

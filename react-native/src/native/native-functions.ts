@@ -16,7 +16,7 @@ import type {
   ThetaState,
   ThetaState2,
 } from '../service/data';
-import {
+import type {
   CameraPowerEnum,
   CaptureModeEnum,
   ChargingStateEnum,
@@ -29,6 +29,7 @@ import {
   PluginOrders,
   ThetaModel,
   WifiSecurityModeEnum,
+  WlanPasswordStateEnum,
 } from '../service';
 
 const ThetaBleClientReactNative = NativeModules.ThetaBleClientReactNative;
@@ -209,7 +210,7 @@ export async function nativeCameraControlCommandV2GetOptions(id: number, optionN
   return ThetaBleClientReactNative.nativeCameraControlCommandV2GetOptions(id, optionNames);
 }
 
-export async function nativeCameraControlCommandV2GetOptionsByString(id: number, optionNames: string[]): Promise<Map<string, unknown>> {
+export async function nativeCameraControlCommandV2GetOptionsByString(id: number, optionNames: string[]): Promise<Record<string, unknown>> {
   return ThetaBleClientReactNative.nativeCameraControlCommandV2GetOptionsByString(id, optionNames);
 }
 
@@ -287,6 +288,10 @@ export async function nativeWlanControlCommandV2SetAccessPointStatically(
   id: number, params: SetAccessPointParams,
 ) {
   return ThetaBleClientReactNative.nativeWlanControlCommandV2SetAccessPointStatically(id, params);
+}
+
+export async function nativeWlanControlCommandV2GetWlanPasswordState(id: number): Promise<WlanPasswordStateEnum> {
+  return ThetaBleClientReactNative.nativeWlanControlCommandV2GetWlanPasswordState(id);
 }
 
 export async function nativeReleaseDevice(id: number) {

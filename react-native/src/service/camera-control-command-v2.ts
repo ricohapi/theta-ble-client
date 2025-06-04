@@ -113,13 +113,14 @@ export class CameraControlCommandV2 extends ThetaService {
    * @param optionNames List of strings representing the names of the options
    * @return A map where each key is an option name and each value is the corresponding value for that option.
    */
-  async getOptionsByString(optionNames: string[]): Promise<Map<string, unknown>> {
+  async getOptionsByString(optionNames: string[]): Promise<Record<string, unknown>> {
     if (optionNames.length === 0) {
       throw new Error(MESSAGE_NO_ARGUMENT);
     }
     try {
-      const optionsMap: Map<string, unknown> = await ThetaBleClient.nativeCameraControlCommandV2GetOptionsByString(this.device.id, optionNames ?? []);
-      return optionsMap;
+      return await ThetaBleClient.nativeCameraControlCommandV2GetOptionsByString(
+        this.device.id, optionNames ?? [],
+      );
     } catch (error) {
       throw error;
     }

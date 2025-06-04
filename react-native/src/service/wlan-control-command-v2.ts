@@ -6,9 +6,9 @@ import type {
   ThetaDevice,
 } from '../theta-device';
 import { ThetaService } from './theta-service';
-import { BleServiceEnum, NetworkTypeEnum, WifiSecurityModeEnum } from './values';
+import { BleServiceEnum, NetworkTypeEnum, WifiSecurityModeEnum, WlanPasswordStateEnum } from './values';
 import * as ThetaBleClient from '../native';
-import { ConnectedWifiInfo, Proxy } from './data';
+import type { ConnectedWifiInfo, Proxy } from './data';
 
 /* eslint no-useless-catch: 0 */
 
@@ -229,6 +229,22 @@ export class WlanControlCommandV2 extends ThetaService {
           proxy,
         },
       );
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  /**
+   * Read WLAN password state.
+   *
+   * Service: 3C6FEEB6-F335-4F93-A4BB-495F926DB409
+   * Characteristic: E522112A-5689-4901-0803-0520637DC895
+   * 
+   * @returns start-up status
+   */
+  async getWlanPasswordState(): Promise<WlanPasswordStateEnum> {
+    try {
+      return await ThetaBleClient.nativeWlanControlCommandV2GetWlanPasswordState(this.device.id);
     } catch (error) {
       throw error;
     }

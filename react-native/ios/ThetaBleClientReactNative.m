@@ -238,6 +238,10 @@ RCT_EXTERN_METHOD(nativeWlanControlCommandV2SetAccessPointStatically:(int)id
                   withResolver:(RCTPromiseResolveBlock)resolve
                   withRejecter:(RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(nativeWlanControlCommandV2GetWlanPasswordState:(int)id
+                  withResolver:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
+
 RCT_EXTERN_METHOD(nativeReleaseDevice:(int)id
                   withResolver:(RCTPromiseResolveBlock)resolve
                   withRejecter:(RCTPromiseRejectBlock)reject)

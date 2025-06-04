@@ -526,6 +526,13 @@ class ThetaBleClientReactNativeModule(reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
+  fun nativeWlanControlCommandV2GetWlanPasswordState(id: Int, promise: Promise) {
+    launch {
+      WlanControlCommandV2Service.getWlanPasswordState(id, promise)
+    }
+  }
+
+  @ReactMethod
   fun nativeReleaseDevice(id: Int, promise: Promise) {
     deviceList[id]?.let {
       deviceList.remove(id)

@@ -1,5 +1,5 @@
-import { WlanFrequencyEnum } from '../values';
-import { DhcpLeaseAddress } from './dhcp-lease-address';
+import type { WlanFrequencyEnum } from '../values';
+import type { DhcpLeaseAddress } from './dhcp-lease-address';
 
 /**
  * Connected network information.

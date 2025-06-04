@@ -61,6 +61,7 @@ export const NativeModules  = {
     nativeWlanControlCommandV2ScanSsidStop: jest.fn(),
     nativeWlanControlCommandV2SetAccessPointDynamically: jest.fn(),
     nativeWlanControlCommandV2SetAccessPointStatically: jest.fn(),
+    nativeWlanControlCommandV2GetWlanPasswordState: jest.fn(),
   },
 };
 

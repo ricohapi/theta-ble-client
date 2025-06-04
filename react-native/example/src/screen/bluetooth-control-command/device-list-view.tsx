@@ -1,6 +1,6 @@
 import React from 'react';
 import { ScrollView, StyleProp, Text, TouchableOpacity, View, ViewProps, ViewStyle } from 'react-native';
-import { PeripheralDevice } from 'theta-ble-client-react-native';
+import type { PeripheralDevice } from 'theta-ble-client-react-native';
 import styles from './styles';
 
 interface Props extends Pick<ViewProps, 'testID'> {
@@ -8,8 +8,8 @@ interface Props extends Pick<ViewProps, 'testID'> {
     deviceList: PeripheralDevice[];
     onSelectedDevice?: (device?: PeripheralDevice) => void;
     selectedDevice?: PeripheralDevice;
-  }
-  
+}
+
 export const DeviceListView: React.FC<Props> = ({ deviceList, onSelectedDevice, selectedDevice }) => {
 
   const isSelectedDevice = (peripheralDevice: PeripheralDevice) => {
@@ -17,7 +17,6 @@ export const DeviceListView: React.FC<Props> = ({ deviceList, onSelectedDevice, 
   };
 
   const onPressItem = (item: PeripheralDevice) => {
-    // setSelected(item);
     onSelectedDevice?.(item);
   };
 
