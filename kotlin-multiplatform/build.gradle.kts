@@ -10,7 +10,7 @@ plugins {
     signing
 }
 
-val theta_ble_version = "1.2.0"
+val theta_ble_version = "1.3.0"
 
 group = "com.ricoh360.thetableclient"
 version = theta_ble_version
