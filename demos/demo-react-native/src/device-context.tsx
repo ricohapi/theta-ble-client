@@ -1,5 +1,5 @@
-import * as React from 'react';
-import type { ThetaDevice } from 'theta-ble-client-react-native';
+import React, { ReactNode } from 'react';
+import type { ThetaDevice } from './modules/theta-ble-client';
 
 interface Props {
   thetaDevice?: ThetaDevice;
@@ -15,7 +15,12 @@ const DeviceContext = React.createContext<Props>({
 export function useDeviceContext() {
   return React.useContext(DeviceContext);
 }
-export function DeviceProvider({ children }) {
+
+interface DeviceProviderProps {
+  children: ReactNode;
+}
+
+export const DeviceProvider: React.FC<DeviceProviderProps> = ({ children }) => {
   const [thetaDevice, setThetaDevice] = React.useState<ThetaDevice>();
 
   const value = {
@@ -26,4 +31,4 @@ export function DeviceProvider({ children }) {
   return (
     <DeviceContext.Provider value={value}>{children}</DeviceContext.Provider>
   );
-}
+};

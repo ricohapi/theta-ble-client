@@ -20,7 +20,7 @@ interface ScanProps {
 async function scanImpl(name?: string, timeout?: Timeout): Promise<ThetaDevice[]> {
   /* eslint-disable-next-line no-useless-catch */
   try {
-    const deviceList = await ThetaBleClient.nativeScan({name, timeout});
+    const deviceList = await ThetaBleClient.nativeScan({ name, timeout });
     const result = deviceList.map((element) => {
       return new ThetaDevice(element.deviceId, element.name);
     });
@@ -61,7 +61,7 @@ export async function scan(
   if (typeof props === 'string') {
     paramName = props;
   } else if (props != null) {
-    const {name, timeout} = props as ScanProps;
+    const { name, timeout } = props as ScanProps;
     paramName = name;
     paramTimeout = timeout;
   }

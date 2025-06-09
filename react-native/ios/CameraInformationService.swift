@@ -10,7 +10,7 @@ import THETABleClient
 class CameraInformationService {
     static func getFirmwareRevision(id: Int,
                                     resolve: @escaping RCTPromiseResolveBlock,
-                                    reject: @escaping RCTPromiseRejectBlock) -> Void
+                                    reject: @escaping RCTPromiseRejectBlock)
     {
         guard let device = ThetaBleClientReactNative.deviceList[id] else {
             reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
@@ -20,7 +20,7 @@ class CameraInformationService {
             reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
             return
         }
-        
+
         Task {
             do {
                 let value = try await service.getFirmwareRevision()
@@ -30,10 +30,10 @@ class CameraInformationService {
             }
         }
     }
-    
+
     static func getManufacturerName(id: Int,
                                     resolve: @escaping RCTPromiseResolveBlock,
-                                    reject: @escaping RCTPromiseRejectBlock) -> Void
+                                    reject: @escaping RCTPromiseRejectBlock)
     {
         guard let device = ThetaBleClientReactNative.deviceList[id] else {
             reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
@@ -43,7 +43,7 @@ class CameraInformationService {
             reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
             return
         }
-        
+
         Task {
             do {
                 let value = try await service.getManufacturerName()
@@ -53,10 +53,10 @@ class CameraInformationService {
             }
         }
     }
-    
+
     static func getModelNumber(id: Int,
                                resolve: @escaping RCTPromiseResolveBlock,
-                               reject: @escaping RCTPromiseRejectBlock) -> Void
+                               reject: @escaping RCTPromiseRejectBlock)
     {
         guard let device = ThetaBleClientReactNative.deviceList[id] else {
             reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
@@ -66,7 +66,7 @@ class CameraInformationService {
             reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
             return
         }
-        
+
         Task {
             do {
                 let value = try await service.getModelNumber()
@@ -76,10 +76,10 @@ class CameraInformationService {
             }
         }
     }
-    
+
     static func getSerialNumber(id: Int,
                                 resolve: @escaping RCTPromiseResolveBlock,
-                                reject: @escaping RCTPromiseRejectBlock) -> Void
+                                reject: @escaping RCTPromiseRejectBlock)
     {
         guard let device = ThetaBleClientReactNative.deviceList[id] else {
             reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
@@ -89,7 +89,7 @@ class CameraInformationService {
             reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
             return
         }
-        
+
         Task {
             do {
                 let value = try await service.getSerialNumber()
@@ -99,10 +99,10 @@ class CameraInformationService {
             }
         }
     }
-    
+
     static func getWlanMacAddress(id: Int,
                                   resolve: @escaping RCTPromiseResolveBlock,
-                                  reject: @escaping RCTPromiseRejectBlock) -> Void
+                                  reject: @escaping RCTPromiseRejectBlock)
     {
         guard let device = ThetaBleClientReactNative.deviceList[id] else {
             reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
@@ -112,7 +112,7 @@ class CameraInformationService {
             reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
             return
         }
-        
+
         Task {
             do {
                 let value = try await service.getWlanMacAddress()
@@ -122,10 +122,10 @@ class CameraInformationService {
             }
         }
     }
-    
+
     static func getBluetoothMacAddress(id: Int,
                                        resolve: @escaping RCTPromiseResolveBlock,
-                                       reject: @escaping RCTPromiseRejectBlock) -> Void
+                                       reject: @escaping RCTPromiseRejectBlock)
     {
         guard let device = ThetaBleClientReactNative.deviceList[id] else {
             reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
@@ -135,7 +135,7 @@ class CameraInformationService {
             reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
             return
         }
-        
+
         Task {
             do {
                 let value = try await service.getBluetoothMacAddress()

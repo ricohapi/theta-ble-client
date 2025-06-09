@@ -10,7 +10,7 @@ import THETABleClient
 class CameraControlCommandsService {
     static func getPluginList(id: Int,
                               resolve: @escaping RCTPromiseResolveBlock,
-                              reject: @escaping RCTPromiseRejectBlock) -> Void
+                              reject: @escaping RCTPromiseRejectBlock)
     {
         guard let device = ThetaBleClientReactNative.deviceList[id] else {
             reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
@@ -20,7 +20,7 @@ class CameraControlCommandsService {
             reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
             return
         }
-        
+
         Task {
             do {
                 let value = try await service.getPluginList()
@@ -30,10 +30,10 @@ class CameraControlCommandsService {
             }
         }
     }
-    
+
     static func getPluginOrders(id: Int,
                                 resolve: @escaping RCTPromiseResolveBlock,
-                                reject: @escaping RCTPromiseRejectBlock) -> Void
+                                reject: @escaping RCTPromiseRejectBlock)
     {
         guard let device = ThetaBleClientReactNative.deviceList[id] else {
             reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
@@ -43,7 +43,7 @@ class CameraControlCommandsService {
             reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
             return
         }
-        
+
         Task {
             do {
                 let value = try await service.getPluginOrders()
@@ -53,11 +53,11 @@ class CameraControlCommandsService {
             }
         }
     }
-    
+
     static func setPluginOrders(id: Int,
                                 value: Any,
                                 resolve: @escaping RCTPromiseResolveBlock,
-                                reject: @escaping RCTPromiseRejectBlock) -> Void
+                                reject: @escaping RCTPromiseRejectBlock)
     {
         guard let device = ThetaBleClientReactNative.deviceList[id] else {
             reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
@@ -67,10 +67,10 @@ class CameraControlCommandsService {
             reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
             return
         }
-        
+
         Task {
             do {
-                let objects = value as? Dictionary<String, Any?> ?? [: ]
+                let objects = value as? [String: Any?] ?? [:]
                 let thetaValue = toTheta(pluginOrders: objects)
                 guard let thetaValue else {
                     reject(ERROR_TITLE, "Plugin orders not found. \(value)", nil)
@@ -83,5 +83,4 @@ class CameraControlCommandsService {
             }
         }
     }
-    
 }

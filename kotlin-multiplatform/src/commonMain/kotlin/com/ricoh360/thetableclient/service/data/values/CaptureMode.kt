@@ -3,24 +3,44 @@ package com.ricoh360.thetableclient.service.data.values
 /**
  * Capture mode.
  */
-enum class CaptureMode(internal val ble: Byte?) {
+enum class CaptureMode(internal val value: String?, internal val ble: Byte?) {
+    UNKNOWN(null, null),
+
     /**
      * Still image shooting mode.
      */
-    IMAGE(0),
+    IMAGE("image", 0),
 
     /**
      * Movie shooting mode.
      */
-    VIDEO(2),
+    VIDEO("video", 2),
 
     /**
      * Live streaming mode.
      */
-    LIVE(3),
+    LIVE("_liveStreaming", 3),
+
+    /**
+     * Interval mode of Theta SC2.
+     */
+    INTERVAL("interval", null),
+
+    /**
+     * Preset mode of Theta SC2.
+     */
+    PRESET("_preset", null),
+
+    /**
+     * WebRTC.
+     */
+    WEB_RTC("_streaming", null),
     ;
 
     companion object {
+        /**
+         * Options property key name
+         */
         val keyName: String
             get() = "captureMode"
 
@@ -32,6 +52,19 @@ enum class CaptureMode(internal val ble: Byte?) {
          */
         internal fun getFromBle(bleData: Byte): CaptureMode? {
             return entries.firstOrNull { it.ble == bleData }
+        }
+
+        /**
+         * Search by json value.
+         *
+         * @param value json value.
+         * @return CaptureMode
+         */
+        fun getFromValue(value: String): CaptureMode {
+            return entries.firstOrNull { it.value == value } ?: run {
+                println("Unknown value ${UNKNOWN::class.simpleName}: $value")
+                UNKNOWN
+            }
         }
     }
 }

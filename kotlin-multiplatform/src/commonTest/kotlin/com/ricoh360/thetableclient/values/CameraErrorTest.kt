@@ -1,11 +1,14 @@
 package com.ricoh360.thetableclient.values
 
-import com.ricoh360.thetableclient.*
+import com.ricoh360.thetableclient.initMock
 import com.ricoh360.thetableclient.service.data.ThetaState
 import com.ricoh360.thetableclient.service.data.values.CameraError
 import com.ricoh360.thetableclient.transferred.CameraState
 import kotlinx.coroutines.test.runTest
-import kotlin.test.*
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
 class CameraErrorTest {
 

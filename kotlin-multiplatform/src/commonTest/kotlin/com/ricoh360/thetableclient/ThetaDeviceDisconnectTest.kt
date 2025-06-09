@@ -2,8 +2,16 @@ package com.ricoh360.thetableclient
 
 import com.ricoh360.thetableclient.ble.MockBlePeripheral
 import com.ricoh360.thetableclient.ble.newAdvertisement
-import kotlinx.coroutines.*
-import kotlin.test.*
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeout
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertFalse
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 class ThetaDeviceDisconnectTest {
     private val devName = "99999999"

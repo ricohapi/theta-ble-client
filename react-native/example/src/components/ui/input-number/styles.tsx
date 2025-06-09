@@ -17,13 +17,15 @@ const styles = StyleSheet.create({
   },
   itemBack: {
     alignItems: 'center',
-    padding: 5,
+    paddingHorizontal: 5,
+    margin: 5,
     alignSelf: 'center',
     borderColor: 'gray',
     borderWidth: 1,
   },
   inputText: {
     minWidth: 70,
+    fontSize: 16,
     textAlign: 'right',
     color: 'black',
   },

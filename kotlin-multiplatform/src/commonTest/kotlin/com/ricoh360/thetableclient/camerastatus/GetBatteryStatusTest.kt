@@ -7,7 +7,11 @@ import com.ricoh360.thetableclient.initMock
 import com.ricoh360.thetableclient.service.data.values.ChargingState
 import com.ricoh360.thetableclient.toBytes
 import kotlinx.coroutines.runBlocking
-import kotlin.test.*
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class GetBatteryStatusTest {
     private val devName = "99999999"

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		96C595CA2D11CB2800E55B91 /* OptionsConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C595C92D11CB2800E55B91 /* OptionsConverter.swift */; };
 		C989E1CE2AF86F7500877931 /* CameraInformationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C989E1CD2AF86F7500877931 /* CameraInformationService.swift */; };
 		C989E1D02AF86FD800877931 /* CameraControlCommandsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C989E1CF2AF86FD800877931 /* CameraControlCommandsService.swift */; };
 		C989E1D22AF86FFF00877931 /* CameraStatusCommandService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C989E1D12AF86FFF00877931 /* CameraStatusCommandService.swift */; };
@@ -31,6 +32,7 @@
 
 /* Begin PBXFileReference section */
 		134814201AA4EA6300B7C361 /* libThetaBleClientReactNative.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libThetaBleClientReactNative.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		96C595C92D11CB2800E55B91 /* OptionsConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsConverter.swift; sourceTree = "<group>"; };
 		B3E7B5891CC2AC0600A0062D /* ThetaBleClientReactNative.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThetaBleClientReactNative.m; sourceTree = "<group>"; };
 		C915F43029E7F37F00991361 /* ThetaBleClientConvertObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThetaBleClientConvertObject.swift; sourceTree = "<group>"; };
 		C984E27829C7DFCF00A178CA /* ThetaBleClientConvertEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThetaBleClientConvertEnum.swift; sourceTree = "<group>"; };
@@ -65,6 +67,7 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
+				96C595C92D11CB2800E55B91 /* OptionsConverter.swift */,
 				C989E1CF2AF86FD800877931 /* CameraControlCommandsService.swift */,
 				C9EFA84B2AF3949900AA7A9E /* CameraControlCommandV2Service.swift */,
 				C989E1CD2AF86F7500877931 /* CameraInformationService.swift */,
@@ -140,6 +143,7 @@
 				C989E1CE2AF86F7500877931 /* CameraInformationService.swift in Sources */,
 				C989E1D62AF8704C00877931 /* ShootingControlCommandService.swift in Sources */,
 				C9EFA84D2AF394C600AA7A9E /* ThetaBleClientConvertObject.swift in Sources */,
+				96C595CA2D11CB2800E55B91 /* OptionsConverter.swift in Sources */,
 				C9EFA84C2AF394C000AA7A9E /* CameraControlCommandV2Service.swift in Sources */,
 				C989E1D02AF86FD800877931 /* CameraControlCommandsService.swift in Sources */,
 				C989E1D22AF86FFF00877931 /* CameraStatusCommandService.swift in Sources */,

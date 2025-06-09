@@ -24,7 +24,7 @@ describe('scanThetaSsid', () => {
   });
 
   test('Call scanThetaSsid normal', async () => {
-    const ssidList = await scanThetaSsid({model});
+    const ssidList = await scanThetaSsid({ model });
 
     expect(thetaBle.nativeScanThetaSsid).toHaveBeenCalledWith({
       model: model,

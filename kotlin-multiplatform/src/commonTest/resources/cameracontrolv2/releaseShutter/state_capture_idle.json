@@ -1,0 +1,17 @@
+{
+  "_boardTemp": 38,
+  "_cameraError": [
+    "NO_MEMORY",
+    "FILE_NUMBER_OVER"
+  ],
+  "_batteryState": "charging",
+  "_latestFileUrl": "http://192.168.1.1/files/100RICOH/R0010267.MP4",
+  "_batteryInsert": true,
+  "_recordableTime": 3000,
+  "_batteryTemp": 43,
+  "batteryLevel": 0.99,
+  "_recordedTime": 1,
+  "_captureStatus": "idle",
+  "_capturedPictures": 10,
+  "_function": "normal"
+}

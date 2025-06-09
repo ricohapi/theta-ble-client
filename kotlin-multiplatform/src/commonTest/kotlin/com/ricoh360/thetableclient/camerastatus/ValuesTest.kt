@@ -1,7 +1,6 @@
 package com.ricoh360.thetableclient.camerastatus
 
-import com.ricoh360.thetableclient.*
-import com.ricoh360.thetableclient.service.data.values.CameraPower
+import com.ricoh360.thetableclient.initMock
 import com.ricoh360.thetableclient.service.data.values.ChargingState
 import com.ricoh360.thetableclient.service.data.values.CommandErrorDescription
 import com.ricoh360.thetableclient.service.data.values.PluginPowerStatus
@@ -33,25 +32,9 @@ class ValuesTest {
             Pair(ChargingState.CHARGED, 1),
             Pair(ChargingState.DISCONNECT, 2),
         )
-        assertEquals(values.size, ChargingState.values().size)
+        assertEquals(values.size, ChargingState.entries.size)
         values.forEach {
             assertEquals(it.first.ble, it.second?.toByte(), "ChargingState ${it.first}")
-        }
-    }
-
-    /**
-     * CameraPower.
-     */
-    @Test
-    fun checkCameraPower() = runBlocking {
-        val values = listOf(
-            Pair(CameraPower.OFF, 0),
-            Pair(CameraPower.ON, 1),
-            Pair(CameraPower.SLEEP, 2),
-        )
-        assertEquals(values.size, CameraPower.values().size)
-        values.forEach {
-            assertEquals(it.first.ble, it.second?.toByte(), "CameraPower ${it.first}")
         }
     }
 
@@ -70,7 +53,7 @@ class ValuesTest {
             Pair(CommandErrorDescription.DEVICE_BUSY, 6),
             Pair(CommandErrorDescription.UNEXPECTED, 7),
         )
-        assertEquals(values.size, CommandErrorDescription.values().size)
+        assertEquals(values.size, CommandErrorDescription.entries.size)
         values.forEach {
             assertEquals(
                 it.first.ble,
@@ -89,7 +72,7 @@ class ValuesTest {
             Pair(PluginPowerStatus.RUNNING, 0),
             Pair(PluginPowerStatus.STOP, 1),
         )
-        assertEquals(values.size, PluginPowerStatus.values().size)
+        assertEquals(values.size, PluginPowerStatus.entries.size)
         values.forEach {
             assertEquals(it.first.ble, it.second.toByte(), "PluginPowerStatus ${it.first}")
         }

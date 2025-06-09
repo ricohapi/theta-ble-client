@@ -157,10 +157,94 @@ RCT_EXTERN_METHOD(nativeCameraControlCommandV2GetState2:(int)id
                   withResolver:(RCTPromiseResolveBlock)resolve
                   withRejecter:(RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(nativeReleaseDevice:(int)id
+RCT_EXTERN_METHOD(nativeCameraControlCommandV2GetOptions:(int)id
+                  withOptionNames:(NSArray*)optionNames
                   withResolver:(RCTPromiseResolveBlock)resolve
                   withRejecter:(RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(nativeCameraControlCommandV2GetOptionsByString:(int)id
+                  withOptionNames:(NSArray*)optionNames
+                  withResolver:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(nativeCameraControlCommandV2SetOptions:(int)id
+                  withOptions:(NSDictionary*)options
+                  withResolver:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(nativeCameraControlCommandV2ReleaseShutter:(int)id
+                  withResolver:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(nativeBluetoothControlCommandScanPeripheralDevice:(int)id
+                  withTimeout:(int)timeout
+                  withResolver:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(nativeBluetoothControlCommandScanPeripheralDeviceStart:(int)id
+                  withTimeout:(int)timeout
+                  withResolver:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(nativeBluetoothControlCommandScanPeripheralDeviceStop:(int)id
+                  withResolver:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(nativeBluetoothControlCommandConnectPeripheralDevice:(int)id
+                  withMacAddress:(NSString*)macAddress
+                  withResolver:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(nativeBluetoothControlCommandDeletePeripheralDevice:(int)id
+                  withMacAddress:(NSString*)macAddress
+                  withResolver:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(nativeWlanControlCommandV2SetNetworkType:(int)id
+                  withNetworkType:(NSString*)networkType
+                  withResolver:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(nativeWlanControlCommandV2SetNetworkTypeNotify:(int)id
+                  withEnable:(BOOL)enable
+                  withResolver:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(nativeWlanControlCommandV2GetConnectedWifiInfo:(int)id
+                  withResolver:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(nativeWlanControlCommandV2SetConnectedWifiInfoNotify:(int)id
+                  withEnable:(BOOL)enable
+                  withResolver:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(nativeWlanControlCommandV2ScanSsidStart:(int)id
+                  withTimeout:(int)timeout
+                  withResolver:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(nativeWlanControlCommandV2ScanSsidStop:(int)id
+                  withResolver:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(nativeWlanControlCommandV2SetAccessPointDynamically:(int)id
+                  withParams:(NSDictionary*)params
+                  withResolver:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(nativeWlanControlCommandV2SetAccessPointStatically:(int)id
+                  withParams:(NSDictionary*)params
+                  withResolver:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(nativeWlanControlCommandV2GetWlanPasswordState:(int)id
+                  withResolver:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(nativeReleaseDevice:(int)id
+                  withResolver:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
 
 + (BOOL)requiresMainQueueSetup
 {

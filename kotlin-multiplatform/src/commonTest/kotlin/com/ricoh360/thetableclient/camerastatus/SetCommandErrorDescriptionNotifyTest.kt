@@ -65,7 +65,7 @@ class SetCommandErrorDescriptionNotifyTest {
         }
         val data = testValue.ble?.toBytes() ?: 255.toByte().toBytes()
         observer(data)
-        withTimeout(100) {
+        withTimeout(500) {
             deferred.await()
         }
         assertTrue(true, "setCommandErrorDescriptionNotify")
@@ -105,7 +105,7 @@ class SetCommandErrorDescriptionNotifyTest {
         }
         val data = testValue.ble?.toBytes() ?: 255.toByte().toBytes()
         observer(data)
-        withTimeout(100) {
+        withTimeout(500) {
             deferred.await()
         }
 
@@ -116,7 +116,7 @@ class SetCommandErrorDescriptionNotifyTest {
 
         observer(data)
         try {
-            withTimeout(100) {
+            withTimeout(500) {
                 deferred.await()
             }
             assertTrue(false, "call success")
@@ -206,7 +206,7 @@ class SetCommandErrorDescriptionNotifyTest {
             deferred.complete(Unit)
         }
         observer(ByteArray(0))
-        withTimeout(100) {
+        withTimeout(500) {
             deferred.await()
         }
         assertTrue(true, "exception empty")

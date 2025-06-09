@@ -12,14 +12,18 @@ import {
   PluginPowerStatusEnum,
   ThetaDevice,
   CameraControlCommands,
-} from 'theta-ble-client-react-native';
+} from '../../modules/theta-ble-client';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../../App';
 
 const TITLE = 'Camera Status Command';
 const ERROR_MESSAGE_NO_DEVICE = 'No device.';
 const ERROR_MESSAGE_NOT_CONNECTED = 'Not connected.';
 const ERROR_MESSAGE_UNSUPPORTED = 'Unsupported.';
 
-const CameraStatusScreen = ({ navigation }) => {
+const CameraStatusScreen: React.FC<
+NativeStackScreenProps<RootStackParamList, 'CameraStatus'>
+> = ({ navigation }) => {
   const { thetaDevice } = useDeviceContext();
   const [cameraStatusCommand, setCameraStatusCommand] = React.useState<CameraStatusCommand>();
 

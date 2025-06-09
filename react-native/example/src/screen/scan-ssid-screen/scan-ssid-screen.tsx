@@ -1,10 +1,12 @@
 import * as React from 'react';
-import { ThetaModel, scanThetaSsid } from 'theta-ble-client-react-native';
+import { ThetaModel, scanThetaSsid } from '../../modules/theta-ble-client';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import styles from './styles';
 import { ScrollView, Text, View } from 'react-native';
 import { Item, ItemListView } from '../../components/ui/item-list';
 import Button from '../../components/ui/button';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../../App';
 
 interface ModelItem extends Item {
   value: ThetaModel | undefined;
@@ -15,7 +17,9 @@ function getJsonString(object: any) {
   return JSON.stringify(JSON.parse(JSON.stringify(object)), null, 2);
 }
 
-const ScanSsidScreen = () => {
+const ScanSsidScreen: React.FC<
+NativeStackScreenProps<RootStackParamList, 'ScanSsid'>
+> = () => {
   const [selectedModel, setSelectedModel] = React.useState<ModelItem>();
   const [message, setMessage] = React.useState('');
 
@@ -23,6 +27,10 @@ const ScanSsidScreen = () => {
     {
       name: 'undefined',
       value: undefined,
+    },
+    {
+      name: 'THETA_A1',
+      value: ThetaModel.THETA_A1,
     },
     {
       name: 'THETA_X',

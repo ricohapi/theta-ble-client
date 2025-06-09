@@ -31,7 +31,7 @@ jobs:
         arguments: testDebugUnitTest
     - name: Archive code coverage results
       if: always()
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v4
       with:
         name: code-coverage-report
         path: kotlin-multiplatform/build/reports/tests/testDebugUnitTest

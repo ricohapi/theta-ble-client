@@ -81,7 +81,7 @@ class SetStateNotifyTest {
         val data = jsonText.encodeToByteArray()
         observer(data)
 
-        withTimeout(100) {
+        withTimeout(500) {
             deferred.await()
         }
         assertTrue(true, "notify")
@@ -133,7 +133,7 @@ class SetStateNotifyTest {
 
         observer(data)
         try {
-            withTimeout(100) {
+            withTimeout(500) {
                 deferred.await()
             }
             assertTrue(false, "call success")
@@ -228,7 +228,7 @@ class SetStateNotifyTest {
         }
 
         observer(ByteArray(0))
-        withTimeout(100) {
+        withTimeout(500) {
             deferred.await()
         }
         assertTrue(true, "exception empty")
@@ -270,7 +270,7 @@ class SetStateNotifyTest {
         val data = jsonText.encodeToByteArray()
         observer(data)
 
-        withTimeout(100) {
+        withTimeout(500) {
             deferred.await()
         }
         assertTrue(true, "notify")

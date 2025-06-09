@@ -17,6 +17,7 @@ internal interface BlePeripheral {
     suspend fun observe(characteristic: BleCharacteristic, collect: (ByteArray) -> Unit)
     fun contain(characteristic: BleCharacteristic): Boolean
     fun contain(service: BleService): Boolean
+    fun tryBond()
 }
 
 internal class BlePeripheralImpl internal constructor(val peripheral: Peripheral) : BlePeripheral {
@@ -74,6 +75,10 @@ internal class BlePeripheralImpl internal constructor(val peripheral: Peripheral
             }
         }
         return false
+    }
+
+    override fun tryBond() {
+        com.ricoh360.thetableclient.tryBond(peripheral)
     }
 }
 

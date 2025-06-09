@@ -1,11 +1,12 @@
 import { NativeModules } from 'react-native';
 import { ThetaDevice } from '../../theta-device';
-import { BleServiceEnum,
+import {
+  BleServiceEnum,
   CameraControlCommandV2,
   CameraErrorEnum,
   CaptureStatusEnum,
   ChargingStateEnum,
-  ShootingFunctionEnum, 
+  ShootingFunctionEnum,
 } from '../../service';
 
 describe('CameraControlCommandV2 getState', () => {

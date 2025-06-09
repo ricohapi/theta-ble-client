@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ricoh360.thetaclient.ThetaRepository
 import com.ricoh360.thetableclient.ThetaBle
 import com.ricoh360.thetableclient.service.CameraStatusCommand
 import com.ricoh360.thetableclient.service.data.GpsInfo
@@ -14,12 +13,12 @@ import com.ricoh360.thetableclient.service.data.values.CameraPower
 import com.ricoh360.thetableclient.service.data.values.CaptureMode
 import com.ricoh360.thetableclient.service.data.values.ChargingState
 import com.ricoh360.thetableclient.service.data.values.PluginPowerStatus
+import com.ricoh360.thetaclient.ThetaRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.lang.StringBuilder
 
 class ThetaViewModel : ViewModel() {
     private val _infoText = MutableLiveData("Initialized")
@@ -44,22 +43,30 @@ class ThetaViewModel : ViewModel() {
     private val uuid = APP_UUID
     private var thetaDevice: ThetaBle.ThetaDevice? = null
 
+    fun getBleThetaName(info: ThetaInfo): String {
+        return when (info.model) {
+            "RICOH360 THETA A1" -> "AA" + info.serialNumber.takeLast(8)
+            else -> info.serialNumber.takeLast(8)
+        }
+    }
+
     fun connectWifi() {
         scope.launch {
-            var thetaRepository: ThetaRepository? = null
+            val thetaRepository: ThetaRepository?
             try {
                 thetaRepository = ThetaRepository.newInstance("http://192.168.1.1")
                 thetaRepository.let {
-                    val info = it.getThetaInfo()
-                    val devName = info.serialNumber.takeLast(8)
+                    val info = getThetaInfoApi()
+                    val devName = getBleThetaName(info)
                     setDevice(devName, false)
                     setInfoText("wifi connected. $devName")
                 }
             } catch (e: Throwable) {
                 e.printStackTrace()
+                return@launch
             }
             try {
-                thetaRepository?.let {
+                thetaRepository.let {
                     val name = it.setBluetoothDevice(uuid)
                     setDevice(name, true)
                 }
@@ -67,7 +74,7 @@ class ThetaViewModel : ViewModel() {
                 e.printStackTrace()
             }
             try {
-                thetaRepository?.let {
+                thetaRepository.let {
                     val options =
                         ThetaRepository.Options(bluetoothPower = ThetaRepository.BluetoothPowerEnum.ON)
                     it.setOptions(options)
@@ -369,6 +376,7 @@ class ThetaViewModel : ViewModel() {
             null
         }
     }
+
     fun setPluginControl(value: PluginPowerStatus) {
         scope.launch {
             val device = thetaDevice

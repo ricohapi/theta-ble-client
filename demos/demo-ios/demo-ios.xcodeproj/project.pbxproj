@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		1A5CA7899BC0D829943A7117 /* Pods_demo_ios.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9813411A213924B4238F293E /* Pods_demo_ios.framework */; };
 		C9434D072AD63E8100FC7903 /* CameraControlCommandV2View.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9434D062AD63E8100FC7903 /* CameraControlCommandV2View.swift */; };
+		C9717B552C042C8F002EA4CD /* WebApiUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9717B542C042C8F002EA4CD /* WebApiUtil.swift */; };
 		C98E162529C1DABF00054429 /* ThetaBleApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98E162429C1DABF00054429 /* ThetaBleApi.swift */; };
 		C993A6F029C1D8ED00E2631D /* demo_iosApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C993A6EF29C1D8ED00E2631D /* demo_iosApp.swift */; };
 		C993A6F229C1D8ED00E2631D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C993A6F129C1D8ED00E2631D /* ContentView.swift */; };
@@ -22,6 +23,7 @@
 		5B617CB2EB69FF6F4ACAF615 /* Pods-demo-ios.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-demo-ios.release.xcconfig"; path = "Target Support Files/Pods-demo-ios/Pods-demo-ios.release.xcconfig"; sourceTree = "<group>"; };
 		9813411A213924B4238F293E /* Pods_demo_ios.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_demo_ios.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9434D062AD63E8100FC7903 /* CameraControlCommandV2View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraControlCommandV2View.swift; sourceTree = "<group>"; };
+		C9717B542C042C8F002EA4CD /* WebApiUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebApiUtil.swift; sourceTree = "<group>"; };
 		C98E162429C1DABF00054429 /* ThetaBleApi.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThetaBleApi.swift; sourceTree = "<group>"; };
 		C993A6EC29C1D8ED00E2631D /* demo-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "demo-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C993A6EF29C1D8ED00E2631D /* demo_iosApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = demo_iosApp.swift; sourceTree = "<group>"; };
@@ -88,6 +90,7 @@
 				C9CEC3B729ED350100EA12D5 /* CameraStatusView.swift */,
 				C993A6F329C1D8F000E2631D /* Assets.xcassets */,
 				C993A6F529C1D8F000E2631D /* Preview Content */,
+				C9717B542C042C8F002EA4CD /* WebApiUtil.swift */,
 			);
 			path = "demo-ios";
 			sourceTree = "<group>";
@@ -217,6 +220,7 @@
 				C98E162529C1DABF00054429 /* ThetaBleApi.swift in Sources */,
 				C9CEC3B829ED350100EA12D5 /* CameraStatusView.swift in Sources */,
 				C993A6F229C1D8ED00E2631D /* ContentView.swift in Sources */,
+				C9717B552C042C8F002EA4CD /* WebApiUtil.swift in Sources */,
 				C993A6F029C1D8ED00E2631D /* demo_iosApp.swift in Sources */,
 				C9434D072AD63E8100FC7903 /* CameraControlCommandV2View.swift in Sources */,
 			);

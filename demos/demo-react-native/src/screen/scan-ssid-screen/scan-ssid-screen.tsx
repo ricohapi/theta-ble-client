@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ThetaModel, scanThetaSsid } from 'theta-ble-client-react-native';
+import { ThetaModel, scanThetaSsid } from '../../modules/theta-ble-client';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import styles from './styles';
 import { ScrollView, Text, View } from 'react-native';
@@ -22,6 +22,10 @@ const ScanSsidScreen = () => {
     {
       name: 'undefined',
       value: undefined,
+    },
+    {
+      name: 'THETA_A1',
+      value: ThetaModel.THETA_A1,
     },
     {
       name: 'THETA_X',
