@@ -155,6 +155,25 @@ afterEvaluate {
             }
         }
     }
+
+     val publishTasks = listOf(
+        "publishAndroidReleasePublicationToMavenLocal" to listOf("signIosArm64Publication", "signIosSimulatorArm64Publication", "signIosX64Publication", "signKotlinMultiplatformPublication"),
+        "publishIosArm64PublicationToMavenLocal" to listOf("signAndroidReleasePublication", "signIosSimulatorArm64Publication", "signIosX64Publication", "signKotlinMultiplatformPublication"),
+        "publishIosSimulatorArm64PublicationToMavenLocal" to listOf("signIosArm64Publication", "signAndroidReleasePublication", "signIosX64Publication", "signKotlinMultiplatformPublication"),
+        "publishIosX64PublicationToMavenLocal" to listOf("signIosArm64Publication", "signIosSimulatorArm64Publication", "signAndroidReleasePublication", "signKotlinMultiplatformPublication"),
+        "publishKotlinMultiplatformPublicationToMavenLocal" to listOf("signIosArm64Publication", "signIosSimulatorArm64Publication", "signIosX64Publication", "signAndroidReleasePublication")
+    )
+
+    publishTasks.forEach { (publishTaskName, signTaskNames) ->
+        tasks.findByName(publishTaskName)?.let { publishTask ->
+            signTaskNames.forEach { signTaskName ->
+                tasks.findByName(signTaskName)?.let { signTask ->
+                    publishTask.dependsOn(signTask)
+                    publishTask.mustRunAfter(signTask)
+                }
+            }
+        }
+    }
 }
 
 signing {
