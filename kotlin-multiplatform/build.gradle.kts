@@ -1,22 +1,18 @@
-import java.util.*
+import com.vanniktech.maven.publish.SonatypeHost
 
 plugins {
     kotlin("multiplatform")
     id("com.android.library")
-    id("maven-publish")
     kotlin("native.cocoapods")
     kotlin("plugin.serialization")
     id("org.jetbrains.dokka")
-    signing
+    id("com.vanniktech.maven.publish") version "0.32.0"
 }
 
 val theta_ble_version = "1.3.0"
 
 group = "com.ricoh360.thetableclient"
 version = theta_ble_version
-
-// Init publish property
-initProp()
 
 kotlin {
     androidTarget {
@@ -103,120 +99,42 @@ val javadocJar by tasks.registering(Jar::class) {
     archiveClassifier.set("javadoc")
 }
 
-// Publish the library to GitHub Packages Mavan repository.
-// Because the components are created only during the afterEvaluate phase, you must
-// configure your publications using the afterEvaluate() lifecycle method.
-afterEvaluate {
-    initProp()
-    publishing {
-        publications.withType(MavenPublication::class) {
-            artifact(javadocJar.get())
-            when (name) {
-                "kotlinMultiplatform" -> {
-                    setArtifactId("theta-ble-client")
-                }
-                "androidRelease" -> {
-                    setArtifactId("theta-ble-client-android")
-                }
-                else -> {
-                    setArtifactId("theta-ble-client-$name")
-                }
-            }
-            pom {
-                name.set("theta-ble-client")
-                description.set("This library provides a way to control RICOH THETA using RICOH THETA Bluetooth API v2")
-                url.set("https://github.com/ricohapi/theta-ble-client")
-                licenses {
-                    license {
-                        name.set("MIT")
-                        url.set("https://github.com/ricohapi/theta-ble-client/blob/main/LICENSE")
-                    }
-                }
-                developers {
-                    developer {
-                        organization.set("RICOH360")
-                        organizationUrl.set("https://github.com/ricohapi/theta-ble-client")
-                    }
-                }
-                scm {
-                    connection.set("scm:git:git@github.com:ricohapi/theta-ble-client.git")
-                    developerConnection.set("scm:git:git@github.com:ricohapi/theta-ble-client.git")
-                    url.set("https://github.com/ricohapi/theta-ble-client/tree/main")
-                }
+mavenPublishing {
+    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+    signAllPublications()
+    coordinates(group.toString(), "theta-ble-client", version.toString())
+    pom {
+        name.set("theta-ble-client")
+        description.set("This library provides a way to control RICOH THETA using RICOH THETA Bluetooth API")
+        inceptionYear.set("2023")
+        url.set("https://github.com/ricohapi/theta-ble-client")
+        licenses {
+            license {
+                name.set("MIT")
+                url.set("https://github.com/ricohapi/theta-ble-client/blob/main/LICENSE")
             }
         }
-        repositories {
-            maven {
-                url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-                credentials {
-                    username = getExtraString("ossrhUsername")
-                    password = getExtraString("ossrhPassword")
-                }
+        developers {
+            developer {
+                organization.set("RICOH360")
+                organizationUrl.set("https://github.com/ricohapi/theta-ble-client")
             }
         }
-    }
-
-     val publishTasks = listOf(
-        "publishAndroidReleasePublicationToMavenLocal" to listOf("signIosArm64Publication", "signIosSimulatorArm64Publication", "signIosX64Publication", "signKotlinMultiplatformPublication"),
-        "publishIosArm64PublicationToMavenLocal" to listOf("signAndroidReleasePublication", "signIosSimulatorArm64Publication", "signIosX64Publication", "signKotlinMultiplatformPublication"),
-        "publishIosSimulatorArm64PublicationToMavenLocal" to listOf("signIosArm64Publication", "signAndroidReleasePublication", "signIosX64Publication", "signKotlinMultiplatformPublication"),
-        "publishIosX64PublicationToMavenLocal" to listOf("signIosArm64Publication", "signIosSimulatorArm64Publication", "signAndroidReleasePublication", "signKotlinMultiplatformPublication"),
-        "publishKotlinMultiplatformPublicationToMavenLocal" to listOf("signIosArm64Publication", "signIosSimulatorArm64Publication", "signIosX64Publication", "signAndroidReleasePublication")
-    )
-
-    publishTasks.forEach { (publishTaskName, signTaskNames) ->
-        tasks.findByName(publishTaskName)?.let { publishTask ->
-            signTaskNames.forEach { signTaskName ->
-                tasks.findByName(signTaskName)?.let { signTask ->
-                    publishTask.dependsOn(signTask)
-                    publishTask.mustRunAfter(signTask)
-                }
-            }
+        scm {
+            connection.set("scm:git:git@github.com:ricohapi/theta-ble-client.git")
+            developerConnection.set("scm:git:git@github.com:ricohapi/theta-ble-client.git")
+            url.set("https://github.com/ricohapi/theta-ble-client/tree/main")
         }
     }
-}
-
-signing {
-    if (getExtraString("signing.keyId") != null) {
-        useInMemoryPgpKeys(
-            getExtraString("signing.keyId"),
-            getExtraString("signing.key"),
-            getExtraString("signing.password")
-        )
-        sign(publishing.publications)
-    }
-}
-
-ext["signing.keyId"] = null
-ext["signing.key"] = null
-ext["signing.password"] = null
-ext["ossrhUsername"] = null
-ext["ossrhPassword"] = null
-
-fun initProp() {
-    val secretPropsFile = project.rootProject.file("local.properties")
-    if (secretPropsFile.exists()) {
-        secretPropsFile.reader().use {
-            Properties().apply {
-                load(it)
-            }
-        }.onEach { (name, value) ->
-            ext[name.toString()] = value
-        }
-    } else {
-        ext["signing.keyId"] = System.getenv("SIGNING_KEY_ID")
-        ext["signing.key"] = System.getenv("SIGNING_KEY")
-        ext["signing.password"] = System.getenv("SIGNING_PASSWORD")
-        ext["ossrhUsername"] = System.getenv("OSSRH_USERNAME")
-        ext["ossrhPassword"] = System.getenv("OSSRH_PASSWORD")
-    }
-}
-
-fun getExtraString(name: String): String? {
-    if (ext.has(name)) {
-        return ext[name]?.toString()
-    }
-    return null
+    /* Secrets
+     *     Set following environment variables for Central Portal user token
+     *       * ORG_GRADLE_PROJECT_mavenCentralUsername: username of the user token of Central Portal
+     *       * ORG_GRADLE_PROJECT_mavenCentralPassword: password of the user token of Central Portal
+     *     Set following environment variables for GPG key. See https://vanniktech.github.io/gradle-maven-publish-plugin/central/#secrets
+     *       * ORG_GRADLE_PROJECT_signingInMemoryKey : Secret key in PEM format
+     *       * ORG_GRADLE_PROJECT_signingInMemoryKeyId : 8 characters key id
+     *       * ORG_GRADLE_PROJECT_signingInMemoryKeyPassword
+     */
 }
 
 tasks.dokkaHtml.configure {
