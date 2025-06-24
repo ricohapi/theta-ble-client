@@ -8,4 +8,5 @@ export * from './camera-control-command-v2';
 export * from './camera-status-command';
 export * from './shooting-control-command';
 export * from './theta-service';
+export * from './wlan-control-command';
 export * from './wlan-control-command-v2';

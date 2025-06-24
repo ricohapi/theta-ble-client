@@ -277,25 +277,6 @@ object WlanControlCommandV2Service {
       promise.reject(e)
     }
   }
-
-  suspend fun getWlanPasswordState(id: Int, promise: Promise) {
-    try {
-      val device = ThetaBleClientReactNativeModule.deviceList[id]
-      device ?: let {
-        promise.reject(Exception(ERROR_MESSAGE_DEVICE_NOT_FOUND))
-        return
-      }
-      val service = device.wlanControlCommandV2
-      service ?: let {
-        promise.reject(Exception(ERROR_MESSAGE_UNSUPPORTED_SERVICE))
-        return
-      }
-      val value = service.getWlanPasswordState()
-      promise.resolve(value.name)
-    } catch (e: Throwable) {
-      promise.reject(e)
-    }
-  }
 }
 
 fun fromTheta(value: ConnectedWifiInfo): WritableMap {

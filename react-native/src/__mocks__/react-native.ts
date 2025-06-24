@@ -1,4 +1,4 @@
-export const NativeModules  = {
+export const NativeModules = {
   ThetaBleClientReactNative: {
     nativeScan: jest.fn(),
     nativeScanThetaSsid: jest.fn(),
@@ -46,12 +46,14 @@ export const NativeModules  = {
     nativeCameraControlCommandV2GetOptions: jest.fn(),
     nativeCameraControlCommandV2SetOptions: jest.fn(),
     nativeCameraControlCommandV2ReleaseShutter: jest.fn(),
-  
+
     nativeBluetoothControlCommandScanPeripheralDevice: jest.fn(),
     nativeBluetoothControlCommandScanPeripheralDeviceStart: jest.fn(),
     nativeBluetoothControlCommandScanPeripheralDeviceStop: jest.fn(),
     nativeBluetoothControlCommandConnectPeripheralDevice: jest.fn(),
     nativeBluetoothControlCommandDeletePeripheralDevice: jest.fn(),
+
+    nativeWlanControlCommandGetWlanPasswordState: jest.fn(),
 
     nativeWlanControlCommandV2SetNetworkType: jest.fn(),
     nativeWlanControlCommandV2SetNetworkTypeNotify: jest.fn(),
@@ -61,7 +63,6 @@ export const NativeModules  = {
     nativeWlanControlCommandV2ScanSsidStop: jest.fn(),
     nativeWlanControlCommandV2SetAccessPointDynamically: jest.fn(),
     nativeWlanControlCommandV2SetAccessPointStatically: jest.fn(),
-    nativeWlanControlCommandV2GetWlanPasswordState: jest.fn(),
   },
 };
 

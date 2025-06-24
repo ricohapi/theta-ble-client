@@ -25,7 +25,7 @@ const KEY_LAST_DEVICE_NAME = 'lastDeviceName';
 const KEY_LAST_USE_UUID = 'lastUseUuid';
 
 const MenuScreen: React.FC<
-NativeStackScreenProps<RootStackParamList, 'Menu'>
+  NativeStackScreenProps<RootStackParamList, 'Menu'>
 > = ({ navigation }) => {
   const appUuid = '6BEDD7A3-4E01-4FE4-9DFB-03BFF23ECFD3';
 
@@ -314,6 +314,12 @@ NativeStackScreenProps<RootStackParamList, 'Menu'>
           title="Bluetooth Control Command"
           onPress={() => {
             navigation.navigate('BluetoothControlCommand');
+          }}
+        />
+        <Button
+          title="WLAN Control Command"
+          onPress={() => {
+            navigation.navigate('WlanControlCommand');
           }}
         />
         <Button

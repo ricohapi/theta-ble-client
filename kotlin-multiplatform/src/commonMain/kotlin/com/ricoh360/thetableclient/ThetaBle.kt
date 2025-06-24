@@ -10,6 +10,7 @@ import com.ricoh360.thetableclient.service.CameraInformation
 import com.ricoh360.thetableclient.service.CameraStatusCommand
 import com.ricoh360.thetableclient.service.ShootingControlCommand
 import com.ricoh360.thetableclient.service.ThetaService
+import com.ricoh360.thetableclient.service.WlanControlCommand
 import com.ricoh360.thetableclient.service.WlanControlCommandV2
 import com.ricoh360.thetableclient.service.data.values.ApplicationError
 import com.ricoh360.thetableclient.service.data.values.ThetaModel
@@ -356,6 +357,8 @@ class ThetaBle internal constructor() {
          */
         var bluetoothControlCommand: BluetoothControlCommand? = null
 
+        var wlanControlCommand: WlanControlCommand? = null
+
         var wlanControlCommandV2: WlanControlCommandV2? = null
 
         internal suspend fun createPeripheral(): BlePeripheral {
@@ -428,6 +431,12 @@ class ThetaBle internal constructor() {
                 val service = BluetoothControlCommand(this)
                 (serviceList as MutableList).add(service)
                 bluetoothControlCommand = service
+            }
+
+            if (peripheral.contain(BleService.WLAN_CONTROL_COMMAND)) {
+                val service = WlanControlCommand(this)
+                (serviceList as MutableList).add(service)
+                wlanControlCommand = service
             }
 
             if (peripheral.contain(BleService.WLAN_CONTROL_COMMAND_V2)) {

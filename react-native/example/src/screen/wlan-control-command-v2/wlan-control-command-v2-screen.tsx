@@ -34,7 +34,7 @@ const WlanControlCommandV2Screen: React.FC<
       },
     ]);
   };
-  
+
   const initService = async () => {
     if (thetaDevice == null) {
       alertToGoBack(ERROR_MESSAGE_NO_DEVICE);
@@ -60,13 +60,13 @@ const WlanControlCommandV2Screen: React.FC<
       await service.setNetworkTypeNotify();
       await service.setConnectedWifiInfoNotify();
       /* eslint-disable-next-line no-empty */
-    } catch (_) {}
+    } catch (_) { }
   };
 
   const addMessage = (newMessage: string) => {
     setMessage(prevItem => {
       return prevItem + '\n' + newMessage;
-    }); 
+    });
   };
 
   const messageScrollToBottom = () => {
@@ -159,21 +159,6 @@ const WlanControlCommandV2Screen: React.FC<
     setConnectedWifiInfoNotify();
   };
 
-  const onGetWlanPasswordState = async () => {
-    if (service == null) {
-      setMessage(ERROR_MESSAGE_UNSUPPORTED);
-      return;
-    }
-    try {
-      const value = await service.getWlanPasswordState();
-      const newMessage = `getWlanPasswordState OK.\n${value}`;
-      console.log(newMessage);
-      setMessage(newMessage);
-    } catch (error) {
-      setMessage(JSON.stringify(error, null, 2));
-    }
-  };
-
   React.useEffect(() => {
     initService();
     return () => {
@@ -181,7 +166,7 @@ const WlanControlCommandV2Screen: React.FC<
     };
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
-  
+
   return (
     <SafeAreaView
       style={styles.safeAreaContainer}
@@ -242,14 +227,6 @@ const WlanControlCommandV2Screen: React.FC<
           onPress={() => {
             navigation.navigate('WlanSsid');
           }}
-        />
-      </View>
-      <View style={styles.buttonViewContainerLayout}>
-        <Text style={styles.labelText}>WlanPasswordState</Text>
-        <Button
-          style={styles.button}
-          title="Get"
-          onPress={onGetWlanPasswordState}
         />
       </View>
       <ScrollView

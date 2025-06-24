@@ -460,6 +460,13 @@ class ThetaBleClientReactNativeModule(reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
+  fun nativeWlanControlCommandGetWlanPasswordState(id: Int, promise: Promise) {
+    launch {
+      WlanControlCommandService.getWlanPasswordState(id, promise)
+    }
+  }
+
+  @ReactMethod
   fun nativeWlanControlCommandV2SetNetworkType(id: Int, value: String, promise: Promise) {
     launch {
       WlanControlCommandV2Service.setNetworkType(id, value, promise)
@@ -522,13 +529,6 @@ class ThetaBleClientReactNativeModule(reactContext: ReactApplicationContext) :
   fun nativeWlanControlCommandV2SetAccessPointStatically(id: Int, params: ReadableMap, promise: Promise) {
     launch {
       WlanControlCommandV2Service.setAccessPointStatically(id, params, promise)
-    }
-  }
-
-  @ReactMethod
-  fun nativeWlanControlCommandV2GetWlanPasswordState(id: Int, promise: Promise) {
-    launch {
-      WlanControlCommandV2Service.getWlanPasswordState(id, promise)
     }
   }
 

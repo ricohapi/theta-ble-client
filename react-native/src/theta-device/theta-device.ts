@@ -11,8 +11,9 @@ import {
   CameraControlCommandV2,
   CameraControlCommands,
   CameraInformation,
-  CameraStatusCommand, 
+  CameraStatusCommand,
   ShootingControlCommand,
+  WlanControlCommand,
   WlanControlCommandV2,
   type ThetaService,
 } from '../service';
@@ -71,7 +72,7 @@ export class ThetaDevice {
       if (uuid) {
         this._uuid = uuid;
       }
-    } catch(error) {
+    } catch (error) {
       throw error;
     }
   }
@@ -84,31 +85,31 @@ export class ThetaDevice {
   async isConnected(): Promise<boolean> {
     return await ThetaBleClient.nativeIsConnected(this.id);
   }
-  
+
   /**
    * Disconnect from THETA.
    */
   async disconnect() {
     try {
       await ThetaBleClient.nativeDisconnect(this.id);
-    } catch(error) {
+    } catch (error) {
       throw error;
     }
   }
 
-  async getService(service: BleServiceEnum): Promise<ThetaService| undefined> {
+  async getService(service: BleServiceEnum): Promise<ThetaService | undefined> {
     try {
       if (!await ThetaBleClient.nativeContainService(this.id, service)) {
         return;
       }
       return this.newThetaService(service);
-    } catch(error) {
+    } catch (error) {
       throw error;
     }
   }
 
   private newThetaService(service: BleServiceEnum): ThetaService | undefined {
-    switch (service){
+    switch (service) {
     case BleServiceEnum.CAMERA_CONTROL_COMMANDS:
       return new CameraControlCommands(this);
     case BleServiceEnum.CAMERA_CONTROL_COMMAND_V2:
@@ -121,6 +122,8 @@ export class ThetaDevice {
       return new ShootingControlCommand(this);
     case BleServiceEnum.BLUETOOTH_CONTROL_COMMAND:
       return new BluetoothControlCommand(this);
+    case BleServiceEnum.WLAN_CONTROL_COMMAND:
+      return new WlanControlCommand(this);
     case BleServiceEnum.WLAN_CONTROL_COMMAND_V2:
       return new WlanControlCommandV2(this);
     default:

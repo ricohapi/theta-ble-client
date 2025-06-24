@@ -242,6 +242,10 @@ export async function nativeBluetoothControlCommandDeletePeripheralDevice(id: nu
   return ThetaBleClientReactNative.nativeBluetoothControlCommandDeletePeripheralDevice(id, macAddress);
 }
 
+export async function nativeWlanControlCommandGetWlanPasswordState(id: number): Promise<WlanPasswordStateEnum> {
+  return ThetaBleClientReactNative.nativeWlanControlCommandGetWlanPasswordState(id);
+}
+
 export async function nativeWlanControlCommandV2SetNetworkType(id: number, networkType: NetworkTypeEnum) {
   return ThetaBleClientReactNative.nativeWlanControlCommandV2SetNetworkType(id, networkType);
 }
@@ -288,10 +292,6 @@ export async function nativeWlanControlCommandV2SetAccessPointStatically(
   id: number, params: SetAccessPointParams,
 ) {
   return ThetaBleClientReactNative.nativeWlanControlCommandV2SetAccessPointStatically(id, params);
-}
-
-export async function nativeWlanControlCommandV2GetWlanPasswordState(id: number): Promise<WlanPasswordStateEnum> {
-  return ThetaBleClientReactNative.nativeWlanControlCommandV2GetWlanPasswordState(id);
 }
 
 export async function nativeReleaseDevice(id: number) {
