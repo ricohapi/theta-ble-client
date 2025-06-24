@@ -9,7 +9,7 @@ plugins {
     id("com.vanniktech.maven.publish") version "0.32.0"
 }
 
-val theta_ble_version = "1.3.0"
+val theta_ble_version = "1.3.1"
 
 group = "com.ricoh360.thetableclient"
 version = theta_ble_version
