@@ -10,6 +10,7 @@ import ScanSsidScreen from './screen/scan-ssid-screen';
 import OptionsScreen from './screen/camera-control-command-v2/options-screen';
 import OptionsByStringScreen from './screen/camera-control-command-v2/options-by-string-screen';
 import BluetoothControlCommandScreen from './screen/bluetooth-control-command';
+import WlanControlCommandScreen from './screen/wlan-control-command';
 import WlanControlCommandV2Screen from './screen/wlan-control-command-v2';
 import WlanSsidScreen from './screen/wlan-control-command-v2/wlan-ssid-screen';
 import SetAccessPointScreen from './screen/wlan-control-command-v2/set-access-point-screen';
@@ -22,6 +23,7 @@ export type RootStackParamList = {
   Options: undefined,
   OptionsByString: undefined,
   ScanSsid: undefined,
+  WlanControlCommand: undefined,
   WlanControlCommandV2: undefined,
   WlanSsid: undefined,
   WlanSetAccessPoint: undefined | {
@@ -61,6 +63,11 @@ const RootStack = () => {
         options={{ title: 'BluetoothControlCommand' }}
         name="BluetoothControlCommand"
         component={BluetoothControlCommandScreen}
+      />
+      <Stack.Screen
+        options={{ title: 'WlanControlCommand' }}
+        name="WlanControlCommand"
+        component={WlanControlCommandScreen}
       />
       <Stack.Screen
         options={{ title: 'WlanControlCommandV2' }}

@@ -1,4 +1,4 @@
-package com.ricoh360.thetableclient.wlancontrolv2
+package com.ricoh360.thetableclient.wlancontrol
 
 import com.ricoh360.thetableclient.ThetaBle
 import com.ricoh360.thetableclient.ble.MockBlePeripheral
@@ -41,7 +41,7 @@ class GetWlanPasswordStateTest {
             assertEquals(it.name, "WLAN_PASSWORD_STATE")
             targetValue.ble.toBytes()
         }
-        val result = device.wlanControlCommandV2?.getWlanPasswordState()
+        val result = device.wlanControlCommand?.getWlanPasswordState()
         assertEquals(targetValue, result, "getWlanPasswordState")
     }
 
@@ -54,7 +54,7 @@ class GetWlanPasswordStateTest {
         runBlocking {
             device.connect()
         }
-        val service = device.wlanControlCommandV2
+        val service = device.wlanControlCommand
         assertNotNull(service)
 
         // setup not connected
@@ -82,7 +82,7 @@ class GetWlanPasswordStateTest {
         runBlocking {
             device.connect()
         }
-        val service = device.wlanControlCommandV2
+        val service = device.wlanControlCommand
         assertNotNull(service)
 
         MockBlePeripheral.onRead = {
@@ -108,7 +108,7 @@ class GetWlanPasswordStateTest {
         runBlocking {
             device.connect()
         }
-        val service = device.wlanControlCommandV2
+        val service = device.wlanControlCommand
         assertNotNull(service)
 
         MockBlePeripheral.onRead = {
@@ -140,7 +140,7 @@ class GetWlanPasswordStateTest {
 
         try {
             device.connect()
-            device.wlanControlCommandV2?.getWlanPasswordState()
+            device.wlanControlCommand?.getWlanPasswordState()
             assertTrue(false, "exception unknown")
         } catch (e: ThetaBle.ThetaBleApiException) {
             assertTrue(e.message!!.indexOf("Unknown value", 0, true) >= 0, "exception unknown")

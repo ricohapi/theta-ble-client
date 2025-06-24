@@ -161,6 +161,13 @@ enum class BleCharacteristic(val bleService: BleService, val uuid: String) {
         "6E2DEEBE-88B0-42A5-829D-1B2C6ABCE750",
     ),
 
+    // WLAN Control Command
+
+    WLAN_PASSWORD_STATE(
+        BleService.WLAN_CONTROL_COMMAND,
+        "E522112A-5689-4901-0803-0520637DC895",
+    ),
+
     // WLAN Control Command v2
 
     NOTIFICATION_SCANNED_SSID(
@@ -186,11 +193,6 @@ enum class BleCharacteristic(val bleService: BleService, val uuid: String) {
     READ_CONNECTED_WIFI_INFO(
         BleService.WLAN_CONTROL_COMMAND_V2,
         "01DFF9FF-00FA-44DD-AA6A-71D5E537ABCF",
-    ),
-
-    WLAN_PASSWORD_STATE(
-        BleService.WLAN_CONTROL_COMMAND_V2,
-        "E522112A-5689-4901-0803-0520637DC895",
     ),
     ;
 

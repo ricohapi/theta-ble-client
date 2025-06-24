@@ -200,6 +200,10 @@ RCT_EXTERN_METHOD(nativeBluetoothControlCommandDeletePeripheralDevice:(int)id
                   withResolver:(RCTPromiseResolveBlock)resolve
                   withRejecter:(RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(nativeWlanControlCommandGetWlanPasswordState:(int)id
+                  withResolver:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
+
 RCT_EXTERN_METHOD(nativeWlanControlCommandV2SetNetworkType:(int)id
                   withNetworkType:(NSString*)networkType
                   withResolver:(RCTPromiseResolveBlock)resolve
@@ -235,10 +239,6 @@ RCT_EXTERN_METHOD(nativeWlanControlCommandV2SetAccessPointDynamically:(int)id
 
 RCT_EXTERN_METHOD(nativeWlanControlCommandV2SetAccessPointStatically:(int)id
                   withParams:(NSDictionary*)params
-                  withResolver:(RCTPromiseResolveBlock)resolve
-                  withRejecter:(RCTPromiseRejectBlock)reject)
-
-RCT_EXTERN_METHOD(nativeWlanControlCommandV2GetWlanPasswordState:(int)id
                   withResolver:(RCTPromiseResolveBlock)resolve
                   withRejecter:(RCTPromiseRejectBlock)reject)
 

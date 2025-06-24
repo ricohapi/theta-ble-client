@@ -6,7 +6,7 @@ import type {
   ThetaDevice,
 } from '../theta-device';
 import { ThetaService } from './theta-service';
-import { BleServiceEnum, NetworkTypeEnum, WifiSecurityModeEnum, WlanPasswordStateEnum } from './values';
+import { BleServiceEnum, NetworkTypeEnum, WifiSecurityModeEnum } from './values';
 import * as ThetaBleClient from '../native';
 import type { ConnectedWifiInfo, Proxy } from './data';
 
@@ -74,7 +74,7 @@ export class WlanControlCommandV2 extends ThetaService {
       this.device.notifyList.set('WRITE_SET_NETWORK_TYPE', callback ? (event: NetworkTypeNotify) => {
         callback(event.params?.networkType, event.error);
       } : undefined);
-    } catch(error) {
+    } catch (error) {
       throw error;
     }
   }
@@ -107,7 +107,7 @@ export class WlanControlCommandV2 extends ThetaService {
       this.device.notifyList.set('NOTIFICATION_CONNECTED_WIFI_INFO', callback ? (event: ConnectedWifiInfoNotify) => {
         callback(event.params, event.error);
       } : undefined);
-    } catch(error) {
+    } catch (error) {
       throw error;
     }
   }
@@ -187,7 +187,7 @@ export class WlanControlCommandV2 extends ThetaService {
       throw error;
     }
   }
-  
+
   /**
    * Set access point. IP address is set statically.
    *
@@ -229,22 +229,6 @@ export class WlanControlCommandV2 extends ThetaService {
           proxy,
         },
       );
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  /**
-   * Read WLAN password state.
-   *
-   * Service: 3C6FEEB6-F335-4F93-A4BB-495F926DB409
-   * Characteristic: E522112A-5689-4901-0803-0520637DC895
-   * 
-   * @returns start-up status
-   */
-  async getWlanPasswordState(): Promise<WlanPasswordStateEnum> {
-    try {
-      return await ThetaBleClient.nativeWlanControlCommandV2GetWlanPasswordState(this.device.id);
     } catch (error) {
       throw error;
     }

@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
     spec.name                     = 'THETABleClient'
-    spec.version                  = '1.3.0'
+    spec.version                  = '1.3.1'
     spec.homepage                 = 'https://github.com/ricohapi/theta-ble-client'
     spec.source                   = { :http=> ''}
     spec.authors                  = 'Ricoh Co, Ltd.'
@@ -10,6 +10,17 @@ Pod::Spec.new do |spec|
     spec.libraries                = 'c++'
     spec.ios.deployment_target = '14.0'
                 
+                
+    if !Dir.exist?('build/cocoapods/framework/THETABleClient.framework') || Dir.empty?('build/cocoapods/framework/THETABleClient.framework')
+        raise "
+
+        Kotlin framework 'THETABleClient' doesn't exist yet, so a proper Xcode project can't be generated.
+        'pod install' should be executed after running ':generateDummyFramework' Gradle task:
+
+            ./gradlew :kotlin-multiplatform:generateDummyFramework
+
+        Alternatively, proper pod installation is performed during Gradle sync in the IDE (if Podfile location is set)"
+    end
                 
     spec.pod_target_xcconfig = {
         'KOTLIN_PROJECT_PATH' => ':kotlin-multiplatform',

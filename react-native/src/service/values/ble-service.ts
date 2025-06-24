@@ -45,6 +45,13 @@ export const BleServiceEnum = {
   SHOOTING_CONTROL_COMMAND: 'SHOOTING_CONTROL_COMMAND',
 
   /**
+   * WLAN Control Command
+   * 
+   * Service: F37F568F-9071-445D-A938-5441F2E82399
+   */
+  WLAN_CONTROL_COMMAND: 'WLAN_CONTROL_COMMAND',
+
+  /**
    * WLAN Control Command v2
    * 
    * Service: 3C6FEEB6-F335-4F93-A4BB-495F926DB409

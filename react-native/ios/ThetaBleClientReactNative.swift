@@ -797,12 +797,12 @@ class ThetaBleClientReactNative: RCTEventEmitter {
         }
     }
 
-    @objc(nativeWlanControlCommandV2GetWlanPasswordState:withResolver:withRejecter:)
-    func nativeWlanControlCommandV2GetWlanPasswordState(id: Int,
-                                                        resolve: @escaping RCTPromiseResolveBlock,
-                                                        reject: @escaping RCTPromiseRejectBlock)
+    @objc(nativeWlanControlCommandGetWlanPasswordState:withResolver:withRejecter:)
+    func nativeWlanControlCommandGetWlanPasswordState(id: Int,
+                                                      resolve: @escaping RCTPromiseResolveBlock,
+                                                      reject: @escaping RCTPromiseRejectBlock)
     {
-        WlanControlCommandV2Service.getWlanPasswordState(id: id) { value in
+        WlanControlCommandService.getWlanPasswordState(id: id) { value in
             resolve(value)
         } reject: { code, message, error in
             reject(code, message, error)

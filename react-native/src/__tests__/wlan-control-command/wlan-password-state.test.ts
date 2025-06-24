@@ -1,6 +1,6 @@
 import { NativeModules } from 'react-native';
 import { ThetaDevice } from '../../theta-device';
-import { WlanControlCommandV2, WlanPasswordStateEnum } from '../../service';
+import { WlanControlCommand, WlanPasswordStateEnum } from '../../service';
 
 describe('WlanPasswordStateEnum', () => {
   const data: [WlanPasswordStateEnum, string][] = [
@@ -31,12 +31,12 @@ describe('Wlan Password State', () => {
   });
 
   afterEach(() => {
-    thetaBle.nativeWlanControlCommandV2GetWlanPasswordState = jest.fn();
+    thetaBle.nativeWlanControlCommandGetWlanPasswordState = jest.fn();
   });
 
   test('Call normal get', async () => {
     const bleValue = WlanPasswordStateEnum.SERIAL;
-    jest.mocked(thetaBle.nativeWlanControlCommandV2GetWlanPasswordState).mockImplementation(
+    jest.mocked(thetaBle.nativeWlanControlCommandGetWlanPasswordState).mockImplementation(
       jest.fn(async (id) => {
         expect(id).toBe(devId);
         return bleValue;
@@ -44,22 +44,22 @@ describe('Wlan Password State', () => {
     );
 
     const device = new ThetaDevice(devId, devName);
-    const service = new WlanControlCommandV2(device);
+    const service = new WlanControlCommand(device);
     const response = await service.getWlanPasswordState();
 
     expect(response).toBe(bleValue);
-    expect(thetaBle.nativeWlanControlCommandV2GetWlanPasswordState).toHaveBeenCalledWith(devId);
+    expect(thetaBle.nativeWlanControlCommandGetWlanPasswordState).toHaveBeenCalledWith(devId);
   });
 
   test('Exception get', async () => {
-    jest.mocked(thetaBle.nativeWlanControlCommandV2GetWlanPasswordState).mockImplementation(
+    jest.mocked(thetaBle.nativeWlanControlCommandGetWlanPasswordState).mockImplementation(
       jest.fn(async () => {
         throw 'error';
       }),
     );
 
     const device = new ThetaDevice(devId, devName);
-    const service = new WlanControlCommandV2(device);
+    const service = new WlanControlCommand(device);
     try {
       await service.getWlanPasswordState();
       throw new Error('failed');
@@ -67,6 +67,6 @@ describe('Wlan Password State', () => {
       expect(error).toBe('error');
     }
 
-    expect(thetaBle.nativeWlanControlCommandV2GetWlanPasswordState).toHaveBeenCalledWith(devId);
+    expect(thetaBle.nativeWlanControlCommandGetWlanPasswordState).toHaveBeenCalledWith(devId);
   });
 });
