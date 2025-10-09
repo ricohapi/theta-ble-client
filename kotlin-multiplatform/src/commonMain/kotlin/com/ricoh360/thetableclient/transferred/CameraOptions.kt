@@ -53,18 +53,3 @@ internal data class GetOptionsParams(
      */
     val optionNames: List<String>,
 )
-
-@Serializable
-internal data class CameraOptionsParent(
-    @SerialName("options")
-    val options: CameraOptions,
-) {
-    companion object {
-        fun decode(jsonString: String): CameraOptionsParent {
-            val json = Json {
-                ignoreUnknownKeys = true
-            }
-            return json.decodeFromString(jsonString)
-        }
-    }
-}

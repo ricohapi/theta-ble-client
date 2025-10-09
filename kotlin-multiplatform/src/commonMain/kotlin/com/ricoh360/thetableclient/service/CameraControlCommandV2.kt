@@ -16,10 +16,8 @@ import com.ricoh360.thetableclient.service.data.values.ApplicationError
 import com.ricoh360.thetableclient.service.data.values.CaptureMode
 import com.ricoh360.thetableclient.service.data.values.CaptureStatus
 import com.ricoh360.thetableclient.service.data.values.OptionName
-import com.ricoh360.thetableclient.service.data.values.ThetaModel
 import com.ricoh360.thetableclient.transferred.CameraInfo
 import com.ricoh360.thetableclient.transferred.CameraOptions
-import com.ricoh360.thetableclient.transferred.CameraOptionsParent
 import com.ricoh360.thetableclient.transferred.CameraState
 import com.ricoh360.thetableclient.transferred.CameraState2
 import com.ricoh360.thetableclient.transferred.GetOptionsParams
@@ -242,10 +240,8 @@ class CameraControlCommandV2 internal constructor(thetaDevice: ThetaBle.ThetaDev
             }
             val jsonString = data.decodeToString()
             println("getOptions: $jsonString")
-            return when (thetaDevice.model) {
-                ThetaModel.THETA_A1 -> ThetaOptions(CameraOptions.decode(jsonString))
-                else -> ThetaOptions(CameraOptionsParent.decode(jsonString).options)
-            }
+
+            return ThetaOptions(CameraOptions.decode(jsonString))
         } catch (e: ThetaBleApiException) {
             e.printStackTrace()
             throw e
