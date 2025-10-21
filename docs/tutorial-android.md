@@ -92,6 +92,28 @@ val deviceList = ThetaBle.scan(timeout)
 
 <br/>
 
+## Connect to THETA
+
+You can connect to Theta with `ThetaBle.ThetaDevice.connect()`.
+
+When you have done using the BLE API, disconnect with `ThetaDevice.disconnect()`.
+
+``` Kotlin
+val device: ThetaBle.ThetaDevice? = ThetaBle.scan("AA01234567") // For Thata A1
+// or
+// val device: ThetaBle.ThetaDevice? = ThetaBle.scan("01234567")   // For Theta X/Z1
+
+if (device != null) {
+    try {
+        device.connect()
+        // call BLE APIs
+        device.disconnect()
+    } catch (e: ThetaBle.ThetaBleException) {
+        // handle an error
+    }
+} 
+```
+
 ## Calling the BLE API
 
 To call the BLE API, call the method of the service object defined in `ThetaBle.ThetaDevice`.
@@ -225,7 +247,7 @@ The properties of [`ThateState`](https://github.com/ricohapi/theta-ble-client/bl
 
 | Information | Properties | Type | Remarks |
 |------|-----------|----|-----|
-| Latest image URL | `latestFileUrl` | `String?` | The URL of the last image taken (non-DNG format). You can download it if you connect Theta to WiFi.
+| Latest image URL | `latestFileUrl` | `String?` | The URL of the last image taken (non-DNG format). You can download it if you connect Theta to WLAN.
 | Video recording time (seconds) | `recordedTime` | `Int?` ||
 | Video recording time (seconds) | `recordableTime` | `Int?` ||
 | Continuous shooting status | `captureStatus` | [`CaptureStatus?`](https://github.com/ricohapi/theta-ble-client/blob/main/kotlin-multiplatform/src/commonMain/kotlin/com/ricoh360/thetableclient/service/data/values/CaptureStatus.kt) ||

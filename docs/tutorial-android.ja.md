@@ -107,8 +107,8 @@ BLE APIの使用が終わったら、`ThetaDevice.disconnect()`で切断しま�
 
 ``` Kotlin
 val device: ThetaBle.ThetaDevice? = ThetaBle.scan("AA01234567") // For Thata A1
-or
-val device: ThetaBle.ThetaDevice? = ThetaBle.scan("01234567")   // For Theta X
+// or
+// val device: ThetaBle.ThetaDevice? = ThetaBle.scan("01234567")   // For Theta X/Z1
 
 if (device != null) {
     try {
@@ -254,7 +254,7 @@ if(device != null) {
 
 | 情報 | プロパティ | 型 | 備考 |
 |------|-----------|----|-----|
-| 最新画像URL | `latestFileUrl` | `String?` | 最後に撮影された画像(DNGフォーマット以外)のURL。WiFi接続すればダウンロードできる。 |
+| 最新画像URL | `latestFileUrl` | `String?` | 最後に撮影された画像(DNGフォーマット以外)のURL。WLAN接続すればダウンロードできる。 |
 | ビデオ撮影時間(秒) | `recordedTime` | `Int?` ||
 | ビデオ撮影可能時間(秒) | `recordableTime` | `Int?` ||
 | 連続撮影状態 | `captureStatus` | [`CaptureStatus?`](https://github.com/ricohapi/theta-ble-client/blob/main/kotlin-multiplatform/src/commonMain/kotlin/com/ricoh360/thetableclient/service/data/values/CaptureStatus.kt) ||
