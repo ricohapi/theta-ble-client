@@ -235,7 +235,7 @@ if(device != null) {
 
 <br/>
 
-撮影を行うサンプルコードをです。
+撮影を行うサンプルコードです。
 
 ```kotlin
 val device = ThetaBle.scan(devName)
