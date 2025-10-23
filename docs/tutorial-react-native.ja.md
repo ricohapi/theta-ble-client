@@ -232,14 +232,14 @@ console.log(options.defaultWifiPassword)
 ## オプションの値の設定
 
 [`ThetaOptions`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/data/theta-options.ts) で定義しているオプションの値を`CameraControlCommandV2.setOptions()`で設定できます。
+ただし`defaultWifiPassword`は設定できません。
 
 | オプション | [`ThetaOptions`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/data/theta-options.ts)のプロパティ | 型 | 備考 |
 | --------- | ----------------------- | -- | ---- |
 | アクセスポイント情報 | `accessInfo?` | [`AccessInfo`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/data/access-info.ts) | Theta A1, Xのみ |
 | Thetaの電源状態 | `cameraPower?` | [`CameraPowerEnum`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/values/camera-power.ts) | |
 | 撮影モード | `captureMode?` | [`CaptureModeEnum`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/values/capture-mode.ts) | |
-| APモードのWLANパスワードの初期値 | `defaultWifiPassword?` | `string` ||
-| 設定されているネットワークタイプ | `networkType?` | [`NetworkTypeEnum`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/values/network-type.ts) | |
+| ネットワークタイプ | `networkType?` | [`NetworkTypeEnum`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/values/network-type.ts) | |
 | APモードのSSID | `ssid?` | `String` ||
 | CLモードのダイジェスト認証用のユーザ名 | `username?` | `string` ||
 | CLモードのダイジェスト認証用のパスワード | `password?` | `string` ||
@@ -301,7 +301,7 @@ await service?.releaseShutter();
 
 | 情報 | プロパティ | 型 | 備考 |
 |------|-----------|----|-----|
-| 最新画像URL | `latestFileUrl?` | `string` | 最後に撮影された画像(DNGフォーマット以外)のURL。WiFi接続すればダウンロードできる。 |
+| 最新画像URL | `latestFileUrl?` | `string` | 最後に撮影された画像(DNGフォーマット以外)のURL。WLAN接続すればダウンロードできる。 |
 | ビデオ撮影時間(秒) | `recordedTime?` | `number` ||
 | ビデオ撮影可能時間(秒) | `recordableTime?` | `number` ||
 | 連続撮影状態 | `captureStatus?` | [`CaptureStatusEnum`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/values/capture-status.ts) ||
@@ -320,8 +320,8 @@ await service?.releaseShutter();
 
 | 情報 | プロパティ | 型 | 備考 |
 |------|-----------|----|-----|
-| 内蔵GPSモジュールの位置情報 | `internalGpsInfo?` | [`{gpsInfo: GpsInfo}`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/data/gps-info.ts#L4) ||
-| 外部GPSデバイスの位置情報 | `externalGpsInfo?` | [`{gpsInfo: GpsInfo}`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/data/gps-info.ts#L4) ||
+| 内蔵GPSモジュールの位置情報 | `internalGpsInfo?` | [`{gpsInfo: GpsInfo}`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/data/gps-info.ts) ||
+| 外部GPSデバイスの位置情報 | `externalGpsInfo?` | [`{gpsInfo: GpsInfo}`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/data/gps-info.ts) ||
 
 <br/>
 

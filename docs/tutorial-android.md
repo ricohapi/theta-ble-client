@@ -30,7 +30,8 @@ The application must request Bluetooth permissions.
 
 ## Enabling Bluetooth (Theta X/Z1 only)
 
-When Bluetooth is turned off on the Theta X/Z1, you can turn it on with the Theta operation, but you can also turn it on via the Web API. The Theta A1 has Bluetooth on all the time.
+When Bluetooth is turned off on the Theta X/Z1, you can turn it on with the Theta operation, but you can also turn it on via the Web API.
+Theta A1 has Bluetooth on all the time.
 
 1. In the Web API, set the option [\_bluetoothPower](https://docs-theta-api.ricoh360.com/web-api/options/bluetoothPower.html) to `ON`.
 
@@ -188,14 +189,14 @@ if(device != null) {
 ## Setting Optional Values
 
 You can set the value of the options defined in [`ThetaOptions`](https://github.com/ricohapi/theta-ble-client/blob/main/kotlin-multiplatform/src/commonMain/kotlin/com/ricoh360/thetableclient/service/data/ThetaOptions.kt) with `CameraControlCommandV2.setOptions()`.
+However, you can not set `DefaultWifiPassword`.
 
 | Options | `OptionName` Properties | Type | Remarks |
 | --------- | ----------------------- | -- | ---- |
 | Access point information | `AccessInfo` | [`AccessInfo?`](https://github.com/ricohapi/theta-ble-client/blob/main/kotlin-multiplatform/src/commonMain/kotlin/com/ricoh360/thetableclient/service/data/AccessInfo.kt) | Theta A1, Xのみ |
 | Theta power status | `CameraPower` | [`CameraPower?`](https://github.com/ricohapi/theta-ble-client/blob/main/kotlin-multiplatform/src/commonMain/kotlin/com/ricoh360/thetableclient/service/data/values/CameraPower.kt) | |
 | Shooting mode | `CaptureMode` | [`CaptureMode?`](https://github.com/ricohapi/theta-ble-client/blob/main/kotlin-multiplatform/src/commonMain/kotlin/com/ricoh360/thetableclient/service/data/values/CaptureMode.kt) | |
-| Default WLAN password for AP mode | `DefaultWifiPassword` | `String?` ||
-| Configured network type | `NetworkType` | [`NetworkType?`](https://github.com/ricohapi/theta-ble-client/blob/main/kotlin-multiplatform/src/commonMain/kotlin/com/ricoh360/thetableclient/service/data/values/NetworkType.kt) | |
+| network type | `NetworkType` | [`NetworkType?`](https://github.com/ricohapi/theta-ble-client/blob/main/kotlin-multiplatform/src/commonMain/kotlin/com/ricoh360/thetableclient/service/data/values/NetworkType.kt) | |
 | AP mode SSID | `Ssid` | `String?` ||
 | Username for CL mode digest authentication | `Username` | `String?` ||
 | Password for CL mode digest authentication | `password` | `String?` ||
@@ -303,7 +304,7 @@ if(device != null) {
 }
 ```
 
-## Controlling the Wifi
+## Controlling the WLAN
 
 You can use the [`WlanControlCommandV2`](https://github.com/ricohapi/theta-ble-client/blob/main/kotlin-multiplatform/src/commonMain/kotlin/com/ricoh360/thetableclient/service/WlanControlCommandV2.kt) service to control the wireless LAN.
 

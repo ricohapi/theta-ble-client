@@ -195,14 +195,14 @@ if(device != null) {
 ## オプションの値の設定
 
 [`ThetaOptions`](https://github.com/ricohapi/theta-ble-client/blob/main/kotlin-multiplatform/src/commonMain/kotlin/com/ricoh360/thetableclient/service/data/ThetaOptions.kt) で定義しているオプションの値を`CameraControlCommandV2.setOptions()`で設定できます。
+ただし`defaultWifiPassword`は設定できません。
 
 | オプション | `ThetaOptions`のプロパティ | 型 | 備考 |
 | --------- | ----------------------- | -- | ---- |
 | アクセスポイント情報 | `accessInfo` | [`AccessInfo?`](https://github.com/ricohapi/theta-ble-client/blob/main/kotlin-multiplatform/src/commonMain/kotlin/com/ricoh360/thetableclient/service/data/AccessInfo.kt) | Theta A1, Xのみ |
 | Thetaの電源状態 | `cameraPower` | [`CameraPower?`](https://github.com/ricohapi/theta-ble-client/blob/main/kotlin-multiplatform/src/commonMain/kotlin/com/ricoh360/thetableclient/service/data/values/CameraPower.kt) | |
 | 撮影モード | `captureMode` | [`CaptureMode?`](https://github.com/ricohapi/theta-ble-client/blob/main/kotlin-multiplatform/src/commonMain/kotlin/com/ricoh360/thetableclient/service/data/values/CaptureMode.kt) | |
-| APモードのWLANパスワードの初期値 | `defaultWifiPassword` | `String?` ||
-| 設定されているネットワークタイプ | `networkType` | [`NetworkType?`](https://github.com/ricohapi/theta-ble-client/blob/main/kotlin-multiplatform/src/commonMain/kotlin/com/ricoh360/thetableclient/service/data/values/NetworkType.kt) | |
+| ネットワークタイプ | `networkType` | [`NetworkType?`](https://github.com/ricohapi/theta-ble-client/blob/main/kotlin-multiplatform/src/commonMain/kotlin/com/ricoh360/thetableclient/service/data/values/NetworkType.kt) | |
 | APモードのSSID | `ssid` | `String?` ||
 | CLモードのダイジェスト認証用のユーザ名 | `username` | `String?` ||
 | CLモードのダイジェスト認証用のパスワード | `password` | `String?` ||
