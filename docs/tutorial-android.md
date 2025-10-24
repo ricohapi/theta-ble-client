@@ -161,7 +161,7 @@ You can get the value of the option defined in [`OptionName`](https://github.com
 | Options | `OptionName` Properties | Type | Remarks |
 | --------- | ----------------------- | -- | ---- |
 | Access point information | `AccessInfo` | [`AccessInfo?`](https://github.com/ricohapi/theta-ble-client/blob/main/kotlin-multiplatform/src/commonMain/kotlin/com/ricoh360/thetableclient/service/data/AccessInfo.kt) | Theta A1, Xのみ |
-| Theta power status | `CameraPower` | [`CameraPower?`](https://github.com/ricohapi/theta-ble-client/blob/main/kotlin-multiplatform/src/commonMain/kotlin/com/ricoh360/thetableclient/service/data/values/CameraPower.kt) | |
+| Theta power state | `CameraPower` | [`CameraPower?`](https://github.com/ricohapi/theta-ble-client/blob/main/kotlin-multiplatform/src/commonMain/kotlin/com/ricoh360/thetableclient/service/data/values/CameraPower.kt) | |
 | Shooting mode | `CaptureMode` | [`CaptureMode?`](https://github.com/ricohapi/theta-ble-client/blob/main/kotlin-multiplatform/src/commonMain/kotlin/com/ricoh360/thetableclient/service/data/values/CaptureMode.kt) | |
 | Default WLAN password for AP mode | `DefaultWifiPassword` | `String?` ||
 | Configured network type | `NetworkType` | [`NetworkType?`](https://github.com/ricohapi/theta-ble-client/blob/main/kotlin-multiplatform/src/commonMain/kotlin/com/ricoh360/thetableclient/service/data/values/NetworkType.kt) | |
@@ -194,9 +194,9 @@ However, you can not set `DefaultWifiPassword`.
 | Options | `OptionName` Properties | Type | Remarks |
 | --------- | ----------------------- | -- | ---- |
 | Access point information | `AccessInfo` | [`AccessInfo?`](https://github.com/ricohapi/theta-ble-client/blob/main/kotlin-multiplatform/src/commonMain/kotlin/com/ricoh360/thetableclient/service/data/AccessInfo.kt) | Theta A1, Xのみ |
-| Theta power status | `CameraPower` | [`CameraPower?`](https://github.com/ricohapi/theta-ble-client/blob/main/kotlin-multiplatform/src/commonMain/kotlin/com/ricoh360/thetableclient/service/data/values/CameraPower.kt) | |
+| Theta power state | `CameraPower` | [`CameraPower?`](https://github.com/ricohapi/theta-ble-client/blob/main/kotlin-multiplatform/src/commonMain/kotlin/com/ricoh360/thetableclient/service/data/values/CameraPower.kt) | |
 | Shooting mode | `CaptureMode` | [`CaptureMode?`](https://github.com/ricohapi/theta-ble-client/blob/main/kotlin-multiplatform/src/commonMain/kotlin/com/ricoh360/thetableclient/service/data/values/CaptureMode.kt) | |
-| network type | `NetworkType` | [`NetworkType?`](https://github.com/ricohapi/theta-ble-client/blob/main/kotlin-multiplatform/src/commonMain/kotlin/com/ricoh360/thetableclient/service/data/values/NetworkType.kt) | |
+| Network type | `NetworkType` | [`NetworkType?`](https://github.com/ricohapi/theta-ble-client/blob/main/kotlin-multiplatform/src/commonMain/kotlin/com/ricoh360/thetableclient/service/data/values/NetworkType.kt) | |
 | AP mode SSID | `Ssid` | `String?` ||
 | Username for CL mode digest authentication | `Username` | `String?` ||
 | Password for CL mode digest authentication | `password` | `String?` ||
@@ -242,7 +242,7 @@ if(device != null) {
 
 ## Getting Theta state
 
-You can get the status of Theta ([`ThetaState`](https://github.com/ricohapi/theta-ble-client/blob/main/kotlin-multiplatform/src/commonMain/kotlin/com/ricoh360/thetableclient/service/data/ThetaState.kt)、[`ThetaState2`](https://github.com/ricohapi/theta-ble-client/blob/main/kotlin-multiplatform/src/commonMain/kotlin/com/ricoh360/thetableclient/service/data/ThetaState2.kt)) with `CameraControlCommandV2.getState()` and `CameraControlCommandV2.getState2()`.
+You can get the state of Theta ([`ThetaState`](https://github.com/ricohapi/theta-ble-client/blob/main/kotlin-multiplatform/src/commonMain/kotlin/com/ricoh360/thetableclient/service/data/ThetaState.kt)、[`ThetaState2`](https://github.com/ricohapi/theta-ble-client/blob/main/kotlin-multiplatform/src/commonMain/kotlin/com/ricoh360/thetableclient/service/data/ThetaState2.kt)) with `CameraControlCommandV2.getState()` and `CameraControlCommandV2.getState2()`.
 
 The properties of [`ThateState`](https://github.com/ricohapi/theta-ble-client/blob/main/kotlin-multiplatform/src/commonMain/kotlin/com/ricoh360/thetableclient/service/data/ThetaState.kt) are as follows.
 
@@ -256,7 +256,7 @@ The properties of [`ThateState`](https://github.com/ricohapi/theta-ble-client/bl
 | Shooting settings | `function` | [`ShootingFunction?`](https://github.com/ricohapi/theta-ble-client/blob/main/kotlin-multiplatform/src/commonMain/kotlin/com/ricoh360/thetableclient/service/data/values/ShootingFunction.kt) ||
 | Battery availability | `batteryInsert` | `Boolean?` ||
 | Battery level | `batteryLevel` | `Float?` | 0 to 1 |
-| Charging status | `batteryState` | [`ChargingState?`](https://github.com/ricohapi/theta-ble-client/blob/main/kotlin-multiplatform/src/commonMain/kotlin/com/ricoh360/thetableclient/service/data/values/ChargingState.kt) ||
+| Charging state | `batteryState` | [`ChargingState?`](https://github.com/ricohapi/theta-ble-client/blob/main/kotlin-multiplatform/src/commonMain/kotlin/com/ricoh360/thetableclient/service/data/values/ChargingState.kt) ||
 | Main board temperature | `boardTemp` | `Int?` ||
 | Battery temperature | `batteryTemp` | `Int?` ||
 | Error condition | `cameraError` | [`List<CameraError>?`](https://github.com/ricohapi/theta-ble-client/blob/main/kotlin-multiplatform/src/commonMain/kotlin/com/ricoh360/thetableclient/service/data/values/CameraError.kt)||
@@ -283,7 +283,7 @@ if(device != null) {
 }
 ```
 
-## Theta status notifications
+## Theta state notifications
 
 If you call `CameraControlCommandV2.setStateNotify()` with a callback function as an argument, it will be called when the state changes.
 If you omit the argument, you will cancel the configured callback function.
@@ -310,7 +310,7 @@ You can use the [`WlanControlCommandV2`](https://github.com/ricohapi/theta-ble-c
 
 | Features | Methods | Arguments | Returns |
 | ---- | ------- | ---- |------ |
-| Getting access point connection status | `getConnectedWifiInfo()` | - | [`ConnectedWifiInfo`](https://github.com/ricohapi/theta-ble-client/blob/main/kotlin-multiplatform/src/commonMain/kotlin/com/ricoh360/thetableclient/service/data/ConnectedWifiInfo.kt) |
+| Getting access point connection state | `getConnectedWifiInfo()` | - | [`ConnectedWifiInfo`](https://github.com/ricohapi/theta-ble-client/blob/main/kotlin-multiplatform/src/commonMain/kotlin/com/ricoh360/thetableclient/service/data/ConnectedWifiInfo.kt) |
 | Configuring an access point (DHCP) | `setAccessPointDynamically()` | SSID, etc. | - |
 | Configuring an access point (static) | `setAccessPointStatically()` | SSID, IP address, and more | - |
 | Network type settings | `setNetworkType()` | [`NetworkType`](https://github.com/ricohapi/theta-ble-client/blob/main/kotlin-multiplatform/src/commonMain/kotlin/com/ricoh360/thetableclient/service/data/values/NetworkType.kt) | - |

@@ -120,11 +120,11 @@ You can get the camera information (`ThetaInfo` object) using `ThetaDevice.camer
 | Information | Properties | Type |
 |------|-----------|----|
 | Manufacturer | `manufacturer` | `String` |
-| THETA Models | `model` | `ThetaModel` |
-| Serial Number | `serialNumber` | `String` |
-| WLAN MAC Address | `wlanMacAddress` | `String?` |
-| Bluetooth MAC Addresses | `bluetoothMacAddress` | `String?` |
-| Firmware Version | `firmwareVersion` | `String` |
+| THETA models | `model` | `ThetaModel` |
+| Serial number | `serialNumber` | `String` |
+| WLAN MAC address | `wlanMacAddress` | `String?` |
+| Bluetooth MAC addresses | `bluetoothMacAddress` | `String?` |
+| Firmware version | `firmwareVersion` | `String` |
 | Uptime (seconds) | `uptime` | `Int` |
 
 ## Obtaining optional values
@@ -133,15 +133,15 @@ You can get the value of the option defined in `OptionName` with `CameraControlC
 
 | Options | `OptionName` Properties | Type | Remarks |
 | --------- | ----------------------- | -- | ---- |
-| Access Point Information | `AccessInfo` | `AccessInfo?` | Theta A1, X only |
-| Theta Power Status | `CameraPower` | `CameraPower?` | |
-| Shooting Modes | `CaptureMode` | `CaptureMode?` | |
-| Default WLAN Password in AP Mode | `DefaultWifiPassword` | `String?` ||
-| Configured Network Type | `NetworkType` | `NetworkType?` | |
-| SSID in AP Mode | `Ssid` | `String?` ||
-| Username for CL Mode Digest Authentication | `Username` | `String?` ||
-| Radio Antenna Settings | `WlanAntennaConfig` | `WlanAntennaConfig?` | Theta A1, X only |
-| AP Mode Radio Frequency | `WlanFrequency` | `WlanFrequency?` ||
+| Access point information | `AccessInfo` | `AccessInfo?` | Theta A1, X only |
+| Theta power state | `CameraPower` | `CameraPower?` | |
+| Shooting modes | `CaptureMode` | `CaptureMode?` | |
+| Default WLAN password in AP mode | `DefaultWifiPassword` | `String?` ||
+| Configured network type | `NetworkType` | `NetworkType?` | |
+| SSID in AP mode | `Ssid` | `String?` ||
+| Username for CL mode digest authentication | `Username` | `String?` ||
+| Radio antenna settings | `WlanAntennaConfig` | `WlanAntennaConfig?` | Theta A1, X only |
+| AP mode radio frequency | `WlanFrequency` | `WlanFrequency?` ||
 
 <br/>
 
@@ -163,15 +163,15 @@ However, you cannot set `defaultWifiPassword`.
 
 | Options | `ThetaOptions` Properties | Type | Remarks |
 | --------- | ----------------------- | -- | ---- |
-| Access Point Information | `accessInfo` | `AccessInfo?` | Theta A1, X only |
-| Theta Power Status | `cameraPower` | `CameraPower?` | |
-| Shooting Modes | `captureMode` | `CaptureMode?` | |
-| Network Type | `networkType` | `NetworkType?` | |
-| SSID in AP Mode | `ssid` | `String?` ||
-| Username for CL Mode Digest Authentication | `username` | `String?` ||
-| Password for CL Mode Digest Authentication | `password` | `String?` ||
-| Radio Antenna Settings | `wlanAntennaConfig` | `WlanAntennaConfig?` | Theta A1, X only |
-| AP Mode Radio Frequency | `wlanFrequency` | `WlanFrequency?` ||
+| Access point information | `accessInfo` | `AccessInfo?` | Theta A1, X only |
+| Theta power state | `cameraPower` | `CameraPower?` | |
+| Shooting modes | `captureMode` | `CaptureMode?` | |
+| Network type | `networkType` | `NetworkType?` | |
+| SSID in AP mode | `ssid` | `String?` ||
+| Username for CL mode digest authentication | `username` | `String?` ||
+| Password for CL mode digest authentication | `password` | `String?` ||
+| Radio antenna settings | `wlanAntennaConfig` | `WlanAntennaConfig?` | Theta A1, X only |
+| AP mode radio frequency | `wlanFrequency` | `WlanFrequency?` ||
 
 <br/>
 
@@ -216,17 +216,17 @@ The properties of `ThateState` are as follows:
 | Information | Properties | Type | Remarks |
 |------|-----------|----|-----|
 | Latest image URL | `latestFileUrl` | `String?` | The URL of the last image taken (non-DNG format). You can download it by connecting to WLAN.
-| Video Recording Time (Seconds) | `recordedTime` | `Int?` ||
-| Video Recording Time (Seconds) | `recordableTime` | `Int?` ||
-| Continuous Shooting Status | `captureStatus` | `CaptureStatus?` ||
-| Number of Continuous Shots | `capturedPictures` | `Int?` ||
-| Shooting Settings | `function` | `ShootingFunction?` ||
-| Battery Availability | `batteryInsert` | `Boolean?` ||
-| Battery Level | `batteryLevel` | `Float?` | 0 to 1 |
-| State of Charge | `batteryState` | `ChargingState?` ||
-| Main Base Temperature | `boardTemp` | `Int?` ||
-| Battery Temperature | `batteryTemp` | `Int?` ||
-| Error Condition | `cameraError` | `List<CameraError>?`||
+| Video recording time (seconds) | `recordedTime` | `Int?` ||
+| Video recording time (seconds) | `recordableTime` | `Int?` ||
+| Continuous shooting status | `captureStatus` | `CaptureStatus?` ||
+| Number of continuous shots | `capturedPictures` | `Int?` ||
+| Shooting settings | `function` | `ShootingFunction?` ||
+| Battery availability | `batteryInsert` | `Boolean?` ||
+| Battery level | `batteryLevel` | `Float?` | 0 to 1 |
+| State of charge | `batteryState` | `ChargingState?` ||
+| Main board temperature | `boardTemp` | `Int?` ||
+| Battery temperature | `batteryTemp` | `Int?` ||
+| Error condition | `cameraError` | `List<CameraError>?`||
 
 <br/>
 
@@ -234,8 +234,8 @@ The properties of `ThateState2` are as follows:
 
 | Information | Properties | Type | Remarks |
 |------|-----------|----|-----|
-| Built-in GPS Module Location | `internalGpsInfo` | `StateGpsInfo?` ||
-| Location of External GPS Devices | `externalGpsInfo` | `StateGpsInfo?` ||
+| Location of built-in GPS module | `internalGpsInfo` | `StateGpsInfo?` ||
+| Location of external GPS devices | `externalGpsInfo` | `StateGpsInfo?` ||
 
 <br/>
 
@@ -249,7 +249,7 @@ let state = try await service?.getState()
 // use state?.latestFileUrl
 ```
 
-## Theta status notifications
+## Theta state notifications
 
 If you call `CameraControlCommandV2.setStateNotify()` with a callback function as an argument, it will be called when the state changes.
 If you omit the argument, you will cancel the configured callback function.
@@ -279,7 +279,7 @@ You can use the `WlanControlCommandV2` service to control the wireless LAN.
 
 | Features | Methods | Arguments | Returns |
 | ---- | ------- | ---- |------ |
-| Getting Access Point Connection Status | `getConnectedWifiInfo()` | - |`ConnectedWifiInfo` |
-| Configuring Access Points (DHCP) | `setAccessPointDynamically()` | SSID, etc. | - |
-| Configuring Access Points (Static) | `setAccessPointStatically()` | SSID, IP Address, & More | - |
-| Network Type Settings | `setNetworkType()` | `NetworkType` | - |
+| Getting access point connection state | `getConnectedWifiInfo()` | - |`ConnectedWifiInfo` |
+| Configuring an access point (DHCP) | `setAccessPointDynamically()` | SSID, etc. | - |
+| Configuring an access point (Static) | `setAccessPointStatically()` | SSID, IP Address, & More | - |
+| Network type settings | `setNetworkType()` | `NetworkType` | - |

@@ -187,11 +187,11 @@ The properties of `ThetaInfo` are as follows:
 | Information | Properties | Type |
 |------|-----------|----|
 | Manufacturer | `manufacturer` | `string` |
-| THETA Models | `model` | `ThetaModel` |
-| Serial Number | `serialNumber` | `string` |
-| WLAN MAC Address | `wlanMacAddress?` | `string` |
-| Bluetooth MAC Addresses | `bluetoothMacAddress?` | `string` |
-| Firmware Version | `firmwareVersion` | `string` |
+| THETA models | `model` | `ThetaModel` |
+| Serial number | `serialNumber` | `string` |
+| WLAN MAC address | `wlanMacAddress?` | `string` |
+| Bluetooth MAC addresses | `bluetoothMacAddress?` | `string` |
+| Firmware version | `firmwareVersion` | `string` |
 | Uptime (seconds) | `uptime` | `number` |
 
 ## Obtaining optional values
@@ -201,15 +201,15 @@ However, you cannot get `Password`.
 
 | Options | `OptionName` Properties | Type | Remarks |
 | --------- | ----------------------- | -- | ---- |
-| Access Point Information | `AccessInfo` | [`AccessInfo`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/data/access-info.ts) | Theta A1, X only |
-| Theta Power Status | `CameraPower` | [`CameraPowerEnum`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/values/camera-power.ts) | |
-| Shooting Mode | `CaptureMode` | [`CaptureModeEnum`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/values/capture-mode.ts) | |
-| Default WLAN Password in AP Mode | `DefaultWifiPassword` | `string` ||
-| Network type set | `NetworkType` | [`NetworkTypeEnum`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/values/network-type.ts) | |
-| SSID in AP Mode | `Ssid` | `string` ||
-| Username for CL Mode Digest Authentication | `Username` | `string` ||
-| Radio Antenna Configuration | `WlanAntennaConfig` | [`WlanAntennaConfigEnum`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/values/wlan-antenna-config.ts) | Theta A1, X only |
-| AP Mode Radio Frequency | `WlanFrequency` | [`WlanFrequencyEnum`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/values/wlan-frequency.ts) ||
+| Access point information | `AccessInfo` | [`AccessInfo`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/data/access-info.ts) | Theta A1, X only |
+| Theta power state | `CameraPower` | [`CameraPowerEnum`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/values/camera-power.ts) | |
+| Shooting mode | `CaptureMode` | [`CaptureModeEnum`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/values/capture-mode.ts) | |
+| Default WLAN password in AP mode | `DefaultWifiPassword` | `string` ||
+| Configured network type | `NetworkType` | [`NetworkTypeEnum`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/values/network-type.ts) | |
+| SSID in AP mode | `Ssid` | `string` ||
+| Username for CL mode digest authentication | `Username` | `string` ||
+| Radio antenna configuration | `WlanAntennaConfig` | [`WlanAntennaConfigEnum`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/values/wlan-antenna-config.ts) | Theta A1, X only |
+| AP mode radio frequency | `WlanFrequency` | [`WlanFrequencyEnum`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/values/wlan-frequency.ts) ||
 
 <br/>
 
@@ -237,16 +237,16 @@ However, you cannot set `defaultWifiPassword`.
 
 | Options | [`ThetaOptions`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/data/theta-options.ts) Properties | Type | Remarks |
 | --------- | ----------------------- | -- | ---- |
-| Access Point Information | `accessInfo?` | [`AccessInfo`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/data/access-info.ts) | Theta A1, X only |
-| Theta Power Status | `cameraPower?` | [`CameraPowerEnum`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/values/camera-power.ts) | |
-| Shooting Mode | `captureMode?` | [`CaptureModeEnum`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/values/capture-mode.ts) | |
-| Default WLAN Password in AP Mode | `defaultWifiPassword?` | `string` ||
+| Access point information | `accessInfo?` | [`AccessInfo`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/data/access-info.ts) | Theta A1, X only |
+| Theta power state | `cameraPower?` | [`CameraPowerEnum`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/values/camera-power.ts) | |
+| Shooting mode | `captureMode?` | [`CaptureModeEnum`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/values/capture-mode.ts) | |
+| Default WLAN password in AP mode | `defaultWifiPassword?` | `string` ||
 | Network type | `networkType?` | [`NetworkTypeEnum`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/values/network-type.ts) | |
-| SSID in AP Mode | `ssid?` | `String` ||
-| Username for CL Mode Digest Authentication | `username?` | `string` ||
-| Password for CL Mode Digest Authentication | `password?` | `string` ||
-| Radio Antenna Configuration | `wlanAntennaConfig?` | [`WlanAntennaConfigEnum`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/values/wlan-antenna-config.ts) | Theta A1, X only |
-| AP Mode Radio Frequency | `wlanFrequency?` | [`WlanFrequencyEnum`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/values/wlan-frequency.ts) ||
+| SSID in AP mode | `ssid?` | `String` ||
+| Username for CL mode digest authentication | `username?` | `string` ||
+| Password for CL mode digest authentication | `password?` | `string` ||
+| Radio antenna configuration | `wlanAntennaConfig?` | [`WlanAntennaConfigEnum`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/values/wlan-antenna-config.ts) | Theta A1, X only |
+| AP mode radio frequency | `wlanFrequency?` | [`WlanFrequencyEnum`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/values/wlan-frequency.ts) ||
 
 <br/>
 
@@ -297,7 +297,7 @@ await service?.releaseShutter();
 
 ## Getting Theta state
 
-You can get the status of Theta ([`ThetaState`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/data/theta-state.ts)、[`ThetaState2`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/data/theta-state2.ts)) with `CameraControlCommandV2.getState()` and `CameraControlCommandV2.getState2()`.
+You can get the state of Theta ([`ThetaState`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/data/theta-state.ts)、[`ThetaState2`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/data/theta-state2.ts)) with `CameraControlCommandV2.getState()` and `CameraControlCommandV2.getState2()`.
 
 The properties of [`ThateState`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/data/theta-state.ts) are as follows: 
 
@@ -311,7 +311,7 @@ The properties of [`ThateState`](https://github.com/ricohapi/theta-ble-client-pr
 | Shooting settings | `shootingFunction?` | [`ShootingFunctionEnum`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/values/shooting-function.ts) ||
 | Battery availability | `batteryInsert?` | `boolean` ||
 | Battery level | `batteryLevel?` | `number` | 0 to 1 |
-| Charging status | `batteryState?` | [`ChargingStateEnum`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/values/charging-state.ts) ||
+| Charging state | `batteryState?` | [`ChargingStateEnum`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/values/charging-state.ts) ||
 | Main board temperature | `boardTemp?` | `number` ||
 | Battery temperature | `batteryTemp?` | `number` ||
 | Error state | `cameraError?` | [`CameraErrorEnum[]`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/values/camera-error.ts)||
@@ -343,7 +343,7 @@ const state = await service?.getState();
 console.log(state?.latestFileUrl)
 ```
 
-## Theta status notifications
+## Theta state notifications
 
 If you call `CameraControlCommandV2.setStateNotify()` with a callback function as an argument, it will be called when the state changes.
 If you omit the argument, you will cancel the configured callback function.
@@ -376,7 +376,7 @@ You can use the [`WlanControlCommandV2`](https://github.com/ricohapi/theta-ble-c
 
 | Features | Methods | Arguments | Returns |
 | ---- | ------- | ---- |------ |
-Get access point connection status | `getConnectedWifiInfo()` | - | [`ConnectedWifiInfo`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/data/connected-wifi-info.ts) |
+Get access point connection state | `getConnectedWifiInfo()` | - | [`ConnectedWifiInfo`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/data/connected-wifi-info.ts) |
 | Configuring access points (DHCP) | `setAccessPointDynamically()` | SSID, etc. | - |
 | Configuring access points (static) | `setAccessPointStatically()` | SSID, IP Address, and more | - |
 | Set network type | `setNetworkType()` | [`NetworkTypeEnum`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/values/network-type.ts) | - |
