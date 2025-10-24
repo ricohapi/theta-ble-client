@@ -41,7 +41,6 @@ Bluetoothを使用するには、アプリケーション側でBluetooth権限�
 Theta X/Z1のBluetoothがオフの場合、本体操作でオンにすることもできますが、Web APIでオンにすることも可能です。Theta A1はBluetoothが常にオンになっています。
 
 1. Web APIでオプション[\_bluetoothPower](https://docs-theta-api.ricoh360.com/web-api/options/bluetoothPower.html)を`ON`に設定します。
-で Bluetooth モジュールの電源をオンにします。
 
 ## THETAの検出
 

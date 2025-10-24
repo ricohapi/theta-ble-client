@@ -35,7 +35,7 @@ Theta A1 has Bluetooth on all the time.
 
 1. In the Web API, set the option [\_bluetoothPower](https://docs-theta-api.ricoh360.com/web-api/options/bluetoothPower.html) to `ON`.
 
-## THETA Detection
+## THETA detection
 
 If you know the serial number of Theta A1, you can use the serial number as an argument and use [`ThetaBle.scan()`]( https://github.com/ricohapi/theta-ble-client/blob/main/kotlin-multiplatform/src/commonMain/kotlin/com/ricoh360/thetableclient/ThetaBle.kt).
 
@@ -140,7 +140,7 @@ if(device != null) {
 }
 ```
 
-## Obtaining Camera Information
+## Obtaining camera information
 
 You can get camera information ([`ThetaInfo`](https://github.com/ricohapi/theta-ble-client/blob/main/kotlin-multiplatform/src/commonMain/kotlin/com/ricoh360/thetableclient/service/data/ThetaInfo.kt) object) using `ThetaDevice.cameraControlCommandV2.getInfo()`. The properties of `ThetaInfo` are as follows:
 
@@ -154,7 +154,7 @@ You can get camera information ([`ThetaInfo`](https://github.com/ricohapi/theta-
 | Firmware version | `firmwareVersion` | `String` |
 | Uptime (seconds) | `uptime` | `Int` |
 
-## Obtaining Optional Values
+## Obtaining optional values
 
 You can get the value of the option defined in [`OptionName`](https://github.com/ricohapi/theta-ble-client/blob/main/kotlin-multiplatform/src/commonMain/kotlin/com/ricoh360/thetableclient/service/data/values/OptionName.kt) with `CameraControlCommandV2.getOptions()`. However, you cannot get the `Password`.
 
@@ -186,7 +186,7 @@ if(device != null) {
 }
 ```
 
-## Setting Optional Values
+## Setting optional values
 
 You can set the value of the options defined in [`ThetaOptions`](https://github.com/ricohapi/theta-ble-client/blob/main/kotlin-multiplatform/src/commonMain/kotlin/com/ricoh360/thetableclient/service/data/ThetaOptions.kt) with `CameraControlCommandV2.setOptions()`.
 However, you can not set `DefaultWifiPassword`.
@@ -240,7 +240,7 @@ if(device != null) {
 }
 ```
 
-## Getting Theta State
+## Getting Theta state
 
 You can get the status of Theta ([`ThetaState`](https://github.com/ricohapi/theta-ble-client/blob/main/kotlin-multiplatform/src/commonMain/kotlin/com/ricoh360/thetableclient/service/data/ThetaState.kt)、[`ThetaState2`](https://github.com/ricohapi/theta-ble-client/blob/main/kotlin-multiplatform/src/commonMain/kotlin/com/ricoh360/thetableclient/service/data/ThetaState2.kt)) with `CameraControlCommandV2.getState()` and `CameraControlCommandV2.getState2()`.
 
@@ -283,7 +283,7 @@ if(device != null) {
 }
 ```
 
-## Theta Status Notifications
+## Theta status notifications
 
 If you call `CameraControlCommandV2.setStateNotify()` with a callback function as an argument, it will be called when the state changes.
 If you omit the argument, you will cancel the configured callback function.

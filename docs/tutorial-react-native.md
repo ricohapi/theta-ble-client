@@ -1,6 +1,6 @@
 # RICOH360 THETA BLE Client Tutorial for React Native
 
-## Available Models
+## Available models
 
 * RICOH360 THETA A1
 * RICOH THETA X
@@ -15,7 +15,7 @@ $ cd YourProject
 $ yarn add theta-ble-client
 ```
 
-## Setting Permissions
+## Setting permissions
 You need to set permissions to use Bluetooth.
 
 ### Android
@@ -55,7 +55,7 @@ Theta A1 has Bluetooth on all the time.
 
 1. In the Web API, set the option [\_bluetoothPower](https://docs-theta-api.ricoh360.com/web-api/options/bluetoothPower.html) to `ON`.
 
-## THETA Detection
+## THETA detection
 
 If you know the serial number of Theta A1, you can use the serial number as an argument and use [`ThetaBle.scan()`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/theta-ble/theta-ble.ts). 
 
@@ -194,7 +194,7 @@ The properties of `ThetaInfo` are as follows:
 | Firmware Version | `firmwareVersion` | `string` |
 | Uptime (seconds) | `uptime` | `number` |
 
-## Obtaining Optional Values
+## Obtaining optional values
 
 You can get values of options defined in [`OptionName`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/values/option-name.ts) with `CameraControlCommandV2.getOptions()`.
 However, you cannot get `Password`. 
@@ -230,7 +230,7 @@ const options = await service?.getOptions(optionNames);
 console.log(options.defaultWifiPassword)
 ```
 
-## Setting Optional Values
+## Setting optional values
 
 You can set velues of options defined in [`ThetaOptions`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/data/theta-options.ts) with `CameraControlCommandV2.setOptions()`. 
 However, you cannot set `defaultWifiPassword`. 
@@ -295,7 +295,7 @@ const service = (await device?.getService(
 await service?.releaseShutter();
 ```
 
-## Getting Theta State
+## Getting Theta state
 
 You can get the status of Theta ([`ThetaState`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/data/theta-state.ts)、[`ThetaState2`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/data/theta-state2.ts)) with `CameraControlCommandV2.getState()` and `CameraControlCommandV2.getState2()`.
 
@@ -343,7 +343,7 @@ const state = await service?.getState();
 console.log(state?.latestFileUrl)
 ```
 
-## Theta Status Notifications
+## Theta status notifications
 
 If you call `CameraControlCommandV2.setStateNotify()` with a callback function as an argument, it will be called when the state changes.
 If you omit the argument, you will cancel the configured callback function.

@@ -24,8 +24,6 @@ Bluetoothを使用する権限を設定するために、
 Theta X/Z1のBluetoothがオフの場合、本体操作でオンにすることもできますが、Web APIでオンにすることも可能です。Theta A1はBluetoothが常にオンになっています。
 
 1. Web APIでオプション[\_bluetoothPower](https://docs-theta-api.ricoh360.com/web-api/options/bluetoothPower.html)を`ON`に設定します。
-で Bluetooth モジュールの電源をオンにします。
-
 
 ## THETAの検出
 
@@ -50,7 +48,7 @@ if let device = device {
 let deviceList: [ThetaDevice] = try await ThetaBle.Companion.shared.scan()
 for device in deviceList {
     // Theta A1の場合は device.name がシリアル番号
-    // Theta X/Z1の場合は device.name シリアル番号の数字部分が
+    // Theta X/Z1の場合は device.name シリアル番号の数字部分
 }
 ```
 
@@ -95,81 +93,7 @@ do {
 
 BLE APIを呼び出すには、`ThetaDevice`に定義したサービスオブジェクトのメソッドを呼びます。
 サービスオブジェクトは、`ThetaDevice.connect()`で接続した後に取得可能となります。
-接続した機種がサービスに対応していない場合、サービスオブジェクトは`null`になります。
-
---------------------------------------------------------
-
-Web API コマンド[camera.\_setBluetoothDevice](https://github.com/ricohapi/theta-api-specs/blob/main/theta-web-api-v2.1/commands/camera._set_bluetooth_device.md)で、UUIDを登録した際に取得した名前で、THETAを検索する。
-
-`ThetaBle.scan()`を使用してTHETAを検索して`ThetaDevice`を取得する。
-以降、`ThetaDevice`を使用して、各操作を行う。
-
-``` Swift
-import THETABleClient
-
-  let device = try await ThetaBle.Companion.shared.scan(name: name)
-  if let device = device {
-      // success scan THETA
-  } else {
-      // handle error
-  }
-```
-
-### タイムアウトの設定
-`ThetaBle.scan()`にタイムアウトを指定することができる。
-各値は、省略することで既定値が使用される。
-
-``` Swift
-  let timeout = ThetaBle.Timeout(
-      timeoutScan: 30000,
-      timeoutPeripheral: 1000,
-      timeoutConnect: 5000,
-      timeoutTakePicture: 10000
-  )
-  let device = try await ThetaBle.Companion.shared.scan(name: name, timeout: timeout)
-```
-
-| 属性                   | 使用される箇所             | 既定値(ms) |
-|----------------------|---------------------|---------|
-| `timeoutScan`        | 検索時                 | 30,000  |
-| `timeoutPeripheral`  | THETAに接続する際の機器情報の取得 | 1,000   |
-| `timeoutConnect`     | 実際にTHETAに接続する時      | 5,000   |
-| `timeoutTakePicture` | 静止画撮影時              | 10,000  |
-
-## THETAに接続する
-`ThetaBle.scan()`で取得した`ThetaDevice`を使用して`ThetaDevice.connect()`で接続する。
-認証が必要な場合は、認証で登録したUUIDを指定する。(RICOH THETA V/Z1)
-
-``` Swift
-  let device = try await ThetaBle.Companion.shared.scan(name: name)
-  ...
-  do {
-      try await device!.connect(uuid: uuid)
-      // success
-  } catch {
-      // handle error
-  }
-```
-
-## THETAから切断する
-`ThetaBle.scan()`で取得した`ThetaDevice`を使用して`ThetaDevice.disconnect()`で切断する。
-
-``` Swift
-  let device = try await ThetaBle.Companion.shared.scan(name: name)
-  ...
-  do {
-      try await device!.disconnect()
-      // success
-  } catch {
-      // handle error
-  }
-```
-
-## APIの呼び出し
-APIを呼び出すには、`ThetaDevice`に準備してあるサービスオブジェクトを取得して行う。
-サービスオブジェクトは、`ThetaDevice.connect()`で接続した後に取得可能となる。
-サービスが対応していない場合は、`nil`となる。
-
+接続した機種がサービスに対応していない場合、サービスオブジェクトは`nil`になります。
 
 | サービス名 | サービスオブジェクト | クラス | 備考 |
 |-----------|--------------------|--------|-----|
@@ -178,13 +102,7 @@ APIを呼び出すには、`ThetaDevice`に準備してあるサービスオブ�
 | [WLAN control command v2](https://docs-theta-api.ricoh360.com/bluetooth-api/#wlan-control-command-v2-service) | `wlanControlCommandV2`| `WlanControlCommandV2` | |
 | [Bluetooth control command](https://docs-theta-api.ricoh360.com/bluetooth-api/#bluetooth-control-command) | `bluetoothControlCommand` | `BluetoothControlCommand` | Theta A1のみ |
 
-| サービス名        | サービスオブジェクト               | クラス                      |
-|--------------|--------------------------|--------------------------|
-| カメラ情報        | `cameraInformation`      | `CameraInformation`      |
-| カメラステータスコマンド | `cameraStatusCommand`    | `CameraStatusCommand`    |
-| カメラ制御コマンド    | `cameraControlCommands`  | `CameraControlCommands`  |
-| 撮影制御コマンド     | `shootingControlCommand` | `ShootingControlCommand` |
-| カメラ制御コマンドV2  | `cameraControlCommandV2` | `CameraControlCommandV2` |
+例えば、Thetaの機種名とシリアル番号を取得するには次のようにサービスオブジェクトを使用します。
 
 ```Swift
 let device = try await ThetaBle.Companion.shared.scan(name: name)
