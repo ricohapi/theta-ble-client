@@ -153,7 +153,7 @@ try {
 
 `ThetaDevice.getService()`の引数に[`BleServiceEnum`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/values/ble-service.ts)を渡して、サービスオブジェクトを取得しAPIを呼び出します。
 サービスオブジェクトは、`ThetaDevice.connect()`で接続した後に取得可能になります。
-デバイスが指定したサービスに対応していない場合、サービスオブジェとは`undefined`になります。
+デバイスが指定したサービスに対応していない場合、サービスオブジェクトは`undefined`になります。
 
 | サービス名 | [`BleServiceEnum`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/values/ble-service.ts) | クラス | 備考 |
 |-----------|--------------------|--------|-----|
