@@ -35,6 +35,9 @@ internal data class CameraOptions(
 
     @SerialName("_wlanFrequency")
     val wlanFrequency: Double? = null,
+
+    @SerialName("wifiPassword")
+    val wifiPassword: String? = null,
 ) {
     companion object {
         fun decode(jsonString: String): CameraOptions {

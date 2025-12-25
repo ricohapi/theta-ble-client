@@ -23,4 +23,6 @@ export interface ThetaOptions {
   wlanAntennaConfig?: WlanAntennaConfigEnum;
   /** WlanAntennaConfig */
   wlanFrequency?: WlanFrequencyEnum;
+  /** Password for connecting to Theta in the direct mode. */
+  wifiPassword?: string;
 }

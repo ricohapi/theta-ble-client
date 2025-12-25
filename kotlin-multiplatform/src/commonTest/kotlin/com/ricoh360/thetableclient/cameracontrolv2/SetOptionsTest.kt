@@ -100,7 +100,7 @@ class SetOptionsTest {
     fun exceptionBleTest() = runBlocking {
         val device = ThetaBle.ThetaDevice(newAdvertisement(devName))
 
-        MockBlePeripheral.onWrite = { characteristic, data ->
+        MockBlePeripheral.onWrite = { characteristic, _ ->
             assertEquals(characteristic, BleCharacteristic.SET_OPTIONS)
             throw Exception("write")
         }
