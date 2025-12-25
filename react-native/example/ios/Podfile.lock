@@ -329,7 +329,7 @@ PODS:
   - React-jsinspector (0.71.19)
   - React-logger (0.71.19):
     - glog
-  - react-native-safe-area-context (4.14.1):
+  - react-native-safe-area-context (4.14.0):
     - React-Core
   - React-perflogger (0.71.19)
   - React-RCTActionSheet (0.71.19):
@@ -417,17 +417,17 @@ PODS:
     - React-perflogger (= 0.71.19)
   - RNDefaultPreference (1.4.4):
     - React-Core
-  - RNPermissions (5.4.2):
+  - RNPermissions (5.1.0):
     - React-Core
-  - RNScreens (3.37.0):
+  - RNScreens (3.35.0):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
     - React-RCTImage
   - SocketRocket (0.6.1)
-  - theta-ble-client-react-native (1.3.2):
+  - theta-ble-client-react-native (1.3.3):
     - React-Core
-    - THETABleClient (= 1.3.2)
-  - THETABleClient (1.3.2)
+    - THETABleClient (= 1.3.3)
+  - THETABleClient (1.3.3)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
@@ -631,7 +631,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 7263801e44e004967685dd40672bfcedcda00834
   React-jsinspector: e591d9ecb571456fc929ee10409d8847a442d6a7
   React-logger: 70ddbe0e07179c8adb94c4bffc36c6abc952d3d4
-  react-native-safe-area-context: 141eca0fd4e4191288dfc8b96a7c7e1c2983447a
+  react-native-safe-area-context: 4532f1a0c5d34a46b9324ccaaedcb5582a302b7d
   React-perflogger: 0ba097528e325435aca94b32b5330f58f6acb6fb
   React-RCTActionSheet: 805b3a83f3dd7ae5a1213ea9df0ed748eeb74b85
   React-RCTAnimation: 2a0233681dee47e468302b8233652b35b68329cb
@@ -646,11 +646,11 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: b9be1f58ce9a8b849cb8a37dd998f04ca97e3619
   ReactCommon: bb3d7051c9b8c58ee34f9af76f883bd0fd7c9c31
   RNDefaultPreference: 08bdb06cfa9188d5da97d4642dac745218d7fb31
-  RNPermissions: f4df15c4027ee5093d0436c67868216c046da115
-  RNScreens: 03955a91fd4229e4668841eefc7c04e513870608
+  RNPermissions: e827258be33d370288bd8c1b5b1a8d5f6fdb7968
+  RNScreens: 50ad6e3dbea9023272b3aa753e3ee2720b0c9b8f
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
-  theta-ble-client-react-native: 8b5b0556a270a097e3160329f65f35a6566e401b
-  THETABleClient: 564917ad00c1987d7dba4019e43d76f6a2d5f464
+  theta-ble-client-react-native: df708e80277c2d1dc8473b489d49f27b784f775f
+  THETABleClient: 30b4c5f5043e2cc1d901fa88cc31be0bf1751e93
   Yoga: d4f5b037672e6b68ba484c7cf7fe6790122df792
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
