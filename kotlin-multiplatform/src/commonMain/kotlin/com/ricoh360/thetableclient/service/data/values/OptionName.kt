@@ -106,6 +106,16 @@ enum class OptionName(val value: String, val keyName: String, val valueType: KCl
         "wlanFrequency",
         com.ricoh360.thetableclient.service.data.values.WlanFrequency::class
     ),
+
+    /**
+     * Option name
+     * wifiPassword
+     */
+    WifiPassword(
+        "wifiPassword",
+        "wifiPassword",
+        String::class
+    ),
     ;
 
     companion object {

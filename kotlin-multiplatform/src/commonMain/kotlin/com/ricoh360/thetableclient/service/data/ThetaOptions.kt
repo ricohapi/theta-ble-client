@@ -64,6 +64,14 @@ data class ThetaOptions(
      * Network type of the camera.
      */
     var wlanFrequency: WlanFrequency? = null,
+
+    /**
+     * Password for connecting to Theta in the direct mode.
+     * Only ASCII printable characters are allowed.
+     * Back slash (\) and double quote (") must be escaped.
+     * This option can be set during the direct mode. This option value cannot be read.
+     */
+    var wifiPassword: String? = null,
 ) {
     constructor() : this(
         accessInfo = null,
@@ -76,6 +84,7 @@ data class ThetaOptions(
         username = null,
         wlanAntennaConfig = null,
         wlanFrequency = null,
+        wifiPassword = null,
     )
 
     internal constructor(options: CameraOptions) : this(
@@ -89,6 +98,7 @@ data class ThetaOptions(
         username = options.username,
         wlanAntennaConfig = options.wlanAntennaConfig?.let { WlanAntennaConfig.getFromValue(it) },
         wlanFrequency = options.wlanFrequency?.let { WlanFrequency.getFromValue(it) },
+        wifiPassword = options.wifiPassword,
     )
 
     internal fun toCameraOptions(): CameraOptions {
@@ -103,6 +113,7 @@ data class ThetaOptions(
             username = username,
             wlanAntennaConfig = wlanAntennaConfig?.value,
             wlanFrequency = wlanFrequency?.value,
+            wifiPassword = wifiPassword,
         )
     }
 
@@ -120,6 +131,7 @@ data class ThetaOptions(
             OptionName.Username -> username
             OptionName.WlanAntennaConfig -> wlanAntennaConfig
             OptionName.WlanFrequency -> wlanFrequency
+            OptionName.WifiPassword -> wifiPassword
         } as T
     }
 
@@ -136,6 +148,7 @@ data class ThetaOptions(
             OptionName.Username -> username = value as String
             OptionName.WlanAntennaConfig -> wlanAntennaConfig = value as WlanAntennaConfig
             OptionName.WlanFrequency -> wlanFrequency = value as WlanFrequency
+            OptionName.WifiPassword -> wifiPassword = value as String
         }
     }
 }

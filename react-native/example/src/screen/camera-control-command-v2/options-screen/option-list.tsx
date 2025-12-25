@@ -137,6 +137,22 @@ export const optionList: OptionItem[] = [
     },
   },
   {
+    name: 'wifiPassword',
+    value: {
+      optionName: OptionName.WifiPassword,
+      editor: (options, onChange) => (
+        <StringEdit
+          propName={'wifiPassword'}
+          options={options}
+          onChange={(wifiPassword) => {
+            onChange(wifiPassword);
+          }}
+        />
+      ),
+      defaultValue: { wifiPassword: '' },
+    },
+  },
+  {
     name: 'wlanAntennaConfig',
     value: {
       optionName: OptionName.WlanAntennaConfig,

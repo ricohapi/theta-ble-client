@@ -33,7 +33,7 @@ class GetInfoTest {
      * getInfo for THETA X.
      */
     @Test
-    fun getInfoThetaXTest() = runTest {
+    fun getInfoThetaXTest() = runBlocking {
         val device = ThetaBle.ThetaDevice(newAdvertisement(devName))
         runBlocking {
             device.connect()
@@ -61,7 +61,7 @@ class GetInfoTest {
      * getInfo for Unknown camera.
      */
     @Test
-    fun getInfoUnknownTest() = runTest {
+    fun getInfoUnknownTest() = runBlocking {
         val device = ThetaBle.ThetaDevice(newAdvertisement(devName))
         runBlocking {
             device.connect()
@@ -89,7 +89,7 @@ class GetInfoTest {
      * Serialization exception.
      */
     @Test
-    fun notJsonTest() = runTest {
+    fun notJsonTest() = runBlocking {
         val device = ThetaBle.ThetaDevice(newAdvertisement(devName))
         runBlocking {
             device.connect()

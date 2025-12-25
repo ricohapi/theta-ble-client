@@ -151,6 +151,8 @@ func toSetOptionsParam(options: [String: Any]) throws -> ThetaOptions {
                 result.wlanAntennaConfig = getEnumValue(values: WlanAntennaConfig.values(), name: value)
             case OptionName.wlanfrequency:
                 result.wlanFrequency = getEnumValue(values: WlanFrequency.values(), name: value)
+            case OptionName.wifipassword:
+                result.wifiPassword = value as? String
             default:
                 break
             }

@@ -20,6 +20,8 @@ export const OptionName = {
   WlanAntennaConfig: 'WlanAntennaConfig',
   /** wlanFrequency */
   WlanFrequency: 'WlanFrequency',
+  /** wifiPassword */
+  WifiPassword: 'WifiPassword',
 } as const;
 
 /** type definition of OptionNameEnum */

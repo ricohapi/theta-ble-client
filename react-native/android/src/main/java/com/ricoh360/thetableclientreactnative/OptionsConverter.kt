@@ -151,7 +151,8 @@ fun toDhcpLeaseAddress(value: ReadableMap): DhcpLeaseAddress {
 fun fromTheta(options: ThetaOptions): WritableMap {
   val valueOptions = listOf(
     OptionName.DefaultWifiPassword,
-    OptionName.Ssid
+    OptionName.Ssid,
+    OptionName.WifiPassword
   )
   val result = Arguments.createMap()
   OptionName.entries.forEach {
@@ -185,6 +186,7 @@ fun toSetOptionsParam(optionsMap: ReadableMap): ThetaOptions {
         OptionName.Username -> result.username = value as? String
         OptionName.WlanAntennaConfig -> result.wlanAntennaConfig = WlanAntennaConfig.entries.find { it.name == value }
         OptionName.WlanFrequency -> result.wlanFrequency = WlanFrequency.entries.find { it.name == value }
+        OptionName.WifiPassword -> result.wifiPassword = value as? String
         else -> {}
       }
     }

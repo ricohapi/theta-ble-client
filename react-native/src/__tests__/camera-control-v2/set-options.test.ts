@@ -44,6 +44,7 @@ describe('CameraControlCommandV2 setOptions', () => {
       password: 'pass123',
       ssid: 'ssid_123',
       username: 'user1',
+      wifiPassword: 'wifipass123',
       wlanAntennaConfig: WlanAntennaConfigEnum.MIMO,
       wlanFrequency: WlanFrequencyEnum.GHZ_2_4,
     };
@@ -62,6 +63,7 @@ describe('CameraControlCommandV2 setOptions', () => {
       password: 'pass123',
       ssid: 'ssid_123',
       username: 'user1',
+      wifiPassword: 'wifipass123',
       wlanAntennaConfig: WlanAntennaConfigEnum.MIMO,
       wlanFrequency: WlanFrequencyEnum.GHZ_2_4,
     });
@@ -83,6 +85,7 @@ describe('CameraControlCommandV2 setOptions', () => {
         password: 'pass123',
         ssid: 'ssid_123',
         username: 'user1',
+        wifiPassword: 'wifipass123',
         wlanAntennaConfig: WlanAntennaConfigEnum.SISO,
         wlanFrequency: WlanFrequencyEnum.GHZ_2_4,
       });
