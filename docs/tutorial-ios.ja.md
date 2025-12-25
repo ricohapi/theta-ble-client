@@ -2,230 +2,284 @@
 
 ## 使用可能な機種
 
-* RICOH THETA Z1
+* RICOH360 THETA A1
 * RICOH THETA X
+* RICOH THETA Z1
 
 ## フレームワークの導入
+
 `Podfile`に`THETABleClient`フレームワークを追加します。
   
 ``` Podfile
-pod 'THETABleClient', '1.0.0'
+pod 'THETABleClient', '1.3.2'
 ```
 
 ## 権限の設定
-Bluetoothを使用する為の権限の設定。
 
+Bluetoothを使用する権限を設定するために、
 `plist`に`NSBluetoothAlwaysUsageDescription`を追加する。
 
-## Bluetooth認証(RICOH THETA V/Z1)
-THETA は、Web API と Bluetooth API を介して認証します。カメラはペアリングを使用しません。
-Web API コマンド[camera.\_setBluetoothDevice](https://github.com/ricohapi/theta-api-specs/blob/main/theta-web-api-v2.1/commands/camera._set_bluetooth_device.md)からUUID をカメラに登録し、オプション[\_bluetoothPower](https://github.com/ricohapi/theta-api-specs/blob/main/theta-web-api-v2.1/options/_bluetooth_power.md)で Bluetooth モジュールをオンにする。
-UUIDを登録時に、THETAの名前が取得できるので、ライブラリでは、この名前を使用して操作を行う。
-登録したUUIDは、接続時に使用する。
+## Bluetoothの有効化 (Theta X/Z1のみ)
 
-RICOH THETA Xの場合は、認証せずに操作を行うことができます。
+Theta X/Z1のBluetoothがオフの場合、本体操作でオンにすることもできますが、Web APIでオンにすることも可能です。Theta A1はBluetoothが常にオンになっています。
 
-参考：
-https://github.com/ricohapi/theta-api-specs/blob/main/theta-bluetooth-api/getting_started.md#1-bluetooth-authentication
+1. Web APIでオプション[\_bluetoothPower](https://docs-theta-api.ricoh360.com/web-api/options/bluetoothPower.html)を`ON`に設定します。
 
+## THETAの検出
 
-## THETAを検索する
-Web API コマンド[camera.\_setBluetoothDevice](https://github.com/ricohapi/theta-api-specs/blob/main/theta-web-api-v2.1/commands/camera._set_bluetooth_device.md)で、UUIDを登録した際に取得した名前で、THETAを検索する。
-
-`ThetaBle.scan()`を使用してTHETAを検索して`ThetaDevice`を取得する。
-以降、`ThetaDevice`を使用して、各操作を行う。
+`ThetaBle.scan()`を使用してTHETAを検索して`ThetaDevice`を取得します。
+Theta A1はシリアル番号を、Theta X/Z1はシリアル番号の数字部分を引数として渡します。
+以降、`ThetaDevice`を使用して、各操作を行ないます。
 
 ``` Swift
 import THETABleClient
 
-  let device = try await ThetaBle.Companion.shared.scan(name: name)
-  if let device = device {
-      // success scan THETA
-  } else {
-      // handle error
-  }
+let device = try await ThetaBle.Companion.shared.scan(name: name)
+if let device = device {
+    // success scan THETA
+} else {
+    // handle error
+}
 ```
 
-### タイムアウトの設定
-`ThetaBle.scan()`にタイムアウトを指定することができる。
-各値は、省略することで既定値が使用される。
+検出したいThetaのシリアル番号が不明な場合は、次のようにしてThetaの候補のリストを検出します。
 
-``` Swift
-  let timeout = ThetaBle.Timeout(
-      timeoutScan: 30000,
-      timeoutPeripheral: 1000,
-      timeoutConnect: 5000,
-      timeoutTakePicture: 10000
-  )
-  let device = try await ThetaBle.Companion.shared.scan(name: name, timeout: timeout)
+```swift
+let deviceList: [ThetaDevice] = try await ThetaBle.Companion.shared.scan()
+for device in deviceList {
+    // Theta A1の場合は device.name がシリアル番号
+    // Theta X/Z1の場合は device.name シリアル番号の数字部分
+}
 ```
 
-| 属性                   | 使用される箇所             | 既定値(ms) |
-|----------------------|---------------------|---------|
-| `timeoutScan`        | 検索時                 | 30,000  |
+`ThetaBle.scan()`にタイムアウトを指定することもできます。デフォルト値でよければ指定を省略できます。
+
+```swift
+let timeout = ThetaBle.Timeout(
+    timeoutScan: 20000,
+    timeoutPeripheral: 2000,
+    timeoutConnect: 3000,
+    timeoutTakePicture: 15000
+)
+let device = try await ThetaBle.Companion.shared.scan(name: name, timeout: timeout)
+```
+
+| 属性                  | 使用される場面       | デフォルト値(ms) |
+|----------------------|---------------------|-----------------|
+| `timeoutScan`        | 検出時                          | 30,000  |
 | `timeoutPeripheral`  | THETAに接続する際の機器情報の取得 | 1,000   |
-| `timeoutConnect`     | 実際にTHETAに接続する時      | 5,000   |
-| `timeoutTakePicture` | 静止画撮影時              | 10,000  |
+| `timeoutConnect`     | 実際にTHETAに接続する時          | 5,000   |
+| `timeoutTakePicture` | 静止画撮影時                    | 10,000  |
 
-## THETAに接続する
-`ThetaBle.scan()`で取得した`ThetaDevice`を使用して`ThetaDevice.connect()`で接続する。
-認証が必要な場合は、認証で登録したUUIDを指定する。(RICOH THETA V/Z1)
+## THETAに接続
+`ThetaBle.scan()`で取得した`ThetaDevice`を使用して`ThetaDevice.connect()`で接続します。
 
-``` Swift
-  let device = try await ThetaBle.Companion.shared.scan(name: name)
-  ...
-  do {
-      try await device!.connect(uuid: uuid)
-      // success
-  } catch {
-      // handle error
-  }
-```
+BLE APIの使用が終わったら、`ThetaDevice.disconnect()`で切断します。
 
-## THETAから切断する
-`ThetaBle.scan()`で取得した`ThetaDevice`を使用して`ThetaDevice.disconnect()`で切断する。
 
 ``` Swift
-  let device = try await ThetaBle.Companion.shared.scan(name: name)
-  ...
-  do {
-      try await device!.disconnect()
-      // success
-  } catch {
-      // handle error
-  }
+let device = try await ThetaBle.Companion.shared.scan(name: name)
+...
+do {
+    try await device!.connect()
+     // call BLE APIs
+    try await device!.disconnect()
+} catch {
+    // handle error
+}
 ```
 
-## APIの呼び出し
-APIを呼び出すには、`ThetaDevice`に準備してあるサービスオブジェクトを取得して行う。
-サービスオブジェクトは、`ThetaDevice.connect()`で接続した後に取得可能となる。
-サービスが対応していない場合は、`nil`となる。
+## BLE APIの呼び出し
 
-| サービス名        | サービスオブジェクト               | クラス                      |
-|--------------|--------------------------|--------------------------|
-| カメラ情報        | `cameraInformation`      | `CameraInformation`      |
-| カメラステータスコマンド | `cameraStatusCommand`    | `CameraStatusCommand`    |
-| カメラ制御コマンド    | `cameraControlCommands`  | `CameraControlCommands`  |
-| 撮影制御コマンド     | `shootingControlCommand` | `ShootingControlCommand` |
-| カメラ制御コマンドV2  | `cameraControlCommandV2` | `CameraControlCommandV2` |
+BLE APIを呼び出すには、`ThetaDevice`に定義したサービスオブジェクトのメソッドを呼びます。
+サービスオブジェクトは、`ThetaDevice.connect()`で接続した後に取得可能となります。
+接続した機種がサービスに対応していない場合、サービスオブジェクトは`nil`になります。
+
+| サービス名 | サービスオブジェクト | クラス | 備考 |
+|-----------|--------------------|--------|-----|
+| [Camera control command v2](https://docs-theta-api.ricoh360.com/bluetooth-api/#camera-control-command-v2-service)  | `cameraControlCommandV2` | `CameraControlCommandV2` | |
+| [WLAN control command](https://docs-theta-api.ricoh360.com/bluetooth-api/#wlan-control-command-service) | `wlanControlCommand`| `WlanControlCommand` ||
+| [WLAN control command v2](https://docs-theta-api.ricoh360.com/bluetooth-api/#wlan-control-command-v2-service) | `wlanControlCommandV2`| `WlanControlCommandV2` | |
+| [Bluetooth control command](https://docs-theta-api.ricoh360.com/bluetooth-api/#bluetooth-control-command) | `bluetoothControlCommand` | `BluetoothControlCommand` | Theta A1のみ |
+
+例えば、Thetaの機種名とシリアル番号を取得するには次のようにサービスオブジェクトを使用します。
 
 ```Swift
-  let device = try await ThetaBle.Companion.shared.scan(name: name)
+let device = try await ThetaBle.Companion.shared.scan(name: name)
+try await device?.connect()
+let service = device?.cameraControlCommandV2
+if let info = try await service?.getInfo() {
+  print("\(info.model) \(info.serialNumber)")
+}
+```
+
+## カメラ情報の取得
+
+`ThetaDevice.cameraControlCommandV2.getInfo()`でカメラ情報(`ThetaInfo`オブジェクト)を取得できます。`ThetaInfo`のプロパティは次の通りです。
+
+| 情報 | プロパティ | 型 |
+|------|-----------|----|
+| メーカー名 | `manufacturer` | `String` |
+| THETAのモデル | `model` | `ThetaModel` |
+| シリアル番号 | `serialNumber` | `String` |
+| WLAN MACアドレス | `wlanMacAddress` | `String?` |
+| Bluetooth MACアドレス | `bluetoothMacAddress` | `String?` |
+| ファームウェアバージョン | `firmwareVersion` | `String` |
+| 稼働時間(秒) | `uptime` | `Int` |
+
+## オプションの値の取得
+
+`OptionName`で定義しているオプションの値を`CameraControlCommandV2.getOptions()`で取得できます。ただし`Password`は取得できません。
+
+| オプション | `OptionName`のプロパティ | 型 | 備考 |
+| --------- | ----------------------- | -- | ---- |
+| アクセスポイント情報 | `AccessInfo` | `AccessInfo?` | Theta A1, Xのみ |
+| Thetaの電源状態 | `CameraPower` | `CameraPower?` | |
+| 撮影モード | `CaptureMode` | `CaptureMode?` | |
+| APモードのWLANパスワードの初期値 | `DefaultWifiPassword` | `String?` ||
+| 設定されているネットワークタイプ | `NetworkType` | `NetworkType?` | |
+| APモードのSSID | `Ssid` | `String?` ||
+| CLモードのダイジェスト認証用のユーザ名 | `Username` | `String?` ||
+| 無線アンテナの設定 | `WlanAntennaConfig` | `WlanAntennaConfig?` | Theta A1, Xのみ |
+| APモードの無線周波数 | `WlanFrequency` | `WlanFrequency?` ||
+
+<br/>
+
+`OptionName.DefaultWifiPassword`を取得するサンプルコードです。
+
+```Swift
+let device = try await ThetaBle.Companion.shared.scan(name: name)
+try await device?.connect()
+let service = device?.cameraControlCommandV2
+let optionNames: [OptionName] = [.DefaultWifiPassword]
+options = try await service?.getOptions(optionNames)
+print(options?.defaultWifiPassword)
+```
+
+## オプションの値の設定
+
+`ThetaOptions`で定義しているオプションの値を`CameraControlCommandV2.setOptions()`で設定できます。
+ただし`defaultWifiPassword`は設定できません。
+
+| オプション | `ThetaOptions`のプロパティ | 型 | 備考 |
+| --------- | ----------------------- | -- | ---- |
+| アクセスポイント情報 | `accessInfo` | `AccessInfo?` | Theta A1, Xのみ |
+| Thetaの電源状態 | `cameraPower` | `CameraPower?` | |
+| 撮影モード | `captureMode` | `CaptureMode?` | |
+| ネットワークタイプ | `networkType` | `NetworkType?` | |
+| APモードのSSID | `ssid` | `String?` ||
+| CLモードのダイジェスト認証用のユーザ名 | `username` | `String?` ||
+| CLモードのダイジェスト認証用のパスワード | `password` | `String?` ||
+| 無線アンテナの設定 | `wlanAntennaConfig` | `WlanAntennaConfig?` | Theta A1, Xのみ |
+| APモードの無線周波数 | `wlanFrequency` | `WlanFrequency?` ||
+
+<br/>
+
+`ThetaOptions.captureMode`をビデオモードに設定するサンプルコードです。
+
+```Swift
+let device = try await ThetaBle.Companion.shared.scan(name: name)
+try await device?.connect()
+let service = device?.cameraControlCommandV2
+let options = ThetaOptions()
+options.captureMode = .video
+try await service?.setOptions(options)
+```
+
+## 撮影
+
+`CameraControlCommandV2.releaseShutter()`を呼ぶと、`CaptureMode`オプションの値とThetaの状態に従って撮影処理を行ないます。
+
+| `CaptureMode`オプションの値 | 動画撮影中か否か | 撮影処理 |
+| ------------------------- | ----------------| ------- |
+| `image` | n/a | 静止画撮影 |
+| `video` | 撮影していない | ビデオ撮影開始 |
+| `video` | 撮影中 | ビデオ撮影終了 |
+
+<br/>
+
+撮影を行うサンプルコードです。
+
+```Swift
+let device = try await ThetaBle.Companion.shared.scan(name: name)
+try await device?.connect()
+let service = device?.cameraControlCommandV2
+try await service?.releaseShutter()
+```
+
+## Thetaの状態取得
+
+`CameraControlCommandV2.getState()`および`CameraControlCommandV2.getState2()`でThetaの状態(`ThetaState`、`ThetaState2`)を取得できます。
+
+`ThateState`のプロパティは下記の通りです。
+
+| 情報 | プロパティ | 型 | 備考 |
+|------|-----------|----|-----|
+| 最新画像URL | `latestFileUrl` | `String?` | 最後に撮影された画像(DNGフォーマット以外)のURL。WLAN接続すればダウンロードできる。 |
+| ビデオ撮影時間(秒) | `recordedTime` | `Int?` ||
+| ビデオ撮影可能時間(秒) | `recordableTime` | `Int?` ||
+| 連続撮影状態 | `captureStatus` | `CaptureStatus?` ||
+| 連続撮影枚数 | `capturedPictures` | `Int?` ||
+| 撮影設定 | `function` | `ShootingFunction?` ||
+| バッテリーの有無 | `batteryInsert` | `Boolean?` ||
+| バッテリー残量 | `batteryLevel` | `Float?` | 0から1まで |
+| 充電状態 | `batteryState` | `ChargingState?` ||
+| メイン基盤の温度 | `boardTemp` | `Int?` ||
+| バッテリーの温度 | `batteryTemp` | `Int?` ||
+| エラー状態 | `cameraError` | `List<CameraError>?`||
+
+<br/>
+
+`ThateState2`のプロパティは下記の通りです。
+
+| 情報 | プロパティ | 型 | 備考 |
+|------|-----------|----|-----|
+| 内蔵GPSモジュールの位置情報 | `internalGpsInfo` | `StateGpsInfo?` ||
+| 外部GPSデバイスの位置情報 | `externalGpsInfo` | `StateGpsInfo?` ||
+
+<br/>
+
+最新画像URLを取得するサンプルコードです。
+
+```Swift
+let device = try await ThetaBle.Companion.shared.scan(name: name)
+try await device?.connect()
+let service = device?.cameraControlCommandV2
+let state = try await service?.getState()
+let url = state?.latestFileUrl
+```
+
+## Thetaの状態通知
+
+コールバック関数を引数にして`CameraControlCommandV2.setStateNotify()`を呼ぶと、状態が変化した時にその関数が呼び出されます。
+引数を省略すると、設定済みのコールバック関数を解除します。
+エラーが発生した場合には、コールバック関数の引数`error`に値が返ります。
+
+```swift
+let device = try await ThetaBle.Companion.shared.scan(name: name)
+...
+do {
   try await device?.connect()
-  let service = device?.cameraInformation
-  let firmware = try await service?.getFirmwareRevision()
-```
-
-## カメラ情報を取得する
-カメラ情報は、`CameraInformation`に準備してある以下の関数で取得する
-
-| 情報                | 関数                       | 型        |
-|-------------------|--------------------------|----------|
-| ファームウェアリビジョン      | `getFirmwareRevision`    | `String` |
-| メーカー名             | `getManufacturerName`    | `String` |
-| モデル番号             | `getModelNumber`         | `String` |
-| シリアル番号            | `getSerialNumber`        | `String` |
-| WLAN MACアドレス      | `getWlanMacAddress`      | `String` |
-| Bluetooth MACアドレス | `getBluetoothMacAddress` | `String` |
-
-
-```Swift
-  let device = try await ThetaBle.Companion.shared.scan(name: name)
-  do {
-    try await device?.connect()
-    let service = device?.cameraInformation
-
-    let firmware = try await service?.getFirmwareRevision()
-    let maker = try await service?.getManufacturerName()
-    let model = try await service?.getModelNumber()
-    let serial = try await service?.getSerialNumber()
-    let wlan = try await service?.getWlanMacAddress()
-    let bluetooth = try service?.getBluetoothMacAddress()
-    // success
-  } catch {
-    // handle error
-  }
-```
-
-## 静止画を撮影する
-キャプチャモードを確認してから、`ShootingControlCommand.takePicture()`を呼び出して静止画を撮影する。
-
-キャプチャモード`CaptureMode`は、`ShootingControlCommand.getCaptureMode()`で取得して、`ShootingControlCommand.setCaptureMode()`で設定を行う。静止画の場合は、`CaptureMode.image`に設定する。
-また、`ShootingControlCommand.setCaptureMode()`で変更した後は、少し待たないと、撮影に失敗する。
-
-* キャプチャモード`CaptureMode`
-  | 値       | 説明              |
-  |---------|-----------------|
-  | `image` | 静止画撮影モード        |
-  | `video` | 動画撮影モード         |
-  | `live`  | ライブ ストリーミング モード |
-
-`ShootingControlCommand.takePicture()`は、以下のように`KotlinSuspendFunction1`を実装したコールバック用クラスを作成して呼び出します。
-撮影が完了すると、コールバック用クラスの`invoke`関数が呼ばれ、エラーが発生した場合は、引数にエラー情報が格納される。
-
-``` Swift
-  let device = try await ThetaBle.Companion.shared.scan(name: name)
-  ...
-  do {
-    try await device?.connect()
-    let service = device?.shootingControlCommand
-    let captureMode = try await service?.getCaptureMode()
-    if (captureMode != .image) {
-      try await service?.setCaptureMode(value: .image)
-      // Wait a little or you'll fail
-      try await Task.sleep(nanoseconds: 1 * 1000 * 1000 * 1000)
-    }
-
-    class Callback: KotlinSuspendFunction1 {
-        func invoke(p1: Any?) async throws -> Any? {
-            if p1 == nil {
-                // success. Take a picture.
-            } else {
-                // handle error
-            }
-            return nil
-        }
-    }
-
-    try service?.takePicture(complete: Callback())
-  } catch {
-    // handle error
-  }
-```
-
-## カメラの状態
-カメラの状態は、`CameraStatusCommand`に準備してある以下の関数で取得、設定、通知を行う。
-
-| 種類         | 取得                 | 設定                 | 通知                                 |
-|------------|--------------------|--------------------|------------------------------------|
-| バッテリー残量    | `getBatteryLevel`  | -                  | `setBatteryLevelNotify`            |
-| 充電状態       | `getBatteryStatus` | -                  | `setBatteryStatusNotify`           |
-| カメラの起動状態   | `getCameraPower`   | `setCameraPower`   | `setCameraPowerNotify`             |
-| カメラのエラー    | -                  | -                  | `setCommandErrorDescriptionNotify` |
-| プラグインの起動状態 | `getPluginControl` | `setPluginControl` | `setPluginControlNotify`           |
-
-### 通知機能
-通知は、`setXxxxxxNotify()`を使用する。
-引数にコールバック関数を渡すと、状態が変更された時に、その関数が呼び出される。引数を省略すると、設定したコールバック関数を解除する。
-エラーが発生した場合には、コールバック関数の引数`error`に値が返る。
-
-``` Swift
-  let service = device?.cameraStatusCommand
-  try service?.setBatteryStatusNotify {value, error in
+  let service = device?.cameraControlCommandV2
+  try service?.setStateNotify { state, error in
       if error != nil {
-          // handle error
+          // error: Error
       } else {
-          // Notify value
+          // state: ThetaState
       }
   }
+} catch {
+  // handle error
+}
 ```
 
-## Camera Control Command v2
-Camera Control Command v2の機能を使用するには、`CameraControlCommandV2`を使用します。
-対応していない場合は、`ThetaDevice.cameraControlCommandV2`が`nil`となります。
+## 無線LANの制御
 
-``` Swift
-  let thetaInfo = try? await device.cameraControlCommandV2?.getInfo()
-  let model = thetaInfo?.model
-  ...
-```
+`WlanControlCommandV2`サービスを使って無線LANの制御を行えます。
+
+| 機能 | メソッド | 引数 |戻り値 |
+| ---- | ------- | ---- |------ |
+| アクセスポイント接続状態の取得 | `getConnectedWifiInfo()` | - |`ConnectedWifiInfo` |
+| アクセスポイントの設定(DHCP) | `setAccessPointDynamically()` | ssidなど | - |
+| アクセスポイントの設定(静的) | `setAccessPointStatically()` | ssid、IPアドレスなど | - |
+| ネットワークタイプの設定 | `setNetworkType()` | `NetworkType` | - |

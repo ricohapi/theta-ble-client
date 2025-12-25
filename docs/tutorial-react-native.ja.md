@@ -2,8 +2,9 @@
 
 ## 使用可能な機種
 
-* RICOH THETA Z1
+* RICOH360 THETA A1
 * RICOH THETA X
+* RICOH THETA Z1
 
 ## パッケージの導入
 `theta-ble-client`を`package.json`に追加する。
@@ -15,12 +16,12 @@ $ yarn add theta-ble-client
 ```
 
 ## 権限の設定
-Bluetoothを使用する為の権限の設定。
+Bluetoothを使用する為の権限の設定が必要です。
 
 ### Android
-Androidは、アプリケーション側でBluetooth権限の要求を行う必要がある。
+アプリケーション側でBluetooth権限の要求を行います。
 
-``` Typescript
+```Typescript
 import {PermissionsAndroid, Platform} from 'react-native';
 
 const requestPermission = async () => {
@@ -45,26 +46,17 @@ const requestPermission = async () => {
 ```
 
 ### iOS
-`plist`に`NSBluetoothAlwaysUsageDescription`を追加する。
+`plist`に`NSBluetoothAlwaysUsageDescription`を追加します。
 
-## Bluetooth認証(RICOH THETA V/Z1)
-THETA は、Web API と Bluetooth API を介して認証します。カメラはペアリングを使用しません。
-Web API コマンド[camera.\_setBluetoothDevice](https://github.com/ricohapi/theta-api-specs/blob/main/theta-web-api-v2.1/commands/camera._set_bluetooth_device.md)からUUID をカメラに登録し、オプション[\_bluetoothPower](https://github.com/ricohapi/theta-api-specs/blob/main/theta-web-api-v2.1/options/_bluetooth_power.md)で Bluetooth モジュールをオンにする。
-UUIDを登録時に、THETAの名前が取得できるので、ライブラリでは、この名前を使用して操作を行う。
-登録したUUIDは、接続時に使用する。
+## Bluetoothの有効化 (Theta X/Z1のみ)
 
-RICOH THETA Xの場合は、認証せずに操作を行うことができます。
+Theta X/Z1のBluetoothがオフの場合、本体操作でオンにすることもできますが、Web APIでオンにすることも可能です。Theta A1はBluetoothが常にオンになっています。
 
-参考：
-https://github.com/ricohapi/theta-api-specs/blob/main/theta-bluetooth-api/getting_started.md#1-bluetooth-authentication
+1. Web APIでオプション[\_bluetoothPower](https://docs-theta-api.ricoh360.com/web-api/options/bluetoothPower.html)を`ON`に設定します。
 
+## THETAの検出
 
-## THETAを検索する
-Web API コマンド[camera.\_setBluetoothDevice](https://github.com/ricohapi/theta-api-specs/blob/main/theta-web-api-v2.1/commands/camera._set_bluetooth_device.md)で、UUIDを登録した際に取得した名前で、THETAを検索する。
-
-`scan()`を使用してTHETAを検索して`ThetaDevice`を取得する。
-以降、`ThetaDevice`を使用して、各操作を行う。
-所得した`ThetaDevice`の使用が終了した場合は、`ThetaDevice.release()`を呼び出して、リソースを解放する必要がある。
+Theta A1のシリアル番号がわかっていれば、シリアル番号を引数にして[`ThetaBle.scan()`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/theta-ble/theta-ble.ts)を呼びます。
 
 ``` Typescript
 import {
@@ -72,214 +64,316 @@ import {
   ThetaDevice,
 } from 'theta-ble-client-react-native';
 
-  const device = await scan({
-    name: '12345678',
-  });
-  if (device) {
+const device = await scan({
+  name: 'AA12345678',
+});
+if (device) {
   // success scan THETA
-  } else {
+} else {
   // handle error
-  }
+}
 ```
 
-### タイムアウトの設定
-`scan()`にタイムアウトを指定することができる。
-各値は、省略することで既定値が使用される。
+Theta X/Z1のシリアル番号がわかっていれば、シリアル番号の数字部分を引数にして[`ThetaBle.scan()`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/theta-ble/theta-ble.ts)を呼びます。
 
 ``` Typescript
-  const device = await scan({
-    name: '12345678',
-    timeout: {
-      timeoutScan: 30_000,
-      timeoutPeripheral: 1_000,
-      timeoutConnect: 5_000,
-      timeoutTakePicture: 10_000,
-    },
-  });
+import {
+  scan,
+  ThetaDevice,
+} from 'theta-ble-client-react-native';
+
+const device = await scan({
+  name: '12345678',
+});
+if (device) {
+  // success scan THETA
+} else {
+  // handle error
+}
 ```
 
-| 属性                   | 使用される箇所             | 既定値(ms) |
-|----------------------|---------------------|---------|
-| `timeoutScan`        | 検索時                 | 30,000  |
+検出したいThetaのシリアル番号が不明な場合は、次のようにしてThetaの候補のリストを検出します。
+
+``` Typescript
+import {
+  scan,
+  ThetaDevice,
+} from 'theta-ble-client-react-native';
+
+const deviceList = await scan();
+deviceList.forEach(device => {
+  // Theta A1なら device.name がシリアル番号
+  // Theta X/Z1なら device.name がシリアル番号の数字部分
+})
+```
+
+[`ThetaBle.scan()`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/theta-ble/theta-ble.ts)にタイムアウトを指定することもできます。デフォルト値でよければ指定を省略できます。
+
+``` Typescript
+const device = await scan({
+  name: '12345678',
+  timeout: {
+    timeoutScan: 20_000,
+    timeoutPeripheral: 2_000,
+    timeoutConnect: 3_000,
+    timeoutTakePicture: 15_000,
+  },
+});
+```
+
+| 属性                  | 使用される場面       | デフォルト値(ms) |
+|----------------------|---------------------|-----------------|
+| `timeoutScan`        | 検出時                          | 30,000  |
 | `timeoutPeripheral`  | THETAに接続する際の機器情報の取得 | 1,000   |
-| `timeoutConnect`     | 実際にTHETAに接続する時      | 5,000   |
-| `timeoutTakePicture` | 静止画撮影時              | 10,000  |
+| `timeoutConnect`     | 実際にTHETAに接続する時          | 5,000   |
+| `timeoutTakePicture` | 静止画撮影時                    | 10,000  |
 
-## THETAに接続する
-`scan()`で取得した`ThetaDevice`を使用して`ThetaDevice.connect()`で接続する。
-認証が必要な場合は、認証で登録したUUIDを指定する。(RICOH THETA V/Z1)
+## THETAに接続
 
-``` Typescript
-  const device = await scan({
-    name: '12345678',
-  });
-  ...
-  try {
-    await device.connect(uuid);
-    // success
-  } catch (_) {
-    // handle error
-  }
-```
+[`ThetaBle.scan()`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/theta-ble/theta-ble.ts)で取得した[`ThetaDevice`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/theta-device/theta-device.ts)を使用して`ThetaDevice.connect()`で接続します。
 
-## THETAから切断する
-`scan()`で取得した`ThetaDevice`を使用して`ThetaDevice.disconnect()`で切断する。
+BLE APIの使用が終わったら、`ThetaDevice.disconnect()`で切断します。
 
 ``` Typescript
-  const device = await scan({
-    name: '12345678',
-  });
-  ...
-  try {
-    await device.disconnect();
-    // success
-  } catch (_) {
-    // handle error
-  }
+const device = await scan({
+  name: 'AA12345678', // for Theta A1
+  // name : '12345678', // for Theta X/Z1
+});
+...
+try {
+  await device.connect();
+  // call BLE APIs
+  await device.disconnect();
+} catch (_) {
+  // handle error
+}
 ```
 
-## APIの呼び出し
-APIを呼び出すには、`ThetaDevice.getService()`に`BleServiceEnum`を渡して、サービスオブジェクトを取得して行う。
-サービスオブジェクトは、`ThetaDevice.connect()`で接続した後に取得可能となる。
-サービスが対応していない場合は、`undefined`となる。
+## BLE APIの呼び出し
 
-| サービス名        | `BleServiceEnum`            | サービスオブジェクト               |
-|--------------|-----------------------------|--------------------------|
-| カメラ情報        | `CAMERA_INFORMATION`        | `CameraInformation`      |
-| カメラステータスコマンド | `CAMERA_STATUS_COMMAND`     | `CameraStatusCommand`    |
-| カメラ制御コマンド    | `CAMERA_CONTROL_COMMANDS`   | `CameraControlCommands`  |
-| 撮影制御コマンド     | `SHOOTING_CONTROL_COMMAND`  | `ShootingControlCommand` |
-| カメラ制御コマンドV2  | `CAMERA_CONTROL_COMMAND_V2` | `CameraControlCommandV2` |
+`ThetaDevice.getService()`の引数に[`BleServiceEnum`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/values/ble-service.ts)を渡して、サービスオブジェクトを取得しAPIを呼び出します。
+サービスオブジェクトは、`ThetaDevice.connect()`で接続した後に取得可能になります。
+デバイスが指定したサービスに対応していない場合、サービスオブジェクトは`undefined`になります。
+
+| サービス名 | [`BleServiceEnum`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/values/ble-service.ts) | クラス | 備考 |
+|-----------|--------------------|--------|-----|
+| [Camera control command v2](https://docs-theta-api.ricoh360.com/bluetooth-api/#camera-control-command-v2-service)  | `CAMERA_CONTROL_COMMAND_V2` | [`CameraControlCommandV2`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/camera-control-command-v2.ts) | |
+| [WLAN control command](https://docs-theta-api.ricoh360.com/bluetooth-api/#wlan-control-command-service) | `WLAN_CONTROL_COMMAND`| [`WlanControlCommand`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/wlan-control-command.ts) ||
+| [WLAN control command v2](https://docs-theta-api.ricoh360.com/bluetooth-api/#wlan-control-command-v2-service) | `WLAN_CONTROL_COMMAND_V2`| [`WlanControlCommandV2`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/wlan-control-command-v2.ts) | |
+| [Bluetooth control command](https://docs-theta-api.ricoh360.com/bluetooth-api/#bluetooth-control-command) | `BLUETOOTH_CONTROL_COMMAND` | [`BluetoothControlCommand`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/bluetooth-control-command.ts) | Theta A1のみ |
+
+例えば、Thetaの機種名とシリアル番号を取得するには次のようにサービスオブジェクトを使用します。
 
 ```Typescript
-  const device = await scan({
-    name: '12345678',
-  });
-  await device?.connect();
+const device = await scan({
+  name: '12345678', // or 'AA12345678' for Theta A1
+});
+await device?.connect();
 
-  const service = (await device?.getService(
-    BleServiceEnum.CAMERA_INFORMATION,
-  )) as CameraInformation | undefined;
+const service = (await device?.getService(
+  BleServiceEnum.CAMERA_CONTROL_COMMAND_V2,
+)) as CameraControlCommandV2 | undefined;
 
-  const firmware = await service?.getFirmwareRevision();
+const info = await service?.getInfo();
+console.log(`${info?.model} ${info?.serialNumber}`)
 ```
 
-## カメラ情報を取得する
-カメラ情報は、`CameraInformation`に準備してある以下の関数で取得する
+## カメラ情報の取得
 
-| 情報                | 関数                       | 型        |
-|-------------------|--------------------------|----------|
-| ファームウェアリビジョン      | `getFirmwareRevision`    | `string` |
-| メーカー名             | `getManufacturerName`    | `string` |
-| モデル番号             | `getModelNumber`         | `string` |
-| シリアル番号            | `getSerialNumber`        | `string` |
-| WLAN MACアドレス      | `getWlanMacAddress`      | `string` |
-| Bluetooth MACアドレス | `getBluetoothMacAddress` | `string` |
+`CameraControlCommandV2.getInfo()`でカメラ情報([`ThetaInfo`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/data/theta-info.ts)オブジェクト)を取得できます。`ThetaInfo`のプロパティは次の通りです。
 
+| 情報 | プロパティ | 型 |
+|------|-----------|----|
+| メーカー名 | `manufacturer` | `string` |
+| THETAのモデル | `model` | `ThetaModel` |
+| シリアル番号 | `serialNumber` | `string` |
+| WLAN MACアドレス | `wlanMacAddress?` | `string` |
+| Bluetooth MACアドレス | `bluetoothMacAddress?` | `string` |
+| ファームウェアバージョン | `firmwareVersion` | `string` |
+| 稼働時間(秒) | `uptime` | `number` |
+
+## オプションの値の取得
+
+[`OptionName`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/values/option-name.ts) で定義しているオプションの値を`CameraControlCommandV2.getOptions()`で取得できます。ただし`Password`は取得できません。
+
+| オプション | `OptionName`のプロパティ | 型 | 備考 |
+| --------- | ----------------------- | -- | ---- |
+| アクセスポイント情報 | `AccessInfo` | [`AccessInfo`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/data/access-info.ts) | Theta A1, Xのみ |
+| Thetaの電源状態 | `CameraPower` | [`CameraPowerEnum`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/values/camera-power.ts) | |
+| 撮影モード | `CaptureMode` | [`CaptureModeEnum`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/values/capture-mode.ts) | |
+| APモードのWLANパスワードの初期値 | `DefaultWifiPassword` | `string` ||
+| 設定されているネットワークタイプ | `NetworkType` | [`NetworkTypeEnum`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/values/network-type.ts) | |
+| APモードのSSID | `Ssid` | `string` ||
+| CLモードのダイジェスト認証用のユーザ名 | `Username` | `string` ||
+| 無線アンテナの設定 | `WlanAntennaConfig` | [`WlanAntennaConfigEnum`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/values/wlan-antenna-config.ts) | Theta A1, Xのみ |
+| APモードの無線周波数 | `WlanFrequency` | [`WlanFrequencyEnum`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/values/wlan-frequency.ts) ||
+
+<br/>
+
+`OptionName.DefaultWifiPassword`を取得するサンプルコードです。
 
 ```Typescript
-  const device = await scan({
-    name: '12345678',
-  });
-  try {
-    await device?.connect();
+const device = await scan({
+  name: '12345678', // or 'AA12345678' for Theta A1
+});
+await device?.connect();
 
-    const service = (await device?.getService(
-      BleServiceEnum.CAMERA_INFORMATION,
-    )) as CameraInformation | undefined;
+const service = (await device?.getService(
+  BleServiceEnum.CAMERA_CONTROL_COMMAND_V2,
+)) as CameraControlCommandV2 | undefined;
 
-    const firmware = await service?.getFirmwareRevision();
-    const maker = await service?.getManufacturerName();
-    const model = await service?.getModelNumber();
-    const serial = await service?.getSerialNumber();
-    const wlan = await service?.getWlanMacAddress();
-    const bluetooth = await service?.getBluetoothMacAddress();
-    // success
-  } catch (_) {
-    // handle error
-  }
+const optionNames = [ OptionName.DefaultWifiPassword, ]
+const options = await service?.getOptions(optionNames);
+console.log(options.defaultWifiPassword)
 ```
 
-## 静止画を撮影する
-キャプチャモードを確認してから、`ShootingControlCommand.takePicture()`を呼び出して静止画を撮影する。
 
-キャプチャモード`CaptureModeEnum`は、`ShootingControlCommand.getCaptureMode()`で取得して、`ShootingControlCommand.setCaptureMode()`で設定を行う。静止画の場合は、`CaptureModeEnum.IMAGE`に設定する。
-また、`ShootingControlCommand.setCaptureMode()`で変更した後は、少し待たないと、撮影に失敗する。
+## オプションの値の設定
 
-* キャプチャモード`CaptureModeEnum`
-  | 値       | 説明              |
-  |---------|-----------------|
-  | `IMAGE` | 静止画撮影モード        |
-  | `VIDEO` | 動画撮影モード         |
-  | `LIVE`  | ライブ ストリーミング モード |
+[`ThetaOptions`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/data/theta-options.ts) で定義しているオプションの値を`CameraControlCommandV2.setOptions()`で設定できます。
+ただし`defaultWifiPassword`は設定できません。
 
-撮影が完了すると、`ShootingControlCommand.takePicture()`に渡した関数が呼ばれ、エラーが発生した場合は、引数にエラー情報が格納される。
+| オプション | [`ThetaOptions`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/data/theta-options.ts)のプロパティ | 型 | 備考 |
+| --------- | ----------------------- | -- | ---- |
+| アクセスポイント情報 | `accessInfo?` | [`AccessInfo`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/data/access-info.ts) | Theta A1, Xのみ |
+| Thetaの電源状態 | `cameraPower?` | [`CameraPowerEnum`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/values/camera-power.ts) | |
+| 撮影モード | `captureMode?` | [`CaptureModeEnum`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/values/capture-mode.ts) | |
+| ネットワークタイプ | `networkType?` | [`NetworkTypeEnum`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/values/network-type.ts) | |
+| APモードのSSID | `ssid?` | `String` ||
+| CLモードのダイジェスト認証用のユーザ名 | `username?` | `string` ||
+| CLモードのダイジェスト認証用のパスワード | `password?` | `string` ||
+| 無線アンテナの設定 | `wlanAntennaConfig?` | [`WlanAntennaConfigEnum`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/values/wlan-antenna-config.ts) | Theta A1, Xのみ |
+| APモードの無線周波数 | `wlanFrequency?` | [`WlanFrequencyEnum`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/values/wlan-frequency.ts) ||
+
+<br/>
+
+`ThetaOptions.captureMode`をビデオモードに設定するサンプルコードです。
 
 ```Typescript
-  const device = await scan({
-    name: '12345678',
-  });
-  try {
-    await device?.connect();
+const device = await scan({
+  name: '12345678', // or 'AA12345678' for Theta A1
+});
+await device?.connect();
 
-    const service = (await device?.getService(
-      BleServiceEnum.SHOOTING_CONTROL_COMMAND,
-    )) as ShootingControlCommand | undefined;
+const service = (await device?.getService(
+  BleServiceEnum.CAMERA_CONTROL_COMMAND_V2,
+)) as CameraControlCommandV2 | undefined;
 
-    const captureMode = await service?.getCaptureMode();
-    if (captureMode !== CaptureModeEnum.IMAGE) {
-      await service?.setCaptureMode(CaptureModeEnum.IMAGE);
-      await sleep(1000);  // Wait a little or you'll fail
-    }
-
-    service?.takePicture(error => {
-      if (error) {
-        // handle error
-      } else {
-        // success. Take a picture.
-      }
-    });
-  } catch (error) {
-    // handle error
-  }
+const options = {
+  captureMode: CaptureModeEnum.IMAGE,
+} as ThetaOptions;
+await service?.setOptions(options);
 ```
 
-## カメラの状態
-カメラの状態は、`CameraStatusCommand`に準備してある以下の関数で取得、設定、通知を行う。
+## 撮影
 
-| 種類         | 取得                 | 設定                 | 通知                                 |
-|------------|--------------------|--------------------|------------------------------------|
-| バッテリー残量    | `getBatteryLevel`  | -                  | `setBatteryLevelNotify`            |
-| 充電状態       | `getBatteryStatus` | -                  | `setBatteryStatusNotify`           |
-| カメラの起動状態   | `getCameraPower`   | `setCameraPower`   | `setCameraPowerNotify`             |
-| カメラのエラー    | -                  | -                  | `setCommandErrorDescriptionNotify` |
-| プラグインの起動状態 | `getPluginControl` | `setPluginControl` | `setPluginControlNotify`           |
+`CameraControlCommandV2.releaseShutter()`を呼ぶと、`captureMode`オプションの値とThetaの状態に従って撮影処理を行ないます。
 
-### 通知機能
-通知は、`setXxxxxxNotify()`を使用する。
-引数にコールバック関数を渡すと、状態が変更された時に、その関数が呼び出される。引数を省略すると、設定したコールバック関数を解除する。
-エラーが発生した場合には、コールバック関数の引数`error`に値が返る。
+| `captureMode`オプションの値 | 動画撮影中か否か | 撮影処理 |
+| ------------------------- | ----------------| ------- |
+| `CaptureModeEnum.IMAGE` | n/a | 静止画撮影 |
+| `CaptureModeEnum.VIDEO` | 撮影していない | ビデオ撮影開始 |
+| `CaptureModeEnum.VIDEO` | 撮影中 | ビデオ撮影終了 |
 
-``` Typescript
-  const service = (await device?.getService(
-    BleServiceEnum.CAMERA_STATUS_COMMAND,
-  )) as CameraStatusCommand | undefined;
+<br/>
 
-  await service?.setBatteryStatusNotify((value, error) => {
-    if (error) {
-        // handle error
+撮影を行うサンプルコードをです。
+
+```Typescript
+const device = await scan({
+  name: '12345678', // or 'AA12345678' for Theta A1
+});
+await device?.connect();
+
+const service = (await device?.getService(
+  BleServiceEnum.CAMERA_CONTROL_COMMAND_V2,
+)) as CameraControlCommandV2 | undefined;
+
+await service?.releaseShutter();
+```
+
+## Thetaの状態取得
+
+`CameraControlCommandV2.getState()`および`CameraControlCommandV2.getState2()`でThetaの状態([`ThetaState`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/data/theta-state.ts)、[`ThetaState2`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/data/theta-state2.ts))を取得できます。
+
+[`ThateState`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/data/theta-state.ts)のプロパティは下記の通りです。
+
+| 情報 | プロパティ | 型 | 備考 |
+|------|-----------|----|-----|
+| 最新画像URL | `latestFileUrl?` | `string` | 最後に撮影された画像(DNGフォーマット以外)のURL。WLAN接続すればダウンロードできる。 |
+| ビデオ撮影時間(秒) | `recordedTime?` | `number` ||
+| ビデオ撮影可能時間(秒) | `recordableTime?` | `number` ||
+| 連続撮影状態 | `captureStatus?` | [`CaptureStatusEnum`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/values/capture-status.ts) ||
+| 連続撮影枚数 | `capturedPictures?` | `number` ||
+| 撮影設定 | `shootingFunction?` | [`ShootingFunctionEnum`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/values/shooting-function.ts) ||
+| バッテリーの有無 | `batteryInsert?` | `boolean` ||
+| バッテリー残量 | `batteryLevel?` | `number` | 0から1まで |
+| 充電状態 | `batteryState?` | [`ChargingStateEnum`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/values/charging-state.ts) ||
+| メイン基盤の温度 | `boardTemp?` | `number` ||
+| バッテリーの温度 | `batteryTemp?` | `number` ||
+| エラー状態 | `cameraError?` | [`CameraErrorEnum[]`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/values/camera-error.ts)||
+
+<br/>
+
+[`ThateState2`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/data/theta-state2.ts)のプロパティは下記の通りです。
+
+| 情報 | プロパティ | 型 | 備考 |
+|------|-----------|----|-----|
+| 内蔵GPSモジュールの位置情報 | `internalGpsInfo?` | [`{gpsInfo: GpsInfo}`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/data/gps-info.ts) ||
+| 外部GPSデバイスの位置情報 | `externalGpsInfo?` | [`{gpsInfo: GpsInfo}`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/data/gps-info.ts) ||
+
+<br/>
+
+最新画像URLを取得するサンプルコードです。
+
+```Typescript
+const device = await scan({
+  name: '12345678', // or 'AA12345678' for Theta A1
+});
+await device?.connect();
+
+const service = (await device?.getService(
+  BleServiceEnum.CAMERA_CONTROL_COMMAND_V2,
+)) as CameraControlCommandV2 | undefined;
+
+const state = await service?.getState();
+console.log(state?.latestFileUrl)
+```
+
+## Thetaの状態通知
+
+コールバック関数を引数にして`CameraControlCommandV2.setStateNotify()`を呼ぶと、状態が変化した時にその関数が呼び出されます。
+引数を省略すると、設定済みのコールバック関数を解除します。
+エラーが発生した場合には、コールバック関数の引数`error`に値が返ります。
+
+```Typescript
+const device = await scan({
+  name: '12345678', // or 'AA12345678' for Theta A1
+});
+await device?.connect();
+
+const service = (await device?.getService(
+  BleServiceEnum.CAMERA_CONTROL_COMMAND_V2,
+)) as CameraControlCommandV2 | undefined;
+
+service?.setStateNotify((value?: ThetaState, error?: NotifyError) => {
+    if (value !== undefined) {
+      // value's type is ThetaState
+    } else if (error !== undefined) {
+      // error's type is NotifyError
     } else {
-        // Notify value
+      // something is wrong
     }
-  });
+});
 ```
 
-## Camera Control Command v2
-Camera Control Command v2の機能を使用するには、`ThetaDevice.getService()`に`BleServiceEnum.CAMERA_CONTROL_COMMAND_V2`を指定して得られる、`CameraControlCommandV2`を使用します。
+## 無線LANの制御
 
-``` Typescript
-  const cameraControlCommandV2 = await device.getService(BleServiceEnum.CAMERA_CONTROL_COMMAND_V2) as CameraControlCommandV2 | undefined;
-  const thetaInfo = await cameraControlCommandV2?.getInfo();
-  const model = thetaInfo?.model;
-  ...
-```
+[`WlanControlCommandV2`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/wlan-control-command-v2.ts)サービスを使って無線LANの制御を行えます。
+
+| 機能 | メソッド | 引数 |戻り値 |
+| ---- | ------- | ---- |------ |
+| アクセスポイント接続状態の取得 | `getConnectedWifiInfo()` | - |[`ConnectedWifiInfo`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/data/connected-wifi-info.ts) |
+| アクセスポイントの設定(DHCP) | `setAccessPointDynamically()` | ssidなど | - |
+| アクセスポイントの設定(静的) | `setAccessPointStatically()` | ssid、IPアドレスなど | - |
+| ネットワークタイプの設定 | `setNetworkType()` | [`NetworkTypeEnum`](https://github.com/ricohapi/theta-ble-client-private/blob/main/react-native/src/service/values/network-type.ts) | - |
