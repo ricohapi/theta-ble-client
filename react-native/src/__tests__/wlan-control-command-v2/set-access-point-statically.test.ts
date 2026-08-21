@@ -34,7 +34,7 @@ describe('WlanControlCommandV2 setAccessPointStatically', () => {
     jest.mocked(thetaBle.nativeContainService).mockImplementation(
       jest.fn(async () => {
         return true;
-      }),
+      })
     );
   });
 
@@ -45,16 +45,20 @@ describe('WlanControlCommandV2 setAccessPointStatically', () => {
 
   const setupService = async () => {
     const device = new ThetaDevice(devId, devName);
-    const service = await device.getService(BleServiceEnum.WLAN_CONTROL_COMMAND_V2);
+    const service = await device.getService(
+      BleServiceEnum.WLAN_CONTROL_COMMAND_V2
+    );
     return service as WlanControlCommandV2;
   };
 
   test('setAccessPointStatically', async () => {
-    thetaBle.nativeWlanControlCommandV2SetAccessPointStatically = jest.fn().mockImplementation(async (id, value) => {
-      expect(id).toBe(devId);
-      expect(value).toStrictEqual(testData);
-      return;
-    });
+    thetaBle.nativeWlanControlCommandV2SetAccessPointStatically = jest
+      .fn()
+      .mockImplementation(async ({ id, params: value }) => {
+        expect(id).toBe(devId);
+        expect(value).toStrictEqual(testData);
+        return;
+      });
 
     const service = await setupService();
     await service.setAccessPointStatically(
@@ -66,16 +70,19 @@ describe('WlanControlCommandV2 setAccessPointStatically', () => {
       testData.ipAddress,
       testData.subnetMask,
       testData.defaultGateway,
-      testData.proxy,
+      testData.proxy
     );
-    expect(thetaBle.nativeWlanControlCommandV2SetAccessPointStatically).toBeCalledWith(devId, testData);
+    expect(
+      thetaBle.nativeWlanControlCommandV2SetAccessPointStatically
+    ).toBeCalledWith({ id: devId, params: testData });
   });
 
   test('Exception setAccessPointStatically', async () => {
-
-    thetaBle.nativeWlanControlCommandV2SetAccessPointStatically = jest.fn().mockImplementation(() => {
-      throw 'error';
-    });
+    thetaBle.nativeWlanControlCommandV2SetAccessPointStatically = jest
+      .fn()
+      .mockImplementation(() => {
+        throw 'error';
+      });
 
     const service = await setupService();
     try {
@@ -88,12 +95,14 @@ describe('WlanControlCommandV2 setAccessPointStatically', () => {
         testData.ipAddress,
         testData.subnetMask,
         testData.defaultGateway,
-        testData.proxy,
+        testData.proxy
       );
       throw new Error('failed');
     } catch (error) {
       expect(error).toBe('error');
     }
-    expect(thetaBle.nativeWlanControlCommandV2SetAccessPointStatically).toBeCalledWith(devId, testData);
+    expect(
+      thetaBle.nativeWlanControlCommandV2SetAccessPointStatically
+    ).toBeCalledWith({ id: devId, params: testData });
   });
 });

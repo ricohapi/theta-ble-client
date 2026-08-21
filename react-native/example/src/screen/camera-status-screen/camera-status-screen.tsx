@@ -3,10 +3,10 @@ import { Button, Stack } from '@react-native-material/core';
 import { Alert, Text, View } from 'react-native';
 import styles from './styles';
 import { useDeviceContext } from '../../device-context';
+import type { PluginControl } from '../../modules/theta-ble-client';
 import {
   ChargingStateEnum,
   CameraPowerEnum,
-  PluginControl,
   CameraStatusCommand,
   BleServiceEnum,
   PluginPowerStatusEnum,
@@ -22,10 +22,11 @@ const ERROR_MESSAGE_NOT_CONNECTED = 'Not connected.';
 const ERROR_MESSAGE_UNSUPPORTED = 'Unsupported.';
 
 const CameraStatusScreen: React.FC<
-NativeStackScreenProps<RootStackParamList, 'CameraStatus'>
+  NativeStackScreenProps<RootStackParamList, 'CameraStatus'>
 > = ({ navigation }) => {
   const { thetaDevice } = useDeviceContext();
-  const [cameraStatusCommand, setCameraStatusCommand] = React.useState<CameraStatusCommand>();
+  const [cameraStatusCommand, setCameraStatusCommand] =
+    React.useState<CameraStatusCommand>();
 
   const [infoText, setInfoText] = React.useState('Init');
   const [batteryLevel, setBatteryLevel] = React.useState(0);
@@ -38,14 +39,16 @@ NativeStackScreenProps<RootStackParamList, 'CameraStatus'>
 
   const initPlugin = async (device: ThetaDevice) => {
     try {
-      const thetaService = await device.getService(BleServiceEnum.CAMERA_CONTROL_COMMANDS) as CameraControlCommands;
+      const thetaService = (await device.getService(
+        BleServiceEnum.CAMERA_CONTROL_COMMANDS
+      )) as CameraControlCommands;
       if (thetaService == null) {
         setFirstPlugin(undefined);
         return;
       }
       const orders = await thetaService.getPluginOrders();
       setFirstPlugin(orders.first);
-    } catch (error)  {
+    } catch (error) {
       console.log(JSON.stringify(error));
     }
   };
@@ -69,14 +72,15 @@ NativeStackScreenProps<RootStackParamList, 'CameraStatus'>
         return;
       }
       initPlugin(thetaDevice);
-      thetaDevice.getService(BleServiceEnum.CAMERA_STATUS_COMMAND).then(
-        (thetaService) => {
+      thetaDevice
+        .getService(BleServiceEnum.CAMERA_STATUS_COMMAND)
+        .then((thetaService) => {
           setCameraStatusCommand(thetaService as CameraStatusCommand);
           setNotifications(thetaService as CameraStatusCommand);
-        },
-      ).catch(() => {
-        alertToGoBack(ERROR_MESSAGE_UNSUPPORTED);
-      });
+        })
+        .catch(() => {
+          alertToGoBack(ERROR_MESSAGE_UNSUPPORTED);
+        });
     } else {
       alertToGoBack(ERROR_MESSAGE_NO_DEVICE);
     }
@@ -89,8 +93,7 @@ NativeStackScreenProps<RootStackParamList, 'CameraStatus'>
       await service.setCameraPowerNotify();
       await service.setCommandErrorDescriptionNotify();
       await service.setPluginControlNotify();
-      /* eslint-disable-next-line no-empty */
-    } catch (_) {}
+    } catch {}
   };
 
   const updateBatteryLevel = async () => {
@@ -101,7 +104,7 @@ NativeStackScreenProps<RootStackParamList, 'CameraStatus'>
     try {
       const value = await cameraStatusCommand.getBatteryLevel();
       setBatteryLevel(value);
-    } catch (_) {
+    } catch {
       setInfoText('Error.');
     }
   };
@@ -114,7 +117,7 @@ NativeStackScreenProps<RootStackParamList, 'CameraStatus'>
     try {
       const value = await cameraStatusCommand.getBatteryStatus();
       setBatteryStatus(value);
-    } catch (_) {
+    } catch {
       setInfoText('Error.');
     }
   };
@@ -127,7 +130,7 @@ NativeStackScreenProps<RootStackParamList, 'CameraStatus'>
     try {
       const value = await cameraStatusCommand.getCameraPower();
       setCameraPower(value);
-    } catch (_) {
+    } catch {
       setInfoText('Error.');
     }
   };
@@ -140,7 +143,7 @@ NativeStackScreenProps<RootStackParamList, 'CameraStatus'>
     try {
       await cameraStatusCommand.setCameraPower(value);
       setCameraPower(value);
-    } catch (_) {
+    } catch {
       setInfoText('Error.');
     }
   };
@@ -175,7 +178,7 @@ NativeStackScreenProps<RootStackParamList, 'CameraStatus'>
           });
         }
       }
-    } catch (_) {
+    } catch {
       setInfoText('Error.');
     }
   };
@@ -192,29 +195,29 @@ NativeStackScreenProps<RootStackParamList, 'CameraStatus'>
     try {
       const value = await cameraStatusCommand.getPluginControl();
       setPluginControl(value);
-    } catch (_) {
+    } catch {
       setInfoText('Error.');
     }
   };
 
   const setNotifications = async (service: CameraStatusCommand) => {
     console.log('setNotifications()');
-    await service.setBatteryLevelNotify(value => {
+    await service.setBatteryLevelNotify((value) => {
       setInfoText('Battery level: ' + value);
       setBatteryLevel(value ?? 0);
     });
-    await service.setBatteryStatusNotify(value => {
+    await service.setBatteryStatusNotify((value) => {
       setInfoText('Battery status: ' + value);
       setBatteryStatus(value);
     });
-    await service.setCameraPowerNotify(value => {
+    await service.setCameraPowerNotify((value) => {
       setInfoText('Camera power: ' + value);
       setCameraPower(value);
     });
-    await service.setCommandErrorDescriptionNotify(value => {
+    await service.setCommandErrorDescriptionNotify((value) => {
       setInfoText('Command error: ' + value);
     });
-    await service.setPluginControlNotify(value => {
+    await service.setPluginControlNotify((value) => {
       setInfoText('Plugin control: ' + value?.pluginControl);
       setPluginControl(value);
     });

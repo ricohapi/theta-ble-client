@@ -2,7 +2,7 @@ import React from 'react';
 import {
   type ViewProps,
   type ViewStyle,
-  StyleProp,
+  type StyleProp,
   TouchableOpacity,
   Text,
   View,

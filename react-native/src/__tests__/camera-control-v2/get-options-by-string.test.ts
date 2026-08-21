@@ -1,9 +1,6 @@
 import { NativeModules } from 'react-native';
 import { ThetaDevice } from '../../theta-device';
-import {
-  BleServiceEnum,
-  CameraControlCommandV2,
-} from '../../service';
+import { BleServiceEnum, CameraControlCommandV2 } from '../../service';
 
 describe('CameraControlCommandV2 getOptions', () => {
   const devId = 1;
@@ -15,7 +12,7 @@ describe('CameraControlCommandV2 getOptions', () => {
     jest.mocked(thetaBle.nativeContainService).mockImplementation(
       jest.fn(async () => {
         return true;
-      }),
+      })
     );
   });
 
@@ -26,55 +23,59 @@ describe('CameraControlCommandV2 getOptions', () => {
 
   const setupService = async () => {
     const device = new ThetaDevice(devId, devName);
-    const service = await device.getService(BleServiceEnum.CAMERA_CONTROL_COMMAND_V2);
+    const service = await device.getService(
+      BleServiceEnum.CAMERA_CONTROL_COMMAND_V2
+    );
     return service as CameraControlCommandV2;
   };
 
   test('getOptions', async () => {
     const testData = {
-      '_cameraPower': 'on',
-      'captureMode': 'image',
-      '_networkType': 'AP',
-      '_password': 'password123',
-      '_ssid': 'ssid123',
-      '_username': 'adminUser',
-      '_wlanAntennaConfig': 'MIMO',
-      '_wlanFrequency': 2.4,
-      '_accessInfo': {
-        'ssid': 'test_ssid',
-        'ipAddress': '10.0.0.222',
-        'subnetMask': '255.255.255.0',
-        'defaultGateway': '10.0.0.2',
-        'proxyURL': 'proxy-url',
-        'frequency': '2.4',
-        'wlanSignalStrength': -51,
-        'wlanSignalLevel': 4,
-        'lteSignalStrength': 0,
-        'lteSignalLevel': 0,
-        '_dhcpLeaseAddress': [
+      _cameraPower: 'on',
+      captureMode: 'image',
+      _networkType: 'AP',
+      _password: 'password123',
+      _ssid: 'ssid123',
+      _username: 'adminUser',
+      _wlanAntennaConfig: 'MIMO',
+      _wlanFrequency: 2.4,
+      _accessInfo: {
+        ssid: 'test_ssid',
+        ipAddress: '10.0.0.222',
+        subnetMask: '255.255.255.0',
+        defaultGateway: '10.0.0.2',
+        proxyURL: 'proxy-url',
+        frequency: '2.4',
+        wlanSignalStrength: -51,
+        wlanSignalLevel: 4,
+        lteSignalStrength: 0,
+        lteSignalLevel: 0,
+        _dhcpLeaseAddress: [
           {
-            'ipAddress': '10.0.0.3',
-            'macAddress': '58:38:79:9f:00:00',
-            'hostName': 'host_name',
+            ipAddress: '10.0.0.3',
+            macAddress: '58:38:79:9f:00:00',
+            hostName: 'host_name',
           },
         ],
       },
     };
-    thetaBle.nativeCameraControlCommandV2GetOptionsByString = jest.fn().mockImplementation(async (id, names) => {
-      expect(id).toBe(devId);
-      expect(names).toStrictEqual([
-        '_cameraPower',
-        'captureMode',
-        '_networkType',
-        '_password',
-        '_ssid',
-        '_username',
-        '_wlanAntennaConfig',
-        '_wlanFrequency',
-        '_accessInfo',
-      ]);
-      return testData;
-    });
+    thetaBle.nativeCameraControlCommandV2GetOptionsByString = jest
+      .fn()
+      .mockImplementation(async ({ id, optionNames: names }) => {
+        expect(id).toBe(devId);
+        expect(names).toStrictEqual([
+          '_cameraPower',
+          'captureMode',
+          '_networkType',
+          '_password',
+          '_ssid',
+          '_username',
+          '_wlanAntennaConfig',
+          '_wlanFrequency',
+          '_accessInfo',
+        ]);
+        return testData;
+      });
 
     const service = await setupService();
     const optionMap = await service.getOptionsByString([
@@ -100,7 +101,8 @@ describe('CameraControlCommandV2 getOptions', () => {
 
     expect(optionMap._wlanFrequency).toBe(2.4);
 
-    const accessInfo = optionMap._accessInfo as Record<string, unknown> | undefined;
+    const accessInfo = optionMap._accessInfo as
+      Record<string, unknown> | undefined;
     expect(accessInfo).toBeDefined();
     expect(accessInfo?.ssid).toBe('test_ssid');
     expect(accessInfo?.ipAddress).toBe('10.0.0.222');
@@ -112,8 +114,11 @@ describe('CameraControlCommandV2 getOptions', () => {
     expect(accessInfo?.wlanSignalLevel).toBe(4);
     expect(accessInfo?.lteSignalStrength).toBe(0);
     expect(accessInfo?.lteSignalLevel).toBe(0);
-    
-    const dhcpLeaseAddresses = accessInfo?._dhcpLeaseAddress as Record<string, unknown>[];
+
+    const dhcpLeaseAddresses = accessInfo?._dhcpLeaseAddress as Record<
+      string,
+      unknown
+    >[];
     expect(dhcpLeaseAddresses?.length).toBe(1);
     const dhcpLeaseAddress = dhcpLeaseAddresses?.at(0);
     expect(dhcpLeaseAddress).toBeDefined();
@@ -123,10 +128,11 @@ describe('CameraControlCommandV2 getOptions', () => {
   });
 
   test('Exception getOptions', async () => {
-
-    thetaBle.nativeCameraControlCommandV2GetOptionsByString = jest.fn().mockImplementation(() => {
-      throw 'error';
-    });
+    thetaBle.nativeCameraControlCommandV2GetOptionsByString = jest
+      .fn()
+      .mockImplementation(() => {
+        throw 'error';
+      });
 
     const service = await setupService();
     try {

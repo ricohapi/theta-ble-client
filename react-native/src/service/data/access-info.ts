@@ -60,4 +60,4 @@ export interface AccessInfo {
    * client devices information
    */
   dhcpLeaseAddress?: DhcpLeaseAddress[];
-};
+}

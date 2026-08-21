@@ -18,4 +18,4 @@ export interface ConnectedWifiInfo {
    * State of LTE connection case
    */
   lte?: ConnectedInfo;
-};
+}

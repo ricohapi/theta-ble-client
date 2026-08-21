@@ -1,4 +1,9 @@
-import type { CameraErrorEnum, CaptureStatusEnum, ChargingStateEnum, ShootingFunctionEnum } from '../values';
+import type {
+  CameraErrorEnum,
+  CaptureStatusEnum,
+  ChargingStateEnum,
+  ShootingFunctionEnum,
+} from '../values';
 
 /**
  * Mutable values representing Theta status.

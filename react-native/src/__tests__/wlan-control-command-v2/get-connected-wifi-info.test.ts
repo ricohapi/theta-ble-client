@@ -12,7 +12,7 @@ describe('WlanControlCommandV2 getConnectedWifiInfo', () => {
     jest.mocked(thetaBle.nativeContainService).mockImplementation(
       jest.fn(async () => {
         return true;
-      }),
+      })
     );
   });
 
@@ -20,10 +20,12 @@ describe('WlanControlCommandV2 getConnectedWifiInfo', () => {
     thetaBle.nativeContainService = jest.fn();
     thetaBle.nativeWlanControlCommandV2GetConnectedWifiInfo = jest.fn();
   });
-  
+
   const setupService = async () => {
     const device = new ThetaDevice(devId, devName);
-    const service = await device.getService(BleServiceEnum.WLAN_CONTROL_COMMAND_V2);
+    const service = await device.getService(
+      BleServiceEnum.WLAN_CONTROL_COMMAND_V2
+    );
     return service as WlanControlCommandV2;
   };
 
@@ -35,24 +37,29 @@ describe('WlanControlCommandV2 getConnectedWifiInfo', () => {
         isInternetAccessible: false,
       },
     };
-    thetaBle.nativeWlanControlCommandV2GetConnectedWifiInfo = jest.fn().mockImplementation( async (id) => {
-      expect(id).toBe(devId);
-      return testData;
-    });
+    thetaBle.nativeWlanControlCommandV2GetConnectedWifiInfo = jest
+      .fn()
+      .mockImplementation(async ({ id }) => {
+        expect(id).toBe(devId);
+        return testData;
+      });
 
     const service = await setupService();
     const info = await service.getConnectedWifiInfo();
 
     expect(info).toBe(testData);
 
-    expect(thetaBle.nativeWlanControlCommandV2GetConnectedWifiInfo).toHaveBeenCalledWith(devId);
+    expect(
+      thetaBle.nativeWlanControlCommandV2GetConnectedWifiInfo
+    ).toHaveBeenCalledWith({ id: devId });
   });
-  
-  test('Exception getConnectedWifiInfo', async () => {
 
-    thetaBle.nativeWlanControlCommandV2GetConnectedWifiInfo = jest.fn().mockImplementation( () => {
-      throw 'error';
-    });
+  test('Exception getConnectedWifiInfo', async () => {
+    thetaBle.nativeWlanControlCommandV2GetConnectedWifiInfo = jest
+      .fn()
+      .mockImplementation(() => {
+        throw 'error';
+      });
 
     const service = await setupService();
     try {

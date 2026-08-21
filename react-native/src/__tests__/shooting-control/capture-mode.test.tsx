@@ -17,10 +17,10 @@ const devName = '0123456789';
 
 async function getCaptureModeTest(captureMode: CaptureModeEnum) {
   jest.mocked(thetaBle.nativeGetCaptureMode).mockImplementation(
-    jest.fn(async (id) => {
+    jest.fn(async ({ id }) => {
       expect(id).toBe(devId);
       return captureMode as string;
-    }),
+    })
   );
 
   const device = new ThetaDevice(devId, devName);
@@ -28,7 +28,7 @@ async function getCaptureModeTest(captureMode: CaptureModeEnum) {
   const response = await service.getCaptureMode();
 
   expect(response).toBe(captureMode);
-  expect(thetaBle.nativeGetCaptureMode).toHaveBeenCalledWith(devId);
+  expect(thetaBle.nativeGetCaptureMode).toHaveBeenCalledWith({ id: devId });
 }
 
 test('Call getCaptureMode normal', () => {
@@ -37,7 +37,7 @@ test('Call getCaptureMode normal', () => {
     CaptureModeEnum.VIDEO,
     CaptureModeEnum.LIVE,
   ];
-  valueList.forEach(function(element){
+  valueList.forEach(function (element) {
     getCaptureModeTest(element);
   });
 });
@@ -46,9 +46,9 @@ test('Exception for Call getCaptureMode', async () => {
   jest.mocked(thetaBle.nativeGetCaptureMode).mockImplementation(
     jest.fn(async () => {
       throw 'error';
-    }),
+    })
   );
-  
+
   const device = new ThetaDevice(devId, devName);
   const service = new ShootingControlCommand(device);
   try {
@@ -58,22 +58,25 @@ test('Exception for Call getCaptureMode', async () => {
     expect(error).toBe('error');
   }
 
-  expect(thetaBle.nativeGetCaptureMode).toHaveBeenCalledWith(devId);
+  expect(thetaBle.nativeGetCaptureMode).toHaveBeenCalledWith({ id: devId });
 });
 
 async function setCaptureModeTest(captureMode: CaptureModeEnum) {
   jest.mocked(thetaBle.nativeSetCaptureMode).mockImplementation(
-    jest.fn(async (id, mode: string) => {
+    jest.fn(async ({ id, value: mode }) => {
       expect(id).toBe(devId);
       expect(mode).toBe(captureMode as string);
-    }),
+    })
   );
 
   const device = new ThetaDevice(devId, devName);
   const service = new ShootingControlCommand(device);
   await service.setCaptureMode(captureMode);
 
-  expect(thetaBle.nativeSetCaptureMode).toHaveBeenCalledWith(devId, captureMode as string);
+  expect(thetaBle.nativeSetCaptureMode).toHaveBeenCalledWith({
+    id: devId,
+    value: captureMode as string,
+  });
 }
 
 test('Call setCaptureMode normal', () => {
@@ -82,7 +85,7 @@ test('Call setCaptureMode normal', () => {
     CaptureModeEnum.VIDEO,
     CaptureModeEnum.LIVE,
   ];
-  valueList.forEach(function(element){
+  valueList.forEach(function (element) {
     setCaptureModeTest(element);
   });
 });
@@ -91,9 +94,9 @@ test('Exception for Call setCaptureMode', async () => {
   jest.mocked(thetaBle.nativeSetCaptureMode).mockImplementation(
     jest.fn(async () => {
       throw 'error';
-    }),
+    })
   );
-  
+
   const device = new ThetaDevice(devId, devName);
   const service = new ShootingControlCommand(device);
   try {
@@ -103,5 +106,8 @@ test('Exception for Call setCaptureMode', async () => {
     expect(error).toBe('error');
   }
 
-  expect(thetaBle.nativeSetCaptureMode).toHaveBeenCalledWith(devId, CaptureModeEnum.IMAGE as string);
+  expect(thetaBle.nativeSetCaptureMode).toHaveBeenCalledWith({
+    id: devId,
+    value: CaptureModeEnum.IMAGE as string,
+  });
 });

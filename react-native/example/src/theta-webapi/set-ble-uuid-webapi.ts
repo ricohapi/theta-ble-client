@@ -1,4 +1,6 @@
-export async function setBleUuidWebApi(uuid: string): Promise<string | undefined> {
+export async function setBleUuidWebApi(
+  uuid: string
+): Promise<string | undefined> {
   const url = 'http://192.168.1.1/osc/commands/execute';
   const controller = new AbortController();
   const timeout = setTimeout(() => {
@@ -10,7 +12,7 @@ export async function setBleUuidWebApi(uuid: string): Promise<string | undefined
       signal: controller.signal,
       method: 'POST',
       headers: {
-        Accept: 'application/json',
+        'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({

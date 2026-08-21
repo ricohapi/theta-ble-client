@@ -2,7 +2,11 @@ import { NativeModules } from 'react-native';
 import { ThetaDevice } from '../../theta-device';
 import { NativeEventEmitter_addListener } from '../../__mocks__/react-native';
 import type { BaseNotify } from '../../theta-device/notify';
-import { BleServiceEnum, NetworkTypeEnum, WlanControlCommandV2 } from '../../service';
+import {
+  BleServiceEnum,
+  NetworkTypeEnum,
+  WlanControlCommandV2,
+} from '../../service';
 
 describe('WlanControlCommandV2 setNetworkTypeNotify', () => {
   const devId = 1;
@@ -14,7 +18,7 @@ describe('WlanControlCommandV2 setNetworkTypeNotify', () => {
     jest.mocked(thetaBle.nativeContainService).mockImplementation(
       jest.fn(async () => {
         return true;
-      }),
+      })
     );
   });
 
@@ -25,7 +29,9 @@ describe('WlanControlCommandV2 setNetworkTypeNotify', () => {
 
   const setupService = async () => {
     const device = new ThetaDevice(devId, devName);
-    const service = await device.getService(BleServiceEnum.WLAN_CONTROL_COMMAND_V2);
+    const service = await device.getService(
+      BleServiceEnum.WLAN_CONTROL_COMMAND_V2
+    );
     return service as WlanControlCommandV2;
   };
 
@@ -39,7 +45,7 @@ describe('WlanControlCommandV2 setNetworkTypeNotify', () => {
         return {
           remove: jest.fn(),
         };
-      }),
+      })
     );
     const service = await setupService();
     expect(service).toBeDefined();
@@ -60,9 +66,13 @@ describe('WlanControlCommandV2 setNetworkTypeNotify', () => {
       },
     });
 
-    expect(service.device.notifyList.get('WRITE_SET_NETWORK_TYPE')).toBeDefined();
+    expect(
+      service.device.notifyList.get('WRITE_SET_NETWORK_TYPE')
+    ).toBeDefined();
     expect(onNotify).toBeCalled();
-    expect(thetaBle.nativeWlanControlCommandV2SetNetworkTypeNotify).toBeCalledWith(devId, true);
+    expect(
+      thetaBle.nativeWlanControlCommandV2SetNetworkTypeNotify
+    ).toBeCalledWith({ id: devId, enable: true });
   });
 
   test('Not called different characteristic', async () => {
@@ -75,7 +85,7 @@ describe('WlanControlCommandV2 setNetworkTypeNotify', () => {
         return {
           remove: jest.fn(),
         };
-      }),
+      })
     );
 
     const testValue = NetworkTypeEnum.ETHERNET;
@@ -96,9 +106,13 @@ describe('WlanControlCommandV2 setNetworkTypeNotify', () => {
       },
     });
 
-    expect(service.device.notifyList.get('WRITE_SET_NETWORK_TYPE')).toBeDefined();
+    expect(
+      service.device.notifyList.get('WRITE_SET_NETWORK_TYPE')
+    ).toBeDefined();
     expect(onNotify).toBeCalledTimes(0);
-    expect(thetaBle.nativeWlanControlCommandV2SetNetworkTypeNotify).toBeCalledWith(devId, true);
+    expect(
+      thetaBle.nativeWlanControlCommandV2SetNetworkTypeNotify
+    ).toBeCalledWith({ id: devId, enable: true });
   });
 
   test('Set empty', async () => {
@@ -111,7 +125,7 @@ describe('WlanControlCommandV2 setNetworkTypeNotify', () => {
         return {
           remove: jest.fn(),
         };
-      }),
+      })
     );
 
     const testValue = NetworkTypeEnum.ETHERNET;
@@ -134,18 +148,26 @@ describe('WlanControlCommandV2 setNetworkTypeNotify', () => {
       },
     });
 
-    expect(service.device.notifyList.get('WRITE_SET_NETWORK_TYPE')).toBeUndefined();
+    expect(
+      service.device.notifyList.get('WRITE_SET_NETWORK_TYPE')
+    ).toBeUndefined();
     expect(onNotify).toBeCalledTimes(0);
-    expect(thetaBle.nativeWlanControlCommandV2SetNetworkTypeNotify).toBeCalledTimes(2);
-    expect(thetaBle.nativeWlanControlCommandV2SetNetworkTypeNotify).toHaveBeenLastCalledWith(devId, false);
+    expect(
+      thetaBle.nativeWlanControlCommandV2SetNetworkTypeNotify
+    ).toBeCalledTimes(2);
+    expect(
+      thetaBle.nativeWlanControlCommandV2SetNetworkTypeNotify
+    ).toHaveBeenLastCalledWith({ id: devId, enable: false });
   });
 
   test('exception', async () => {
-    jest.mocked(thetaBle.nativeWlanControlCommandV2SetNetworkTypeNotify).mockImplementation(
-      jest.fn(async () => {
-        throw 'error';
-      }),
-    );
+    jest
+      .mocked(thetaBle.nativeWlanControlCommandV2SetNetworkTypeNotify)
+      .mockImplementation(
+        jest.fn(async () => {
+          throw 'error';
+        })
+      );
 
     const onNotify = jest.fn();
     const service = await setupService();
@@ -155,11 +177,13 @@ describe('WlanControlCommandV2 setNetworkTypeNotify', () => {
         onNotify();
       });
       expect(true).toBeFalsy();
-    } catch(error) {
+    } catch (error) {
       expect(error).toBe('error');
     }
     expect(onNotify).toBeCalledTimes(0);
-    expect(thetaBle.nativeWlanControlCommandV2SetNetworkTypeNotify).toBeCalledTimes(1);
+    expect(
+      thetaBle.nativeWlanControlCommandV2SetNetworkTypeNotify
+    ).toBeCalledTimes(1);
   });
 
   test('receive error', async () => {
@@ -172,7 +196,7 @@ describe('WlanControlCommandV2 setNetworkTypeNotify', () => {
         return {
           remove: jest.fn(),
         };
-      }),
+      })
     );
 
     const errorMessage = 'Error receive';
@@ -193,8 +217,12 @@ describe('WlanControlCommandV2 setNetworkTypeNotify', () => {
       },
     });
 
-    expect(service.device.notifyList.get('WRITE_SET_NETWORK_TYPE')).toBeDefined();
+    expect(
+      service.device.notifyList.get('WRITE_SET_NETWORK_TYPE')
+    ).toBeDefined();
     expect(onNotify).toBeCalled();
-    expect(thetaBle.nativeWlanControlCommandV2SetNetworkTypeNotify).toBeCalledWith(devId, true);
+    expect(
+      thetaBle.nativeWlanControlCommandV2SetNetworkTypeNotify
+    ).toBeCalledWith({ id: devId, enable: true });
   });
 });

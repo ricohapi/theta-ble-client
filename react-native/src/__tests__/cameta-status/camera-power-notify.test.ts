@@ -27,7 +27,7 @@ describe('setCameraPowerNotify', () => {
         return {
           remove: jest.fn(),
         };
-      }),
+      })
     );
 
     const testValue = CameraPowerEnum.OFF;
@@ -51,7 +51,10 @@ describe('setCameraPowerNotify', () => {
 
     expect(device.notifyList.get('CAMERA_POWER')).toBeDefined();
     expect(onNotify).toBeCalled();
-    expect(thetaBle.nativeSetCameraPowerNotify).toBeCalledWith(devId, true);
+    expect(thetaBle.nativeSetCameraPowerNotify).toBeCalledWith({
+      id: devId,
+      enable: true,
+    });
   });
 
   test('Not called different characteristic', async () => {
@@ -64,7 +67,7 @@ describe('setCameraPowerNotify', () => {
         return {
           remove: jest.fn(),
         };
-      }),
+      })
     );
 
     const testValue = CameraPowerEnum.SLEEP;
@@ -88,7 +91,10 @@ describe('setCameraPowerNotify', () => {
 
     expect(device.notifyList.get('CAMERA_POWER')).toBeDefined();
     expect(onNotify).toBeCalledTimes(0);
-    expect(thetaBle.nativeSetCameraPowerNotify).toBeCalledWith(devId, true);
+    expect(thetaBle.nativeSetCameraPowerNotify).toBeCalledWith({
+      id: devId,
+      enable: true,
+    });
   });
 
   test('Set empty', async () => {
@@ -101,7 +107,7 @@ describe('setCameraPowerNotify', () => {
         return {
           remove: jest.fn(),
         };
-      }),
+      })
     );
 
     const testValue = CameraPowerEnum.OFF;
@@ -127,14 +133,17 @@ describe('setCameraPowerNotify', () => {
     expect(device.notifyList.get('CAMERA_POWER')).toBeUndefined();
     expect(onNotify).toBeCalledTimes(0);
     expect(thetaBle.nativeSetCameraPowerNotify).toBeCalledTimes(2);
-    expect(thetaBle.nativeSetCameraPowerNotify).toHaveBeenLastCalledWith(devId, false);
+    expect(thetaBle.nativeSetCameraPowerNotify).toHaveBeenLastCalledWith({
+      id: devId,
+      enable: false,
+    });
   });
 
   test('exception', async () => {
     jest.mocked(thetaBle.nativeSetCameraPowerNotify).mockImplementation(
       jest.fn(async () => {
         throw 'error';
-      }),
+      })
     );
 
     const onNotify = jest.fn();
@@ -146,7 +155,7 @@ describe('setCameraPowerNotify', () => {
         onNotify();
       });
       expect(true).toBeFalsy();
-    } catch(error) {
+    } catch (error) {
       expect(error).toBe('error');
     }
     expect(onNotify).toBeCalledTimes(0);
@@ -163,7 +172,7 @@ describe('setCameraPowerNotify', () => {
         return {
           remove: jest.fn(),
         };
-      }),
+      })
     );
 
     const errorMessage = 'Error receive';
@@ -187,6 +196,9 @@ describe('setCameraPowerNotify', () => {
 
     expect(device.notifyList.get('CAMERA_POWER')).toBeDefined();
     expect(onNotify).toBeCalled();
-    expect(thetaBle.nativeSetCameraPowerNotify).toBeCalledWith(devId, true);
+    expect(thetaBle.nativeSetCameraPowerNotify).toBeCalledWith({
+      id: devId,
+      enable: true,
+    });
   });
 });

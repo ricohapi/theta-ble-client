@@ -20,4 +20,4 @@ export const PeripheralDeviceStatusEnum = {
 
 /** type definition of PeripheralDeviceStatusEnum */
 export type PeripheralDeviceStatusEnum =
-  typeof PeripheralDeviceStatusEnum[keyof typeof PeripheralDeviceStatusEnum];
+  (typeof PeripheralDeviceStatusEnum)[keyof typeof PeripheralDeviceStatusEnum];

@@ -14,7 +14,7 @@ describe('WlanControlCommandV2 setConnectedWifiInfoNotify', () => {
     jest.mocked(thetaBle.nativeContainService).mockImplementation(
       jest.fn(async () => {
         return true;
-      }),
+      })
     );
   });
 
@@ -25,7 +25,9 @@ describe('WlanControlCommandV2 setConnectedWifiInfoNotify', () => {
 
   const setupService = async () => {
     const device = new ThetaDevice(devId, devName);
-    const service = await device.getService(BleServiceEnum.WLAN_CONTROL_COMMAND_V2);
+    const service = await device.getService(
+      BleServiceEnum.WLAN_CONTROL_COMMAND_V2
+    );
     return service as WlanControlCommandV2;
   };
 
@@ -39,7 +41,7 @@ describe('WlanControlCommandV2 setConnectedWifiInfoNotify', () => {
         return {
           remove: jest.fn(),
         };
-      }),
+      })
     );
     const service = await setupService();
     expect(service).toBeDefined();
@@ -64,9 +66,13 @@ describe('WlanControlCommandV2 setConnectedWifiInfoNotify', () => {
       params: testData,
     });
 
-    expect(service.device.notifyList.get('NOTIFICATION_CONNECTED_WIFI_INFO')).toBeDefined();
+    expect(
+      service.device.notifyList.get('NOTIFICATION_CONNECTED_WIFI_INFO')
+    ).toBeDefined();
     expect(onNotify).toBeCalled();
-    expect(thetaBle.nativeWlanControlCommandV2SetConnectedWifiInfoNotify).toBeCalledWith(devId, true);
+    expect(
+      thetaBle.nativeWlanControlCommandV2SetConnectedWifiInfoNotify
+    ).toBeCalledWith({ id: devId, enable: true });
   });
 
   test('Not called different characteristic', async () => {
@@ -79,7 +85,7 @@ describe('WlanControlCommandV2 setConnectedWifiInfoNotify', () => {
         return {
           remove: jest.fn(),
         };
-      }),
+      })
     );
 
     const testData = {
@@ -104,9 +110,13 @@ describe('WlanControlCommandV2 setConnectedWifiInfoNotify', () => {
       params: testData,
     });
 
-    expect(service.device.notifyList.get('NOTIFICATION_CONNECTED_WIFI_INFO')).toBeDefined();
+    expect(
+      service.device.notifyList.get('NOTIFICATION_CONNECTED_WIFI_INFO')
+    ).toBeDefined();
     expect(onNotify).toBeCalledTimes(0);
-    expect(thetaBle.nativeWlanControlCommandV2SetConnectedWifiInfoNotify).toBeCalledWith(devId, true);
+    expect(
+      thetaBle.nativeWlanControlCommandV2SetConnectedWifiInfoNotify
+    ).toBeCalledWith({ id: devId, enable: true });
   });
 
   test('Set empty', async () => {
@@ -119,7 +129,7 @@ describe('WlanControlCommandV2 setConnectedWifiInfoNotify', () => {
         return {
           remove: jest.fn(),
         };
-      }),
+      })
     );
 
     const testData = {
@@ -146,18 +156,26 @@ describe('WlanControlCommandV2 setConnectedWifiInfoNotify', () => {
       params: testData,
     });
 
-    expect(service.device.notifyList.get('NOTIFICATION_CONNECTED_WIFI_INFO')).toBeUndefined();
+    expect(
+      service.device.notifyList.get('NOTIFICATION_CONNECTED_WIFI_INFO')
+    ).toBeUndefined();
     expect(onNotify).toBeCalledTimes(0);
-    expect(thetaBle.nativeWlanControlCommandV2SetConnectedWifiInfoNotify).toBeCalledTimes(2);
-    expect(thetaBle.nativeWlanControlCommandV2SetConnectedWifiInfoNotify).toHaveBeenLastCalledWith(devId, false);
+    expect(
+      thetaBle.nativeWlanControlCommandV2SetConnectedWifiInfoNotify
+    ).toBeCalledTimes(2);
+    expect(
+      thetaBle.nativeWlanControlCommandV2SetConnectedWifiInfoNotify
+    ).toHaveBeenLastCalledWith({ id: devId, enable: false });
   });
 
   test('exception', async () => {
-    jest.mocked(thetaBle.nativeWlanControlCommandV2SetConnectedWifiInfoNotify).mockImplementation(
-      jest.fn(async () => {
-        throw 'error';
-      }),
-    );
+    jest
+      .mocked(thetaBle.nativeWlanControlCommandV2SetConnectedWifiInfoNotify)
+      .mockImplementation(
+        jest.fn(async () => {
+          throw 'error';
+        })
+      );
 
     const onNotify = jest.fn();
     const service = await setupService();
@@ -167,11 +185,13 @@ describe('WlanControlCommandV2 setConnectedWifiInfoNotify', () => {
         onNotify();
       });
       expect(true).toBeFalsy();
-    } catch(error) {
+    } catch (error) {
       expect(error).toBe('error');
     }
     expect(onNotify).toBeCalledTimes(0);
-    expect(thetaBle.nativeWlanControlCommandV2SetConnectedWifiInfoNotify).toBeCalledTimes(1);
+    expect(
+      thetaBle.nativeWlanControlCommandV2SetConnectedWifiInfoNotify
+    ).toBeCalledTimes(1);
   });
 
   test('receive error', async () => {
@@ -184,7 +204,7 @@ describe('WlanControlCommandV2 setConnectedWifiInfoNotify', () => {
         return {
           remove: jest.fn(),
         };
-      }),
+      })
     );
 
     const errorMessage = 'Error receive';
@@ -205,8 +225,12 @@ describe('WlanControlCommandV2 setConnectedWifiInfoNotify', () => {
       },
     });
 
-    expect(service.device.notifyList.get('NOTIFICATION_CONNECTED_WIFI_INFO')).toBeDefined();
+    expect(
+      service.device.notifyList.get('NOTIFICATION_CONNECTED_WIFI_INFO')
+    ).toBeDefined();
     expect(onNotify).toBeCalled();
-    expect(thetaBle.nativeWlanControlCommandV2SetConnectedWifiInfoNotify).toBeCalledWith(devId, true);
+    expect(
+      thetaBle.nativeWlanControlCommandV2SetConnectedWifiInfoNotify
+    ).toBeCalledWith({ id: devId, enable: true });
   });
 });

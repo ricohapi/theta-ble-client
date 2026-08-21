@@ -11,21 +11,17 @@ import kotlin.coroutines.CoroutineContext
 
 const val ERROR_MESSAGE_DEVICE_NOT_FOUND = "Device not found."
 const val ERROR_MESSAGE_UNSUPPORTED_SERVICE = "Unsupported service."
+const val MESSAGE_NO_ARGUMENT = "No Argument."
 
 class ThetaBleClientReactNativeModule(reactContext: ReactApplicationContext) :
-  ReactContextBaseJavaModule(reactContext), CoroutineScope {
+  NativeThetaBleClientReactNativeSpec(reactContext), CoroutineScope {
 
   override val coroutineContext: CoroutineContext = Job()
-
-  override fun getName(): String {
-    return NAME
-  }
 
   /**
    * add event listener for [eventName]
    */
-  @ReactMethod
-  fun addListener(eventName: String) {
+  override fun addListener(eventName: String) {
     // Set up any upstream listeners or background tasks as necessary
     if (eventName == EVENT_NOTIFY) {
       listenerCount += 1
@@ -35,10 +31,9 @@ class ThetaBleClientReactNativeModule(reactContext: ReactApplicationContext) :
   /**
    * remove event listener [count]
    */
-  @ReactMethod
-  fun removeListeners(count: Int) {
+  override fun removeListeners(count: Double) {
     // Remove upstream listeners, stop unnecessary background tasks
-    listenerCount -= count
+    listenerCount -= count.toInt()
   }
 
   fun sendNotifyEvent(param: WritableMap) {
@@ -47,15 +42,7 @@ class ThetaBleClientReactNativeModule(reactContext: ReactApplicationContext) :
       .emit(EVENT_NOTIFY, param)
   }
 
-  // Example method
-  // See https://reactnative.dev/docs/native-modules-android
-  @ReactMethod
-  fun multiply(a: Double, b: Double, promise: Promise) {
-    promise.resolve(a * b)
-  }
-
-  @ReactMethod
-  fun nativeScan(params: ReadableMap, promise: Promise) {
+  override fun nativeScan(params: ReadableMap, promise: Promise) {
     launch {
       try {
         val scanParams = toScanParams(params)
@@ -80,8 +67,7 @@ class ThetaBleClientReactNativeModule(reactContext: ReactApplicationContext) :
     }
   }
 
-  @ReactMethod
-  fun nativeScanThetaSsid(params: ReadableMap, promise: Promise) {
+  override fun nativeScanThetaSsid(params: ReadableMap, promise: Promise) {
     launch {
       try {
         val scanParams = toScanSsidParams(params)
@@ -93,8 +79,10 @@ class ThetaBleClientReactNativeModule(reactContext: ReactApplicationContext) :
     }
   }
 
-  @ReactMethod
-  fun nativeConnect(id: Int, uuid: String?, promise: Promise) {
+  override fun nativeConnect(params: ReadableMap, promise: Promise) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
+    val uuid = params.getString("uuid")
     launch {
       try {
         val device = deviceList[id]
@@ -110,8 +98,9 @@ class ThetaBleClientReactNativeModule(reactContext: ReactApplicationContext) :
     }
   }
 
-  @ReactMethod
-  fun nativeIsConnected(id: Int, promise: Promise) {
+  override fun nativeIsConnected(params: ReadableMap, promise: Promise) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
     val device = deviceList[id]
     if (device == null) {
       promise.resolve(false)
@@ -120,8 +109,9 @@ class ThetaBleClientReactNativeModule(reactContext: ReactApplicationContext) :
     promise.resolve(device.isConnected())
   }
 
-  @ReactMethod
-  fun nativeDisconnect(id: Int, promise: Promise) {
+  override fun nativeDisconnect(params: ReadableMap, promise: Promise) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
     launch {
       try {
         val device = deviceList[id]
@@ -137,8 +127,11 @@ class ThetaBleClientReactNativeModule(reactContext: ReactApplicationContext) :
     }
   }
 
-  @ReactMethod
-  fun nativeContainService(id: Int, service: String, promise: Promise) {
+  override fun nativeContainService(params: ReadableMap, promise: Promise) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
+    val service = params.getString("service")
+      ?: return promise.rejectNoArgument()
     launch {
       try {
         val device = deviceList[id]
@@ -155,57 +148,67 @@ class ThetaBleClientReactNativeModule(reactContext: ReactApplicationContext) :
     }
   }
 
-  @ReactMethod
-  fun nativeGetFirmwareRevision(id: Int, promise: Promise) {
+  override fun nativeGetFirmwareRevision(params: ReadableMap, promise: Promise) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
     launch {
       CameraInformationService.getFirmwareRevision(id, promise)
     }
   }
 
-  @ReactMethod
-  fun nativeGetManufacturerName(id: Int, promise: Promise) {
+  override fun nativeGetManufacturerName(params: ReadableMap, promise: Promise) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
     launch {
       CameraInformationService.getManufacturerName(id, promise)
     }
   }
 
-  @ReactMethod
-  fun nativeGetModelNumber(id: Int, promise: Promise) {
+  override fun nativeGetModelNumber(params: ReadableMap, promise: Promise) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
     launch {
       CameraInformationService.getModelNumber(id, promise)
     }
   }
 
-  @ReactMethod
-  fun nativeGetSerialNumber(id: Int, promise: Promise) {
+  override fun nativeGetSerialNumber(params: ReadableMap, promise: Promise) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
     launch {
       CameraInformationService.getSerialNumber(id, promise)
     }
   }
 
-  @ReactMethod
-  fun nativeGetWlanMacAddress(id: Int, promise: Promise) {
+  override fun nativeGetWlanMacAddress(params: ReadableMap, promise: Promise) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
     launch {
       CameraInformationService.getWlanMacAddress(id, promise)
     }
   }
 
-  @ReactMethod
-  fun nativeGetBluetoothMacAddress(id: Int, promise: Promise) {
+  override fun nativeGetBluetoothMacAddress(params: ReadableMap, promise: Promise) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
     launch {
       CameraInformationService.getBluetoothMacAddress(id, promise)
     }
   }
 
-  @ReactMethod
-  fun nativeGetBatteryLevel(id: Int, promise: Promise) {
+  override fun nativeGetBatteryLevel(params: ReadableMap, promise: Promise) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
     launch {
       CameraStatusCommandService.getBatteryLevel(id, promise)
     }
   }
 
-  @ReactMethod
-  fun nativeSetBatteryLevelNotify(id: Int, enable: Boolean, promise: Promise) {
+  override fun nativeSetBatteryLevelNotify(params: ReadableMap, promise: Promise) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
+    val enable = requireArgument(params, "enable", params::getBoolean)
+      ?: return promise.rejectNoArgument()
     launch {
       CameraStatusCommandService.setBatteryLevelNotify(id, enable, promise) {
         sendNotifyEvent(it)
@@ -213,15 +216,19 @@ class ThetaBleClientReactNativeModule(reactContext: ReactApplicationContext) :
     }
   }
 
-  @ReactMethod
-  fun nativeGetBatteryStatus(id: Int, promise: Promise) {
+  override fun nativeGetBatteryStatus(params: ReadableMap, promise: Promise) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
     launch {
       CameraStatusCommandService.getBatteryStatus(id, promise)
     }
   }
 
-  @ReactMethod
-  fun nativeSetBatteryStatusNotify(id: Int, enable: Boolean, promise: Promise) {
+  override fun nativeSetBatteryStatusNotify(params: ReadableMap, promise: Promise) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
+    val enable = requireArgument(params, "enable", params::getBoolean)
+      ?: return promise.rejectNoArgument()
     launch {
       CameraStatusCommandService.setBatteryStatusNotify(id, enable, promise) {
         sendNotifyEvent(it)
@@ -229,22 +236,29 @@ class ThetaBleClientReactNativeModule(reactContext: ReactApplicationContext) :
     }
   }
 
-  @ReactMethod
-  fun nativeGetCameraPower(id: Int, promise: Promise) {
+  override fun nativeGetCameraPower(params: ReadableMap, promise: Promise) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
     launch {
       CameraStatusCommandService.getCameraPower(id, promise)
     }
   }
 
-  @ReactMethod
-  fun nativeSetCameraPower(id: Int, value: String, promise: Promise) {
+  override fun nativeSetCameraPower(params: ReadableMap, promise: Promise) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
+    val value = params.getString("value")
+      ?: return promise.rejectNoArgument()
     launch {
       CameraStatusCommandService.setCameraPower(id, value, promise)
     }
   }
 
-  @ReactMethod
-  fun nativeSetCameraPowerNotify(id: Int, enable: Boolean, promise: Promise) {
+  override fun nativeSetCameraPowerNotify(params: ReadableMap, promise: Promise) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
+    val enable = requireArgument(params, "enable", params::getBoolean)
+      ?: return promise.rejectNoArgument()
     launch {
       CameraStatusCommandService.setCameraPowerNotify(id, enable, promise) {
         sendNotifyEvent(it)
@@ -252,8 +266,11 @@ class ThetaBleClientReactNativeModule(reactContext: ReactApplicationContext) :
     }
   }
 
-  @ReactMethod
-  fun nativeSetCommandErrorDescriptionNotify(id: Int, enable: Boolean, promise: Promise) {
+  override fun nativeSetCommandErrorDescriptionNotify(params: ReadableMap, promise: Promise) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
+    val enable = requireArgument(params, "enable", params::getBoolean)
+      ?: return promise.rejectNoArgument()
     launch {
       CameraStatusCommandService.setCommandErrorDescriptionNotify(id, enable, promise) {
         sendNotifyEvent(it)
@@ -261,22 +278,29 @@ class ThetaBleClientReactNativeModule(reactContext: ReactApplicationContext) :
     }
   }
 
-  @ReactMethod
-  fun nativeGetPluginControl(id: Int, promise: Promise) {
+  override fun nativeGetPluginControl(params: ReadableMap, promise: Promise) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
     launch {
       CameraStatusCommandService.getPluginControl(id, promise)
     }
   }
 
-  @ReactMethod
-  fun nativeSetPluginControl(id: Int, value: ReadableMap, promise: Promise) {
+  override fun nativeSetPluginControl(params: ReadableMap, promise: Promise) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
+    val value = params.getMap("value")
+      ?: return promise.rejectNoArgument()
     launch {
       CameraStatusCommandService.setPluginControl(id, value, promise)
     }
   }
 
-  @ReactMethod
-  fun nativeSetPluginControlNotify(id: Int, enable: Boolean, promise: Promise) {
+  override fun nativeSetPluginControlNotify(params: ReadableMap, promise: Promise) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
+    val enable = requireArgument(params, "enable", params::getBoolean)
+      ?: return promise.rejectNoArgument()
     launch {
       CameraStatusCommandService.setPluginControlNotify(id, enable, promise) {
         sendNotifyEvent(it)
@@ -284,90 +308,113 @@ class ThetaBleClientReactNativeModule(reactContext: ReactApplicationContext) :
     }
   }
 
-  @ReactMethod
-  fun nativeGetPluginList(id: Int, promise: Promise) {
+  override fun nativeGetPluginList(params: ReadableMap, promise: Promise) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
     launch {
       CameraControlCommandsService.getPluginList(id, promise)
     }
   }
 
-  @ReactMethod
-  fun nativeGetPluginOrders(id: Int, promise: Promise) {
+  override fun nativeGetPluginOrders(params: ReadableMap, promise: Promise) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
     launch {
       CameraControlCommandsService.getPluginOrders(id, promise)
     }
   }
 
-  @ReactMethod
-  fun nativeSetPluginOrders(id: Int, value: ReadableMap, promise: Promise) {
+  override fun nativeSetPluginOrders(params: ReadableMap, promise: Promise) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
+    val value = params.getMap("value")
+      ?: return promise.rejectNoArgument()
     launch {
       CameraControlCommandsService.setPluginOrders(id, value, promise)
     }
   }
 
-  @ReactMethod
-  fun nativeGetCaptureMode(id: Int, promise: Promise) {
+  override fun nativeGetCaptureMode(params: ReadableMap, promise: Promise) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
     launch {
       ShootingControlCommandService.getCaptureMode(id, promise)
     }
   }
 
-  @ReactMethod
-  fun nativeSetCaptureMode(id: Int, mode: String, promise: Promise) {
+  override fun nativeSetCaptureMode(params: ReadableMap, promise: Promise) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
+    val value = params.getString("value")
+      ?: return promise.rejectNoArgument()
     launch {
-      ShootingControlCommandService.setCaptureMode(id, mode, promise)
+      ShootingControlCommandService.setCaptureMode(id, value, promise)
     }
   }
 
-  @ReactMethod
-  fun nativeGetFileFormat(id: Int, promise: Promise) {
+  override fun nativeGetFileFormat(params: ReadableMap, promise: Promise) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
     launch {
       ShootingControlCommandService.getFileFormat(id, promise)
     }
   }
 
-  @ReactMethod
-  fun nativeSetFileFormat(id: Int, value: String, promise: Promise) {
+  override fun nativeSetFileFormat(params: ReadableMap, promise: Promise) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
+    val value = params.getString("value")
+      ?: return promise.rejectNoArgument()
     launch {
       ShootingControlCommandService.setFileFormat(id, value, promise)
     }
   }
 
-  @ReactMethod
-  fun nativeGetMaxRecordableTime(id: Int, promise: Promise) {
+  override fun nativeGetMaxRecordableTime(params: ReadableMap, promise: Promise) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
     launch {
       ShootingControlCommandService.getMaxRecordableTime(id, promise)
     }
   }
 
-  @ReactMethod
-  fun nativeSetMaxRecordableTime(id: Int, value: String, promise: Promise) {
+  override fun nativeSetMaxRecordableTime(params: ReadableMap, promise: Promise) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
+    val value = params.getString("value")
+      ?: return promise.rejectNoArgument()
     launch {
       ShootingControlCommandService.setMaxRecordableTime(id, value, promise)
     }
   }
 
-  @ReactMethod
-  fun nativeTakePicture(id: Int, promise: Promise) {
+  override fun nativeTakePicture(params: ReadableMap, promise: Promise) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
     ShootingControlCommandService.takePicture(id, promise)
   }
 
-  @ReactMethod
-  fun nativeCameraControlCommandV2GetInfo(id: Int, promise: Promise) {
+  override fun nativeCameraControlCommandV2GetInfo(params: ReadableMap, promise: Promise) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
     launch {
       CameraControlCommandV2Service.getInfo(id, promise)
     }
   }
 
-  @ReactMethod
-  fun nativeCameraControlCommandV2GetState(id: Int, promise: Promise) {
+  override fun nativeCameraControlCommandV2GetState(params: ReadableMap, promise: Promise) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
     launch {
       CameraControlCommandV2Service.getState(id, promise)
     }
   }
 
-  @ReactMethod
-  fun nativeCameraControlCommandV2SetStateNotify(id: Int, enable: Boolean, promise: Promise) {
+  override fun nativeCameraControlCommandV2SetStateNotify(params: ReadableMap, promise: Promise) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
+    val enable = requireArgument(params, "enable", params::getBoolean)
+      ?: return promise.rejectNoArgument()
     launch {
       CameraControlCommandV2Service.setStateNotify(id, enable, promise) {
         sendNotifyEvent(it)
@@ -375,54 +422,76 @@ class ThetaBleClientReactNativeModule(reactContext: ReactApplicationContext) :
     }
   }
 
-  @ReactMethod
-  fun nativeCameraControlCommandV2GetState2(id: Int, promise: Promise) {
+  override fun nativeCameraControlCommandV2GetState2(params: ReadableMap, promise: Promise) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
     launch {
       CameraControlCommandV2Service.getState2(id, promise)
     }
   }
 
-  @ReactMethod
-  fun nativeCameraControlCommandV2GetOptions(id: Int, optionNames: ReadableArray, promise: Promise) {
+  override fun nativeCameraControlCommandV2GetOptions(params: ReadableMap, promise: Promise) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
+    val optionNames = params.getArray("optionNames")
+      ?: return promise.rejectNoArgument()
     launch {
       CameraControlCommandV2Service.getOptions(id, optionNames, promise)
     }
   }
 
-  @ReactMethod
-  fun nativeCameraControlCommandV2GetOptionsByString(id: Int, optionNames: ReadableArray, promise: Promise) {
+  override fun nativeCameraControlCommandV2GetOptionsByString(
+    params: ReadableMap,
+    promise: Promise
+  ) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
+    val optionNames = params.getArray("optionNames")
+      ?: return promise.rejectNoArgument()
     launch {
       CameraControlCommandV2Service.getOptionsByString(id, optionNames, promise)
     }
   }
 
-  @ReactMethod
-  fun nativeCameraControlCommandV2SetOptions(id: Int, options: ReadableMap, promise: Promise) {
+  override fun nativeCameraControlCommandV2SetOptions(params: ReadableMap, promise: Promise) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
+    val options = params.getMap("options")
+      ?: return promise.rejectNoArgument()
     launch {
       CameraControlCommandV2Service.setOptions(id, options, promise)
     }
   }
 
-  @ReactMethod
-  fun nativeCameraControlCommandV2ReleaseShutter(id: Int, promise: Promise) {
+  override fun nativeCameraControlCommandV2ReleaseShutter(params: ReadableMap, promise: Promise) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
     launch {
       CameraControlCommandV2Service.releaseShutter(id, promise)
     }
   }
 
-  @ReactMethod
-  fun nativeBluetoothControlCommandScanPeripheralDevice(id: Int, timeout: Int, promise: Promise) {
+  override fun nativeBluetoothControlCommandScanPeripheralDevice(
+    params: ReadableMap,
+    promise: Promise
+  ) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
+    val timeout = requireArgument(params, "timeout", params::getInt)
+      ?: return promise.rejectNoArgument()
     launch {
       BluetoothControlCommandService.scanPeripheralDevice(id, timeout, promise)
     }
   }
 
-  @ReactMethod
-  fun nativeBluetoothControlCommandScanPeripheralDeviceStart(
-    id: Int,
-    timeout: Int,
+  override fun nativeBluetoothControlCommandScanPeripheralDeviceStart(
+    params: ReadableMap,
     promise: Promise
   ) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
+    val timeout = requireArgument(params, "timeout", params::getInt)
+      ?: return promise.rejectNoArgument()
     launch {
       BluetoothControlCommandService.scanPeripheralDeviceStart(id, timeout, promise) {
         sendNotifyEvent(it)
@@ -430,51 +499,69 @@ class ThetaBleClientReactNativeModule(reactContext: ReactApplicationContext) :
     }
   }
 
-  @ReactMethod
-  fun nativeBluetoothControlCommandScanPeripheralDeviceStop(id: Int, promise: Promise) {
+  override fun nativeBluetoothControlCommandScanPeripheralDeviceStop(
+    params: ReadableMap,
+    promise: Promise
+  ) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
     launch {
       BluetoothControlCommandService.scanPeripheralDeviceStop(id, promise)
     }
   }
 
-  @ReactMethod
-  fun nativeBluetoothControlCommandConnectPeripheralDevice(
-    id: Int,
-    macAddress: String,
+  override fun nativeBluetoothControlCommandConnectPeripheralDevice(
+    params: ReadableMap,
     promise: Promise
   ) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
+    val macAddress = params.getString("macAddress")
+      ?: return promise.rejectNoArgument()
     launch {
       BluetoothControlCommandService.connectPeripheralDevice(id, macAddress, promise)
     }
   }
 
-  @ReactMethod
-  fun nativeBluetoothControlCommandDeletePeripheralDevice(
-    id: Int,
-    macAddress: String,
+  override fun nativeBluetoothControlCommandDeletePeripheralDevice(
+    params: ReadableMap,
     promise: Promise
   ) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
+    val macAddress = params.getString("macAddress")
+      ?: return promise.rejectNoArgument()
     launch {
       BluetoothControlCommandService.deletePeripheralDevice(id, macAddress, promise)
     }
   }
 
-  @ReactMethod
-  fun nativeWlanControlCommandGetWlanPasswordState(id: Int, promise: Promise) {
+  override fun nativeWlanControlCommandGetWlanPasswordState(params: ReadableMap, promise: Promise) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
     launch {
       WlanControlCommandService.getWlanPasswordState(id, promise)
     }
   }
 
-  @ReactMethod
-  fun nativeWlanControlCommandV2SetNetworkType(id: Int, value: String, promise: Promise) {
+  override fun nativeWlanControlCommandV2SetNetworkType(params: ReadableMap, promise: Promise) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
+    val networkType = params.getString("networkType")
+      ?: return promise.rejectNoArgument()
     launch {
-      WlanControlCommandV2Service.setNetworkType(id, value, promise)
+      WlanControlCommandV2Service.setNetworkType(id, networkType, promise)
     }
   }
 
-  @ReactMethod
-  fun nativeWlanControlCommandV2SetNetworkTypeNotify(id: Int, enable: Boolean, promise: Promise) {
+  override fun nativeWlanControlCommandV2SetNetworkTypeNotify(
+    params: ReadableMap,
+    promise: Promise
+  ) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
+    val enable = requireArgument(params, "enable", params::getBoolean)
+      ?: return promise.rejectNoArgument()
     launch {
       WlanControlCommandV2Service.setNetworkTypeNotify(id, enable, promise) {
         sendNotifyEvent(it)
@@ -482,15 +569,25 @@ class ThetaBleClientReactNativeModule(reactContext: ReactApplicationContext) :
     }
   }
 
-  @ReactMethod
-  fun nativeWlanControlCommandV2GetConnectedWifiInfo(id: Int, promise: Promise) {
+  override fun nativeWlanControlCommandV2GetConnectedWifiInfo(
+    params: ReadableMap,
+    promise: Promise
+  ) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
     launch {
       WlanControlCommandV2Service.getConnectedWifiInfo(id, promise)
     }
   }
 
-  @ReactMethod
-  fun nativeWlanControlCommandV2SetConnectedWifiInfoNotify(id: Int, enable: Boolean, promise: Promise) {
+  override fun nativeWlanControlCommandV2SetConnectedWifiInfoNotify(
+    params: ReadableMap,
+    promise: Promise
+  ) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
+    val enable = requireArgument(params, "enable", params::getBoolean)
+      ?: return promise.rejectNoArgument()
     launch {
       WlanControlCommandV2Service.setConnectedWifiInfoNotify(id, enable, promise) {
         sendNotifyEvent(it)
@@ -498,12 +595,14 @@ class ThetaBleClientReactNativeModule(reactContext: ReactApplicationContext) :
     }
   }
 
-  @ReactMethod
-  fun nativeWlanControlCommandV2ScanSsidStart(
-    id: Int,
-    timeout: Int,
+  override fun nativeWlanControlCommandV2ScanSsidStart(
+    params: ReadableMap,
     promise: Promise
   ) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
+    val timeout = requireArgument(params, "timeout", params::getInt)
+      ?: return promise.rejectNoArgument()
     launch {
       WlanControlCommandV2Service.scanSsidStart(id, timeout, promise) {
         sendNotifyEvent(it)
@@ -511,33 +610,64 @@ class ThetaBleClientReactNativeModule(reactContext: ReactApplicationContext) :
     }
   }
 
-  @ReactMethod
-  fun nativeWlanControlCommandV2ScanSsidStop(id: Int, promise: Promise) {
+  override fun nativeWlanControlCommandV2ScanSsidStop(params: ReadableMap, promise: Promise) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
     launch {
       WlanControlCommandV2Service.scanSsidStop(id, promise)
     }
   }
 
-  @ReactMethod
-  fun nativeWlanControlCommandV2SetAccessPointDynamically(id: Int, params: ReadableMap, promise: Promise) {
+  override fun nativeWlanControlCommandV2SetAccessPointDynamically(
+    params: ReadableMap,
+    promise: Promise
+  ) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
+    val accessPointParams = params.getMap("params")
+      ?: return promise.rejectNoArgument()
     launch {
-      WlanControlCommandV2Service.setAccessPointDynamically(id, params, promise)
+      WlanControlCommandV2Service.setAccessPointDynamically(id, accessPointParams, promise)
     }
   }
 
-  @ReactMethod
-  fun nativeWlanControlCommandV2SetAccessPointStatically(id: Int, params: ReadableMap, promise: Promise) {
+  override fun nativeWlanControlCommandV2SetAccessPointStatically(
+    params: ReadableMap,
+    promise: Promise
+  ) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
+    val accessPointParams = params.getMap("params")
+      ?: return promise.rejectNoArgument()
     launch {
-      WlanControlCommandV2Service.setAccessPointStatically(id, params, promise)
+      WlanControlCommandV2Service.setAccessPointStatically(id, accessPointParams, promise)
     }
   }
 
-  @ReactMethod
-  fun nativeReleaseDevice(id: Int, promise: Promise) {
+  override fun nativeReleaseDevice(params: ReadableMap, promise: Promise) {
+    val id = requireArgument(params, "id", params::getInt)
+      ?: return promise.rejectNoArgument()
     deviceList[id]?.let {
       deviceList.remove(id)
     }
     promise.resolve(null)
+  }
+
+  /**
+   * [getter] (e.g. [ReadableMap.getInt]) throws if [name] is missing or JSON-null,
+   * instead of returning null like getString/getMap/getArray do. Normalize that to a
+   * null return so every field --  whichever accessor it uses -- can be checked and
+   * rejected with MESSAGE_NO_ARGUMENT the same way.
+   */
+  private fun <T> requireArgument(params: ReadableMap, name: String, getter: (String) -> T): T? {
+    if (!params.hasKey(name) || params.isNull(name)) {
+      return null
+    }
+    return getter(name)
+  }
+
+  private fun Promise.rejectNoArgument() {
+    reject(Exception(MESSAGE_NO_ARGUMENT))
   }
 
   companion object {

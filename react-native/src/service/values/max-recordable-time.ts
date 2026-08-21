@@ -4,12 +4,12 @@
 export const MaxRecordableTimeEnum = {
   /**
    * Maximum recordable time. 300sec for other than SC2.
-  */
+   */
   RECORDABLE_TIME_300: 'RECORDABLE_TIME_300',
 
   /**
    * Maximum recordable time. 1500sec for other than SC2.
-  */
+   */
   RECORDABLE_TIME_1500: 'RECORDABLE_TIME_1500',
 
   /**
@@ -23,4 +23,4 @@ export const MaxRecordableTimeEnum = {
 
 /** type definition of MaxRecordableTimeEnum */
 export type MaxRecordableTimeEnum =
-  typeof MaxRecordableTimeEnum[keyof typeof MaxRecordableTimeEnum];
+  (typeof MaxRecordableTimeEnum)[keyof typeof MaxRecordableTimeEnum];

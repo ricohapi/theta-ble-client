@@ -13,10 +13,10 @@ const devName = '0123456789';
 test('Call getFirmwareRevision normal', async () => {
   const bleValue = '01234567890123';
   jest.mocked(thetaBle.nativeGetFirmwareRevision).mockImplementation(
-    jest.fn(async (id) => {
+    jest.fn(async ({ id }) => {
       expect(id).toBe(devId);
       return bleValue;
-    }),
+    })
   );
 
   const device = new ThetaDevice(devId, devName);
@@ -24,16 +24,18 @@ test('Call getFirmwareRevision normal', async () => {
   const response = await service.getFirmwareRevision();
 
   expect(response).toBe(bleValue);
-  expect(thetaBle.nativeGetFirmwareRevision).toHaveBeenCalledWith(devId);
+  expect(thetaBle.nativeGetFirmwareRevision).toHaveBeenCalledWith({
+    id: devId,
+  });
 });
 
 test('Exception for Call getFirmwareRevision', async () => {
   jest.mocked(thetaBle.nativeGetFirmwareRevision).mockImplementation(
     jest.fn(async () => {
       throw 'error';
-    }),
+    })
   );
-  
+
   const device = new ThetaDevice(devId, devName);
   const service = new CameraInformation(device);
   try {
@@ -43,16 +45,18 @@ test('Exception for Call getFirmwareRevision', async () => {
     expect(error).toBe('error');
   }
 
-  expect(thetaBle.nativeGetFirmwareRevision).toHaveBeenCalledWith(devId);
+  expect(thetaBle.nativeGetFirmwareRevision).toHaveBeenCalledWith({
+    id: devId,
+  });
 });
 
 test('Call getManufacturerName normal', async () => {
   const bleValue = '01234567890123';
   jest.mocked(thetaBle.nativeGetManufacturerName).mockImplementation(
-    jest.fn(async (id) => {
+    jest.fn(async ({ id }) => {
       expect(id).toBe(devId);
       return bleValue;
-    }),
+    })
   );
 
   const device = new ThetaDevice(devId, devName);
@@ -60,16 +64,18 @@ test('Call getManufacturerName normal', async () => {
   const response = await service.getManufacturerName();
 
   expect(response).toBe(bleValue);
-  expect(thetaBle.nativeGetManufacturerName).toHaveBeenCalledWith(devId);
+  expect(thetaBle.nativeGetManufacturerName).toHaveBeenCalledWith({
+    id: devId,
+  });
 });
 
 test('Exception for Call getManufacturerName', async () => {
   jest.mocked(thetaBle.nativeGetManufacturerName).mockImplementation(
     jest.fn(async () => {
       throw 'error';
-    }),
+    })
   );
-  
+
   const device = new ThetaDevice(devId, devName);
   const service = new CameraInformation(device);
   try {
@@ -79,16 +85,18 @@ test('Exception for Call getManufacturerName', async () => {
     expect(error).toBe('error');
   }
 
-  expect(thetaBle.nativeGetManufacturerName).toHaveBeenCalledWith(devId);
+  expect(thetaBle.nativeGetManufacturerName).toHaveBeenCalledWith({
+    id: devId,
+  });
 });
 
 test('Call getModelNumber normal', async () => {
   const bleValue = '01234567890123';
   jest.mocked(thetaBle.nativeGetModelNumber).mockImplementation(
-    jest.fn(async (id) => {
+    jest.fn(async ({ id }) => {
       expect(id).toBe(devId);
       return bleValue;
-    }),
+    })
   );
 
   const device = new ThetaDevice(devId, devName);
@@ -96,16 +104,16 @@ test('Call getModelNumber normal', async () => {
   const response = await service.getModelNumber();
 
   expect(response).toBe(bleValue);
-  expect(thetaBle.nativeGetModelNumber).toHaveBeenCalledWith(devId);
+  expect(thetaBle.nativeGetModelNumber).toHaveBeenCalledWith({ id: devId });
 });
 
 test('Exception for Call getModelNumber', async () => {
   jest.mocked(thetaBle.nativeGetModelNumber).mockImplementation(
     jest.fn(async () => {
       throw 'error';
-    }),
+    })
   );
-  
+
   const device = new ThetaDevice(devId, devName);
   const service = new CameraInformation(device);
   try {
@@ -115,16 +123,16 @@ test('Exception for Call getModelNumber', async () => {
     expect(error).toBe('error');
   }
 
-  expect(thetaBle.nativeGetModelNumber).toHaveBeenCalledWith(devId);
+  expect(thetaBle.nativeGetModelNumber).toHaveBeenCalledWith({ id: devId });
 });
 
 test('Call getSerialNumber normal', async () => {
   const bleValue = '01234567890123';
   jest.mocked(thetaBle.nativeGetSerialNumber).mockImplementation(
-    jest.fn(async (id) => {
+    jest.fn(async ({ id }) => {
       expect(id).toBe(devId);
       return bleValue;
-    }),
+    })
   );
 
   const device = new ThetaDevice(devId, devName);
@@ -132,16 +140,16 @@ test('Call getSerialNumber normal', async () => {
   const response = await service.getSerialNumber();
 
   expect(response).toBe(bleValue);
-  expect(thetaBle.nativeGetSerialNumber).toHaveBeenCalledWith(devId);
+  expect(thetaBle.nativeGetSerialNumber).toHaveBeenCalledWith({ id: devId });
 });
 
 test('Exception for Call getSerialNumber', async () => {
   jest.mocked(thetaBle.nativeGetSerialNumber).mockImplementation(
     jest.fn(async () => {
       throw 'error';
-    }),
+    })
   );
-  
+
   const device = new ThetaDevice(devId, devName);
   const service = new CameraInformation(device);
   try {
@@ -151,16 +159,16 @@ test('Exception for Call getSerialNumber', async () => {
     expect(error).toBe('error');
   }
 
-  expect(thetaBle.nativeGetSerialNumber).toHaveBeenCalledWith(devId);
+  expect(thetaBle.nativeGetSerialNumber).toHaveBeenCalledWith({ id: devId });
 });
 
 test('Call getWlanMacAddress normal', async () => {
   const bleValue = '01234567890123';
   jest.mocked(thetaBle.nativeGetWlanMacAddress).mockImplementation(
-    jest.fn(async (id) => {
+    jest.fn(async ({ id }) => {
       expect(id).toBe(devId);
       return bleValue;
-    }),
+    })
   );
 
   const device = new ThetaDevice(devId, devName);
@@ -168,16 +176,16 @@ test('Call getWlanMacAddress normal', async () => {
   const response = await service.getWlanMacAddress();
 
   expect(response).toBe(bleValue);
-  expect(thetaBle.nativeGetWlanMacAddress).toHaveBeenCalledWith(devId);
+  expect(thetaBle.nativeGetWlanMacAddress).toHaveBeenCalledWith({ id: devId });
 });
 
 test('Exception for Call getWlanMacAddress', async () => {
   jest.mocked(thetaBle.nativeGetWlanMacAddress).mockImplementation(
     jest.fn(async () => {
       throw 'error';
-    }),
+    })
   );
-  
+
   const device = new ThetaDevice(devId, devName);
   const service = new CameraInformation(device);
   try {
@@ -187,16 +195,16 @@ test('Exception for Call getWlanMacAddress', async () => {
     expect(error).toBe('error');
   }
 
-  expect(thetaBle.nativeGetWlanMacAddress).toHaveBeenCalledWith(devId);
+  expect(thetaBle.nativeGetWlanMacAddress).toHaveBeenCalledWith({ id: devId });
 });
 
 test('Call getBluetoothMacAddress normal', async () => {
   const bleValue = '01234567890123';
   jest.mocked(thetaBle.nativeGetBluetoothMacAddress).mockImplementation(
-    jest.fn(async (id) => {
+    jest.fn(async ({ id }) => {
       expect(id).toBe(devId);
       return bleValue;
-    }),
+    })
   );
 
   const device = new ThetaDevice(devId, devName);
@@ -204,16 +212,18 @@ test('Call getBluetoothMacAddress normal', async () => {
   const response = await service.getBluetoothMacAddress();
 
   expect(response).toBe(bleValue);
-  expect(thetaBle.nativeGetBluetoothMacAddress).toHaveBeenCalledWith(devId);
+  expect(thetaBle.nativeGetBluetoothMacAddress).toHaveBeenCalledWith({
+    id: devId,
+  });
 });
 
 test('Exception for Call getBluetoothMacAddress', async () => {
   jest.mocked(thetaBle.nativeGetBluetoothMacAddress).mockImplementation(
     jest.fn(async () => {
       throw 'error';
-    }),
+    })
   );
-  
+
   const device = new ThetaDevice(devId, devName);
   const service = new CameraInformation(device);
   try {
@@ -223,5 +233,7 @@ test('Exception for Call getBluetoothMacAddress', async () => {
     expect(error).toBe('error');
   }
 
-  expect(thetaBle.nativeGetBluetoothMacAddress).toHaveBeenCalledWith(devId);
+  expect(thetaBle.nativeGetBluetoothMacAddress).toHaveBeenCalledWith({
+    id: devId,
+  });
 });

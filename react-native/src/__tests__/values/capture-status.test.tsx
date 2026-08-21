@@ -10,7 +10,10 @@ describe('CaptureStatusEnum', () => {
     [CaptureStatusEnum.CONVERTING, 'CONVERTING'],
     [CaptureStatusEnum.TIME_SHIFT_SHOOTING, 'TIME_SHIFT_SHOOTING'],
     [CaptureStatusEnum.CONTINUOUS_SHOOTING, 'CONTINUOUS_SHOOTING'],
-    [CaptureStatusEnum.RETROSPECTIVE_IMAGE_RECORDING, 'RETROSPECTIVE_IMAGE_RECORDING'],
+    [
+      CaptureStatusEnum.RETROSPECTIVE_IMAGE_RECORDING,
+      'RETROSPECTIVE_IMAGE_RECORDING',
+    ],
   ];
 
   test('length', () => {

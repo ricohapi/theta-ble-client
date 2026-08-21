@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { ItemSelectorView } from '../../ui/item-list';
 
 interface Props<T> {

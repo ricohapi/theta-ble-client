@@ -17,8 +17,10 @@ interface ScanProps {
   timeout?: Timeout;
 }
 
-async function scanImpl(name?: string, timeout?: Timeout): Promise<ThetaDevice[]> {
-  /* eslint-disable-next-line no-useless-catch */
+async function scanImpl(
+  name?: string,
+  timeout?: Timeout
+): Promise<ThetaDevice[]> {
   try {
     const deviceList = await ThetaBleClient.nativeScan({ name, timeout });
     const result = deviceList.map((element) => {
@@ -32,41 +34,45 @@ async function scanImpl(name?: string, timeout?: Timeout): Promise<ThetaDevice[]
 
 /**
  * Scan for nearby THETA.
- * 
+ *
  * Call {@link ThetaDevice.release} when the use of the acquired {@link ThetaDevice} is complete.
- * 
+ *
  * @param props scan properties.
  * @returns Found THETA. If no name is specified, an array is returned.
  */
-export async function scan(props?: ScanProps): Promise<ThetaDevice | ThetaDevice[] | undefined>;
+export async function scan(
+  props?: ScanProps
+): Promise<ThetaDevice | ThetaDevice[] | undefined>;
 
 /**
  * Deprecated
  * Scan for nearby THETA.
- * 
+ *
  * Call {@link ThetaDevice.release} when the use of the acquired {@link theta-device.ThetaDevice} is complete.
- * 
+ *
  * @param name Name of THETA to connect.
  * @param uuid UUID used for authentication.
  * @param timeout Configuration of timeout.
  * @returns Found THETA
  */
-export async function scan(name: string, timeout?: Timeout): Promise<ThetaDevice | undefined>;
+export async function scan(
+  name: string,
+  timeout?: Timeout
+): Promise<ThetaDevice | undefined>;
 export async function scan(
   props?: ScanProps | string,
-  timeout?: Timeout,
+  timeout?: Timeout
 ): Promise<ThetaDevice | ThetaDevice[] | undefined> {
   let paramName: string | undefined;
   let paramTimeout = timeout;
   if (typeof props === 'string') {
     paramName = props;
   } else if (props != null) {
-    const { name, timeout } = props as ScanProps;
+    const { name, timeout: propsTimeout } = props as ScanProps;
     paramName = name;
-    paramTimeout = timeout;
+    paramTimeout = propsTimeout;
   }
 
-  /* eslint-disable-next-line no-useless-catch */
   try {
     const result = await scanImpl(paramName, paramTimeout);
     if (typeof paramName === 'string') {
@@ -111,10 +117,12 @@ interface SsidListItem {
 
 /**
  * Scan for nearby THETA SSID.
- * 
+ *
  * @param params scan SSID properties.
  * @returns Found THETA SSID list.
  */
-export async function scanThetaSsid(params?: ScanSsidParams): Promise<SsidListItem[]> {
+export async function scanThetaSsid(
+  params?: ScanSsidParams
+): Promise<SsidListItem[]> {
   return ThetaBleClient.nativeScanThetaSsid(params ?? {});
 }

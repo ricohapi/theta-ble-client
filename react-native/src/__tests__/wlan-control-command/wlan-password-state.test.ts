@@ -36,27 +36,33 @@ describe('Wlan Password State', () => {
 
   test('Call normal get', async () => {
     const bleValue = WlanPasswordStateEnum.SERIAL;
-    jest.mocked(thetaBle.nativeWlanControlCommandGetWlanPasswordState).mockImplementation(
-      jest.fn(async (id) => {
-        expect(id).toBe(devId);
-        return bleValue;
-      }),
-    );
+    jest
+      .mocked(thetaBle.nativeWlanControlCommandGetWlanPasswordState)
+      .mockImplementation(
+        jest.fn(async ({ id }) => {
+          expect(id).toBe(devId);
+          return bleValue;
+        })
+      );
 
     const device = new ThetaDevice(devId, devName);
     const service = new WlanControlCommand(device);
     const response = await service.getWlanPasswordState();
 
     expect(response).toBe(bleValue);
-    expect(thetaBle.nativeWlanControlCommandGetWlanPasswordState).toHaveBeenCalledWith(devId);
+    expect(
+      thetaBle.nativeWlanControlCommandGetWlanPasswordState
+    ).toHaveBeenCalledWith({ id: devId });
   });
 
   test('Exception get', async () => {
-    jest.mocked(thetaBle.nativeWlanControlCommandGetWlanPasswordState).mockImplementation(
-      jest.fn(async () => {
-        throw 'error';
-      }),
-    );
+    jest
+      .mocked(thetaBle.nativeWlanControlCommandGetWlanPasswordState)
+      .mockImplementation(
+        jest.fn(async () => {
+          throw 'error';
+        })
+      );
 
     const device = new ThetaDevice(devId, devName);
     const service = new WlanControlCommand(device);
@@ -67,6 +73,8 @@ describe('Wlan Password State', () => {
       expect(error).toBe('error');
     }
 
-    expect(thetaBle.nativeWlanControlCommandGetWlanPasswordState).toHaveBeenCalledWith(devId);
+    expect(
+      thetaBle.nativeWlanControlCommandGetWlanPasswordState
+    ).toHaveBeenCalledWith({ id: devId });
   });
 });

@@ -8,11 +8,13 @@
 import THETABleClient
 
 class CameraControlCommandV2Service {
+    private static var getOptionsByStringTask: Task<Void, Never>?
+
     static func getInfo(id: Int,
                         resolve: @escaping ([String: Any?]) -> Void,
                         reject: @escaping (String, String, Error?) -> Void)
     {
-        guard let device = ThetaBleClientReactNative.deviceList[id] else {
+        guard let device = ThetaBleClientReactNativeImpl.deviceList[id] else {
             reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
             return
         }
@@ -35,7 +37,7 @@ class CameraControlCommandV2Service {
                          resolve: @escaping ([String: Any?]) -> Void,
                          reject: @escaping (String, String, Error?) -> Void)
     {
-        guard let device = ThetaBleClientReactNative.deviceList[id] else {
+        guard let device = ThetaBleClientReactNativeImpl.deviceList[id] else {
             reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
             return
         }
@@ -60,7 +62,7 @@ class CameraControlCommandV2Service {
                                resolve: @escaping () -> Void,
                                reject: @escaping (String, String, Error?) -> Void)
     {
-        guard let device = ThetaBleClientReactNative.deviceList[id] else {
+        guard let device = ThetaBleClientReactNativeImpl.deviceList[id] else {
             reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
             return
         }
@@ -99,7 +101,7 @@ class CameraControlCommandV2Service {
                           resolve: @escaping ([String: Any?]) -> Void,
                           reject: @escaping (String, String, Error?) -> Void)
     {
-        guard let device = ThetaBleClientReactNative.deviceList[id] else {
+        guard let device = ThetaBleClientReactNativeImpl.deviceList[id] else {
             reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
             return
         }
@@ -123,7 +125,7 @@ class CameraControlCommandV2Service {
                            resolve: @escaping ([String: Any?]) -> Void,
                            reject: @escaping (String, String, Error?) -> Void)
     {
-        guard let device = ThetaBleClientReactNative.deviceList[id] else {
+        guard let device = ThetaBleClientReactNativeImpl.deviceList[id] else {
             reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
             return
         }
@@ -136,13 +138,12 @@ class CameraControlCommandV2Service {
             return
         }
         let params = toGetOptionsParam(optionNames: optionNames)
-        service.getOptions(optionNames: params) { options, error in
-            if let error {
-                reject(ERROR_TITLE, error.localizedDescription, error)
-            } else if let options {
+        Task {
+            do {
+                let options = try await service.getOptions(optionNames: params)
                 resolve(fromTheta(thetaOptions: options))
-            } else {
-                reject(ERROR_TITLE, MESSAGE_NO_RESULT, nil)
+            } catch {
+                reject(ERROR_TITLE, error.localizedDescription, error)
             }
         }
     }
@@ -152,7 +153,7 @@ class CameraControlCommandV2Service {
                                    resolve: @escaping ([String: Any?]) -> Void,
                                    reject: @escaping (String, String, Error?) -> Void)
     {
-        guard let device = ThetaBleClientReactNative.deviceList[id] else {
+        guard let device = ThetaBleClientReactNativeImpl.deviceList[id] else {
             reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
             return
         }
@@ -160,13 +161,14 @@ class CameraControlCommandV2Service {
             reject(ERROR_TITLE, ERROR_MESSAGE_UNSUPPORTED_SERVICE, nil)
             return
         }
-        service.getOptionsByString(optionNames: optionNames) { values, error in
-            if let error {
-                reject(ERROR_TITLE, error.localizedDescription, error)
-            } else if let values {
+        let previousTask = getOptionsByStringTask
+        getOptionsByStringTask = Task {
+            _ = await previousTask?.value
+            do {
+                let values = try await service.getOptionsByString(optionNames: optionNames)
                 resolve(values)
-            } else {
-                reject(ERROR_TITLE, MESSAGE_NO_RESULT, nil)
+            } catch {
+                reject(ERROR_TITLE, error.localizedDescription, error)
             }
         }
     }
@@ -176,7 +178,7 @@ class CameraControlCommandV2Service {
                            resolve: @escaping RCTPromiseResolveBlock,
                            reject: @escaping RCTPromiseRejectBlock)
     {
-        guard let device = ThetaBleClientReactNative.deviceList[id] else {
+        guard let device = ThetaBleClientReactNativeImpl.deviceList[id] else {
             reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
             return
         }
@@ -202,7 +204,7 @@ class CameraControlCommandV2Service {
                                resolve: @escaping RCTPromiseResolveBlock,
                                reject: @escaping RCTPromiseRejectBlock)
     {
-        guard let device = ThetaBleClientReactNative.deviceList[id] else {
+        guard let device = ThetaBleClientReactNativeImpl.deviceList[id] else {
             reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
             return
         }

@@ -6,7 +6,11 @@ import type {
   ThetaDevice,
 } from '../theta-device';
 import { ThetaService } from './theta-service';
-import { BleServiceEnum, NetworkTypeEnum, WifiSecurityModeEnum } from './values';
+import {
+  BleServiceEnum,
+  NetworkTypeEnum,
+  WifiSecurityModeEnum,
+} from './values';
 import * as ThetaBleClient from '../native';
 import type { ConnectedWifiInfo, Proxy } from './data';
 
@@ -27,22 +31,23 @@ export class WlanControlCommandV2 extends ThetaService {
     this.device = device;
   }
 
-  private setNotifyScan(
-    callback?: {
-      onNotify?: (value: string) => void,
-      onCompleted?: (value: string[]) => void,
-    },
-  ) {
-    const notifyCallBack = callback != null ? (event: ScanSsidNotify) => {
-      if (event.params?.ssid != null && callback.onNotify != null) {
-        callback.onNotify(event.params.ssid);
-      }
-      if (event.params?.ssidList != null) {
-        callback.onCompleted?.(event.params.ssidList);
-        // Callback is deleted because it is finished.
-        this.device.notifyList.delete('NOTIFICATION_SCANNED_SSID');
-      }
-    } : undefined;
+  private setNotifyScan(callback?: {
+    onNotify?: (value: string) => void;
+    onCompleted?: (value: string[]) => void;
+  }) {
+    const notifyCallBack =
+      callback != null
+        ? (event: ScanSsidNotify) => {
+            if (event.params?.ssid != null && callback.onNotify != null) {
+              callback.onNotify(event.params.ssid);
+            }
+            if (event.params?.ssidList != null) {
+              callback.onCompleted?.(event.params.ssidList);
+              // Callback is deleted because it is finished.
+              this.device.notifyList.delete('NOTIFICATION_SCANNED_SSID');
+            }
+          }
+        : undefined;
     this.device.notifyList.set('NOTIFICATION_SCANNED_SSID', notifyCallBack);
   }
 
@@ -55,7 +60,10 @@ export class WlanControlCommandV2 extends ThetaService {
    */
   async setNetworkType(networkType: NetworkTypeEnum) {
     try {
-      return await ThetaBleClient.nativeWlanControlCommandV2SetNetworkType(this.device.id, networkType);
+      return await ThetaBleClient.nativeWlanControlCommandV2SetNetworkType(
+        this.device.id,
+        networkType
+      );
     } catch (error) {
       throw error;
     }
@@ -68,12 +76,22 @@ export class WlanControlCommandV2 extends ThetaService {
    *
    * @param callback Notification function
    */
-  async setNetworkTypeNotify(callback?: (value?: NetworkTypeEnum, error?: NotifyError) => void) {
+  async setNetworkTypeNotify(
+    callback?: (value?: NetworkTypeEnum, error?: NotifyError) => void
+  ) {
     try {
-      await ThetaBleClient.nativeWlanControlCommandV2SetNetworkTypeNotify(this.device.id, callback ? true : false);
-      this.device.notifyList.set('WRITE_SET_NETWORK_TYPE', callback ? (event: NetworkTypeNotify) => {
-        callback(event.params?.networkType, event.error);
-      } : undefined);
+      await ThetaBleClient.nativeWlanControlCommandV2SetNetworkTypeNotify(
+        this.device.id,
+        callback ? true : false
+      );
+      this.device.notifyList.set(
+        'WRITE_SET_NETWORK_TYPE',
+        callback
+          ? (event: NetworkTypeNotify) => {
+              callback(event.params?.networkType, event.error);
+            }
+          : undefined
+      );
     } catch (error) {
       throw error;
     }
@@ -88,7 +106,9 @@ export class WlanControlCommandV2 extends ThetaService {
    */
   async getConnectedWifiInfo(): Promise<ConnectedWifiInfo> {
     try {
-      return await ThetaBleClient.nativeWlanControlCommandV2GetConnectedWifiInfo(this.device.id);
+      return await ThetaBleClient.nativeWlanControlCommandV2GetConnectedWifiInfo(
+        this.device.id
+      );
     } catch (error) {
       throw error;
     }
@@ -101,12 +121,22 @@ export class WlanControlCommandV2 extends ThetaService {
    *
    * @param callback Notification function
    */
-  async setConnectedWifiInfoNotify(callback?: (value?: ConnectedWifiInfo, error?: NotifyError) => void) {
+  async setConnectedWifiInfoNotify(
+    callback?: (value?: ConnectedWifiInfo, error?: NotifyError) => void
+  ) {
     try {
-      await ThetaBleClient.nativeWlanControlCommandV2SetConnectedWifiInfoNotify(this.device.id, callback ? true : false);
-      this.device.notifyList.set('NOTIFICATION_CONNECTED_WIFI_INFO', callback ? (event: ConnectedWifiInfoNotify) => {
-        callback(event.params, event.error);
-      } : undefined);
+      await ThetaBleClient.nativeWlanControlCommandV2SetConnectedWifiInfoNotify(
+        this.device.id,
+        callback ? true : false
+      );
+      this.device.notifyList.set(
+        'NOTIFICATION_CONNECTED_WIFI_INFO',
+        callback
+          ? (event: ConnectedWifiInfoNotify) => {
+              callback(event.params, event.error);
+            }
+          : undefined
+      );
     } catch (error) {
       throw error;
     }
@@ -125,11 +155,13 @@ export class WlanControlCommandV2 extends ThetaService {
   async scanSsidStart(
     timeout: number,
     onNotify: (ssid: string) => void,
-    onCompleted?: (ssidList: string[]) => void,
+    onCompleted?: (ssidList: string[]) => void
   ) {
     try {
       await ThetaBleClient.nativeWlanControlCommandV2ScanSsidStart(
-        this.device.id, timeout);
+        this.device.id,
+        timeout
+      );
       this.setNotifyScan({ onNotify, onCompleted });
     } catch (error) {
       this.setNotifyScan();
@@ -144,7 +176,9 @@ export class WlanControlCommandV2 extends ThetaService {
    */
   async scanSsidStop() {
     try {
-      await ThetaBleClient.nativeWlanControlCommandV2ScanSsidStop(this.device.id);
+      await ThetaBleClient.nativeWlanControlCommandV2ScanSsidStop(
+        this.device.id
+      );
       this.setNotifyScan();
     } catch (error) {
       throw error;
@@ -169,7 +203,7 @@ export class WlanControlCommandV2 extends ThetaService {
     security: WifiSecurityModeEnum = WifiSecurityModeEnum.NONE,
     password = '',
     connectionPriority = 1,
-    proxy?: Proxy,
+    proxy?: Proxy
   ) {
     try {
       await ThetaBleClient.nativeWlanControlCommandV2SetAccessPointDynamically(
@@ -181,7 +215,7 @@ export class WlanControlCommandV2 extends ThetaService {
           password,
           connectionPriority,
           proxy,
-        },
+        }
       );
     } catch (error) {
       throw error;
@@ -212,7 +246,7 @@ export class WlanControlCommandV2 extends ThetaService {
     ipAddress: string,
     subnetMask: string,
     defaultGateway: string,
-    proxy?: Proxy,
+    proxy?: Proxy
   ) {
     try {
       await ThetaBleClient.nativeWlanControlCommandV2SetAccessPointStatically(
@@ -227,7 +261,7 @@ export class WlanControlCommandV2 extends ThetaService {
           subnetMask,
           defaultGateway,
           proxy,
-        },
+        }
       );
     } catch (error) {
       throw error;

@@ -1,9 +1,5 @@
-import type {
-  EmitterSubscription,
-} from 'react-native';
-import type {
-  BaseNotify,
-} from './notify';
+import type { EmitterSubscription } from 'react-native';
+import type { BaseNotify } from './notify';
 import * as ThetaBleClient from '../native';
 import {
   BleServiceEnum,
@@ -22,13 +18,13 @@ import {
 
 /**
  * THETA camera device
- * 
+ *
  * Call ThetaBle.scan() to obtain.
  */
 export class ThetaDevice {
   /**
    * ID of THETA
-   * 
+   *
    * Granted by {@link theta-ble.scan}
    */
   readonly id: number;
@@ -49,14 +45,14 @@ export class ThetaDevice {
 
   /**
    * Use in {@link theta-ble.scan}
-   * 
+   *
    * @param id ID obtained from scan
    * @param name THETA name
    */
   constructor(id: number, name: string) {
     this.id = id;
     this.name = name;
-    this.eventListener = ThetaBleClient.addNotifyListener(notify => {
+    this.eventListener = ThetaBleClient.addNotifyListener((notify) => {
       if (notify.deviceId === this.id) {
         this.notifyList.get(notify.characteristic)?.(notify);
       }
@@ -99,7 +95,7 @@ export class ThetaDevice {
 
   async getService(service: BleServiceEnum): Promise<ThetaService | undefined> {
     try {
-      if (!await ThetaBleClient.nativeContainService(this.id, service)) {
+      if (!(await ThetaBleClient.nativeContainService(this.id, service))) {
         return;
       }
       return this.newThetaService(service);
@@ -110,37 +106,35 @@ export class ThetaDevice {
 
   private newThetaService(service: BleServiceEnum): ThetaService | undefined {
     switch (service) {
-    case BleServiceEnum.CAMERA_CONTROL_COMMANDS:
-      return new CameraControlCommands(this);
-    case BleServiceEnum.CAMERA_CONTROL_COMMAND_V2:
-      return new CameraControlCommandV2(this);
-    case BleServiceEnum.CAMERA_INFORMATION:
-      return new CameraInformation(this);
-    case BleServiceEnum.CAMERA_STATUS_COMMAND:
-      return new CameraStatusCommand(this);
-    case BleServiceEnum.SHOOTING_CONTROL_COMMAND:
-      return new ShootingControlCommand(this);
-    case BleServiceEnum.BLUETOOTH_CONTROL_COMMAND:
-      return new BluetoothControlCommand(this);
-    case BleServiceEnum.WLAN_CONTROL_COMMAND:
-      return new WlanControlCommand(this);
-    case BleServiceEnum.WLAN_CONTROL_COMMAND_V2:
-      return new WlanControlCommandV2(this);
-    default:
-      break;
+      case BleServiceEnum.CAMERA_CONTROL_COMMANDS:
+        return new CameraControlCommands(this);
+      case BleServiceEnum.CAMERA_CONTROL_COMMAND_V2:
+        return new CameraControlCommandV2(this);
+      case BleServiceEnum.CAMERA_INFORMATION:
+        return new CameraInformation(this);
+      case BleServiceEnum.CAMERA_STATUS_COMMAND:
+        return new CameraStatusCommand(this);
+      case BleServiceEnum.SHOOTING_CONTROL_COMMAND:
+        return new ShootingControlCommand(this);
+      case BleServiceEnum.BLUETOOTH_CONTROL_COMMAND:
+        return new BluetoothControlCommand(this);
+      case BleServiceEnum.WLAN_CONTROL_COMMAND:
+        return new WlanControlCommand(this);
+      case BleServiceEnum.WLAN_CONTROL_COMMAND_V2:
+        return new WlanControlCommandV2(this);
+      default:
+        break;
     }
     return;
   }
 
   /**
    * Clean up resources.
-   * 
+   *
    * Call when you are done using it.
    */
   release() {
     this.eventListener.remove();
-    ThetaBleClient.nativeReleaseDevice(this.id)
-      .then()
-      .catch();
+    ThetaBleClient.nativeReleaseDevice(this.id).then().catch();
   }
 }

@@ -46,6 +46,8 @@ data class ThetaOptions(
 
     /**
      * SSID to connect when in AP mode.
+     *
+     * Not supported by setOptions.
      */
     var ssid: String? = null,
 

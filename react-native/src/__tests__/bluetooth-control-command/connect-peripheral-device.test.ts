@@ -1,6 +1,10 @@
 import { NativeModules } from 'react-native';
 import { ThetaDevice } from '../../theta-device';
-import { BleServiceEnum, BluetoothControlCommand, PeripheralDeviceStatusEnum } from '../../service';
+import {
+  BleServiceEnum,
+  BluetoothControlCommand,
+  PeripheralDeviceStatusEnum,
+} from '../../service';
 
 describe('BluetoothControlCommand connectPeripheralDevice', () => {
   const devId = 1;
@@ -19,7 +23,7 @@ describe('BluetoothControlCommand connectPeripheralDevice', () => {
     jest.mocked(thetaBle.nativeContainService).mockImplementation(
       jest.fn(async () => {
         return true;
-      }),
+      })
     );
   });
 
@@ -27,30 +31,37 @@ describe('BluetoothControlCommand connectPeripheralDevice', () => {
     thetaBle.nativeContainService = jest.fn();
     thetaBle.nativeBluetoothControlCommandConnectPeripheralDevice = jest.fn();
   });
-  
+
   const setupService = async () => {
     const device = new ThetaDevice(devId, devName);
-    const service = await device.getService(BleServiceEnum.BLUETOOTH_CONTROL_COMMAND);
+    const service = await device.getService(
+      BleServiceEnum.BLUETOOTH_CONTROL_COMMAND
+    );
     return service as BluetoothControlCommand;
   };
 
   test('connectPeripheralDevice', async () => {
-    thetaBle.nativeBluetoothControlCommandConnectPeripheralDevice = jest.fn().mockImplementation( async (id, macAddress) => {
-      expect(id).toBe(devId);
-      expect(macAddress).toBe(peripheralMacAddress);
-    });
+    thetaBle.nativeBluetoothControlCommandConnectPeripheralDevice = jest
+      .fn()
+      .mockImplementation(async ({ id, macAddress }) => {
+        expect(id).toBe(devId);
+        expect(macAddress).toBe(peripheralMacAddress);
+      });
 
     const service = await setupService();
     await service.connectPeripheralDevice(peripheralDevice);
 
-    expect(thetaBle.nativeBluetoothControlCommandConnectPeripheralDevice).toHaveBeenCalledWith(devId, peripheralMacAddress);
+    expect(
+      thetaBle.nativeBluetoothControlCommandConnectPeripheralDevice
+    ).toHaveBeenCalledWith({ id: devId, macAddress: peripheralMacAddress });
   });
 
   test('Exception connectPeripheralDevice', async () => {
-
-    thetaBle.nativeBluetoothControlCommandConnectPeripheralDevice = jest.fn().mockImplementation( () => {
-      throw 'error';
-    });
+    thetaBle.nativeBluetoothControlCommandConnectPeripheralDevice = jest
+      .fn()
+      .mockImplementation(() => {
+        throw 'error';
+      });
 
     const service = await setupService();
     try {

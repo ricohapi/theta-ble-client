@@ -29,7 +29,7 @@ export const NetworkTypeEnum = {
   LTE_PLAN_K: 'LTE_PLAN_K',
   /**
    * SSID scan mode
-   * 
+   *
    * Switch to CL mode and search for SSID
    */
   SCAN: 'SCAN',

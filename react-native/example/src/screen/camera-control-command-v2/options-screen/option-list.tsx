@@ -1,5 +1,13 @@
 import type { Item } from '../../../components/ui/item-list';
-import { CameraPowerEnum, CaptureModeEnum, NetworkTypeEnum, OptionName, ThetaOptions, WlanAntennaConfigEnum, WlanFrequencyEnum } from '../../../modules/theta-ble-client';
+import {
+  CameraPowerEnum,
+  CaptureModeEnum,
+  NetworkTypeEnum,
+  OptionName,
+  WlanAntennaConfigEnum,
+  WlanFrequencyEnum,
+} from '../../../modules/theta-ble-client';
+import type { ThetaOptions } from '../../../modules/theta-ble-client';
 import { EnumEdit, StringEdit } from '../../../components/options';
 import React from 'react';
 
@@ -60,16 +68,6 @@ export const optionList: OptionItem[] = [
     name: 'defaultWifiPassword',
     value: {
       optionName: OptionName.DefaultWifiPassword,
-      editor: (options, onChange) => (
-        <StringEdit
-          propName={'defaultWifiPassword'}
-          options={options}
-          onChange={(defaultWifiPassword) => {
-            onChange(defaultWifiPassword);
-          }}
-        />
-      ),
-      defaultValue: { defaultWifiPassword: '' },
     },
   },
   {

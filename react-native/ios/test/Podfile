@@ -1,0 +1,44 @@
+# Standalone test harness for the theta-ble-client-react-native pod itself --
+# deliberately independent of example/ios (no host app). :app_path points at
+# the library's own package.json (which has its own codegenConfig), so RN's
+# codegen runs against this library directly instead of scanning an app's
+# node_modules dependency graph.
+require Pod::Executable.execute_command('node', ['-p',
+  'require.resolve(
+    "react-native/scripts/react_native_pods.rb",
+    {paths: [process.argv[1]]},
+  )', __dir__]).strip
+
+platform :ios, min_ios_version_supported
+prepare_react_native_project!
+
+target 'ThetaBleClientReactNativeTests' do
+  use_react_native!(
+    :path => '../../node_modules/react-native',
+    :app_path => "#{Pod::Config.instance.installation_root}/../.."
+  )
+
+  pod 'theta-ble-client-react-native', :path => '../..'
+
+  post_install do |installer|
+    react_native_post_install(
+      installer,
+      '../../node_modules/react-native',
+      :mac_catalyst_enabled => false
+    )
+
+    # Same fmt consteval patch as example/ios/Podfile -- see that file for
+    # the full explanation. Kept in sync manually since this is a separate
+    # Pods sandbox.
+    fmt_header = File.join(installer.sandbox.pod_dir('fmt'), 'include/fmt/base.h')
+    contents = File.read(fmt_header)
+    target = '#elif defined(__apple_build_version__) && __apple_build_version__ < 14000029L'
+    patched_marker = '#elif 1 && defined(__apple_build_version__)'
+    unless contents.include?(target) || contents.include?(patched_marker)
+      raise "fmt consteval patch target not found in #{fmt_header} -- " \
+        "fmt's base.h changed, update or drop this Podfile patch (check if RN bumped its fmt pin)"
+    end
+    patched = contents.sub(target, patched_marker)
+    File.write(fmt_header, patched) if patched != contents
+  end
+end

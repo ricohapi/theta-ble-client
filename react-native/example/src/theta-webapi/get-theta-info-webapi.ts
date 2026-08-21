@@ -15,7 +15,7 @@ export async function getThetaInfoWebApi(): Promise<ThetaInfo | undefined> {
       signal: controller.signal,
       method: 'GET',
       headers: {
-        Accept: 'application/json',
+        'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
     });

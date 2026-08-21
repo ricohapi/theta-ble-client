@@ -2,7 +2,12 @@
 
 import type { ThetaDevice } from '../theta-device';
 import { ThetaService } from './theta-service';
-import { BleServiceEnum, CaptureModeEnum, FileFormatEnum, MaxRecordableTimeEnum } from './values';
+import {
+  BleServiceEnum,
+  CaptureModeEnum,
+  FileFormatEnum,
+  MaxRecordableTimeEnum,
+} from './values';
 import * as ThetaBleClient from '../native';
 
 /**
@@ -13,7 +18,7 @@ import * as ThetaBleClient from '../native';
 export class ShootingControlCommand extends ThetaService {
   readonly service: BleServiceEnum;
   readonly device: ThetaDevice;
-  
+
   constructor(device: ThetaDevice) {
     super();
     this.service = BleServiceEnum.SHOOTING_CONTROL_COMMAND;
@@ -24,7 +29,7 @@ export class ShootingControlCommand extends ThetaService {
    * Acquires the capture mode of the camera.
    *
    * Service: 1D0F3602-8DFB-4340-9045-513040DAD991
-   * 
+   *
    * Characteristic: 78009238-AC3D-4370-9B6F-C9CE2F4E3CA8
    *
    * @returns Capture Mode.
@@ -43,15 +48,15 @@ export class ShootingControlCommand extends ThetaService {
    * Set the capture mode of the camera.
    *
    * Service: 1D0F3602-8DFB-4340-9045-513040DAD991
-   * 
+   *
    * Characteristic: 78009238-AC3D-4370-9B6F-C9CE2F4E3CA8
-   * 
+   *
    * @param mode Capture Mode.
    */
   async setCaptureMode(mode: CaptureModeEnum) {
     try {
       return await ThetaBleClient.nativeSetCaptureMode(this.device.id, mode);
-    } catch(error) {
+    } catch (error) {
       throw error;
     }
   }
@@ -60,7 +65,7 @@ export class ShootingControlCommand extends ThetaService {
    * Acquires the recording size (pixels) of the camera.
    *
    * Service: 1D0F3602-8DFB-4340-9045-513040DAD991
-   * 
+   *
    * Characteristic: E8F0EDD1-6C0F-494A-95C3-3244AE0B9A01
    *
    * @returns File format.
@@ -79,15 +84,15 @@ export class ShootingControlCommand extends ThetaService {
    * Set the recording size (pixels) of the camera.
    *
    * Service: 1D0F3602-8DFB-4340-9045-513040DAD991
-   * 
+   *
    * Characteristic: E8F0EDD1-6C0F-494A-95C3-3244AE0B9A01
-   * 
+   *
    * @param value File format.
    */
   async setFileFormat(value: FileFormatEnum) {
     try {
       return await ThetaBleClient.nativeSetFileFormat(this.device.id, value);
-    } catch(error) {
+    } catch (error) {
       throw error;
     }
   }
@@ -96,7 +101,7 @@ export class ShootingControlCommand extends ThetaService {
    * Acquires the maximum recordable time (in seconds) of the camera.
    *
    * Service: 1D0F3602-8DFB-4340-9045-513040DAD991
-   * 
+   *
    * Characteristic: 6EABAB73-7F2B-4061-BE7C-1D71D143CB7D
    *
    * @returns Maximum recordable time.
@@ -115,15 +120,18 @@ export class ShootingControlCommand extends ThetaService {
    * Set the maximum recordable time (in seconds) of the camera.
    *
    * Service: 1D0F3602-8DFB-4340-9045-513040DAD991
-   * 
+   *
    * Characteristic: 6EABAB73-7F2B-4061-BE7C-1D71D143CB7D
-   * 
+   *
    * @param value Maximum recordable time.
    */
   async setMaxRecordableTime(value: MaxRecordableTimeEnum) {
     try {
-      return await ThetaBleClient.nativeSetMaxRecordableTime(this.device.id, value);
-    } catch(error) {
+      return await ThetaBleClient.nativeSetMaxRecordableTime(
+        this.device.id,
+        value
+      );
+    } catch (error) {
       throw error;
     }
   }
@@ -132,12 +140,12 @@ export class ShootingControlCommand extends ThetaService {
    * Instructs the camera to start shooting a still image. Also, acquires the shooting status.
    *
    * Service: 1D0F3602-8DFB-4340-9045-513040DAD991
-   * 
+   *
    * Characteristic: FEC1805C-8905-4477-B862-BA5E447528A5
-   * 
+   *
    * @param complete Notification of end of shooting. If an error occurs, notify the argument.
    */
-  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+
   takePicture(complete?: (error?: any) => void) {
     ThetaBleClient.nativeTakePicture(this.device.id)
       .then(() => {

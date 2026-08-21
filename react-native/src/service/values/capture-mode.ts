@@ -40,4 +40,4 @@ export const CaptureModeEnum = {
 
 /** type definition of CaptureModeEnum */
 export type CaptureModeEnum =
-  typeof CaptureModeEnum[keyof typeof CaptureModeEnum];
+  (typeof CaptureModeEnum)[keyof typeof CaptureModeEnum];

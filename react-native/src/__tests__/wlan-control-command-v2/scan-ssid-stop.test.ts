@@ -12,7 +12,7 @@ describe('WlanControlCommandV2 scanSsidStop', () => {
     jest.mocked(thetaBle.nativeContainService).mockImplementation(
       jest.fn(async () => {
         return true;
-      }),
+      })
     );
   });
 
@@ -21,10 +21,12 @@ describe('WlanControlCommandV2 scanSsidStop', () => {
     thetaBle.nativeWlanControlCommandV2ScanSsidStart = jest.fn();
     thetaBle.nativeWlanControlCommandV2ScanSsidStop = jest.fn();
   });
-  
+
   const setupService = async () => {
     const device = new ThetaDevice(devId, devName);
-    const service = await device.getService(BleServiceEnum.WLAN_CONTROL_COMMAND_V2);
+    const service = await device.getService(
+      BleServiceEnum.WLAN_CONTROL_COMMAND_V2
+    );
     return service as WlanControlCommandV2;
   };
 
@@ -32,18 +34,25 @@ describe('WlanControlCommandV2 scanSsidStop', () => {
     const service = await setupService();
     const onNotify = jest.fn();
     await service.scanSsidStart(100, onNotify);
-    expect(service.device.notifyList.get('NOTIFICATION_SCANNED_SSID')).toBeDefined();
+    expect(
+      service.device.notifyList.get('NOTIFICATION_SCANNED_SSID')
+    ).toBeDefined();
 
     await service.scanSsidStop();
-    expect(service.device.notifyList.get('NOTIFICATION_SCANNED_SSID')).toBeUndefined();
-    expect(thetaBle.nativeWlanControlCommandV2ScanSsidStop).toHaveBeenCalledWith(devId);
-
+    expect(
+      service.device.notifyList.get('NOTIFICATION_SCANNED_SSID')
+    ).toBeUndefined();
+    expect(
+      thetaBle.nativeWlanControlCommandV2ScanSsidStop
+    ).toHaveBeenCalledWith({ id: devId });
   });
 
   test('Exception scanSsidStop', async () => {
-    thetaBle.nativeWlanControlCommandV2ScanSsidStop = jest.fn().mockImplementation( () => {
-      throw 'error';
-    });
+    thetaBle.nativeWlanControlCommandV2ScanSsidStop = jest
+      .fn()
+      .mockImplementation(() => {
+        throw 'error';
+      });
 
     const service = await setupService();
     try {
@@ -54,7 +63,11 @@ describe('WlanControlCommandV2 scanSsidStop', () => {
     } catch (error) {
       expect(error).toBe('error');
     }
-    expect(thetaBle.nativeWlanControlCommandV2ScanSsidStart).toHaveBeenCalledWith(devId, 100);
-    expect(thetaBle.nativeWlanControlCommandV2ScanSsidStop).toHaveBeenCalledWith(devId);
+    expect(
+      thetaBle.nativeWlanControlCommandV2ScanSsidStart
+    ).toHaveBeenCalledWith({ id: devId, timeout: 100 });
+    expect(
+      thetaBle.nativeWlanControlCommandV2ScanSsidStop
+    ).toHaveBeenCalledWith({ id: devId });
   });
 });

@@ -16,4 +16,4 @@ export const WifiSecurityModeEnum = {
 
 /** type definition of WifiSecurityModeEnum */
 export type WifiSecurityModeEnum =
-  typeof WifiSecurityModeEnum[keyof typeof WifiSecurityModeEnum];
+  (typeof WifiSecurityModeEnum)[keyof typeof WifiSecurityModeEnum];

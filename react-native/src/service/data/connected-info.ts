@@ -18,4 +18,4 @@ export interface ConnectedInfo {
    * Whether ping 8.8.8.8 is accessible
    */
   isInternetAccessible: boolean;
-};
+}

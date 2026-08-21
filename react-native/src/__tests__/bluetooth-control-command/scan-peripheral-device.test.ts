@@ -1,6 +1,10 @@
 import { NativeModules } from 'react-native';
 import { ThetaDevice } from '../../theta-device';
-import { BleServiceEnum, BluetoothControlCommand, PeripheralDeviceStatusEnum } from '../../service';
+import {
+  BleServiceEnum,
+  BluetoothControlCommand,
+  PeripheralDeviceStatusEnum,
+} from '../../service';
 
 describe('BluetoothControlCommand scanPeripheralDevice', () => {
   const devId = 1;
@@ -24,7 +28,7 @@ describe('BluetoothControlCommand scanPeripheralDevice', () => {
     jest.mocked(thetaBle.nativeContainService).mockImplementation(
       jest.fn(async () => {
         return true;
-      }),
+      })
     );
   });
 
@@ -32,33 +36,42 @@ describe('BluetoothControlCommand scanPeripheralDevice', () => {
     thetaBle.nativeContainService = jest.fn();
     thetaBle.nativeBluetoothControlCommandScanPeripheralDevice = jest.fn();
   });
-  
+
   const setupService = async () => {
     const device = new ThetaDevice(devId, devName);
-    const service = await device.getService(BleServiceEnum.BLUETOOTH_CONTROL_COMMAND);
+    const service = await device.getService(
+      BleServiceEnum.BLUETOOTH_CONTROL_COMMAND
+    );
     return service as BluetoothControlCommand;
   };
 
   test('scanPeripheralDevice', async () => {
-    thetaBle.nativeBluetoothControlCommandScanPeripheralDevice = jest.fn().mockImplementation( async (id, timeout) => {
-      expect(id).toBe(devId);
-      expect(timeout).toBe(100);
-      return [peripheralDevice1, peripheralDevice2];
-    });
+    thetaBle.nativeBluetoothControlCommandScanPeripheralDevice = jest
+      .fn()
+      .mockImplementation(async ({ id, timeout }) => {
+        expect(id).toBe(devId);
+        expect(timeout).toBe(100);
+        return [peripheralDevice1, peripheralDevice2];
+      });
 
     const service = await setupService();
     const deviceList = await service.scanPeripheralDevice(100);
 
     expect(deviceList.length).toBe(2);
-    expect(thetaBle.nativeBluetoothControlCommandScanPeripheralDevice).toHaveBeenCalledWith(devId, 100);
-    expect(thetaBle.nativeBluetoothControlCommandScanPeripheralDeviceStop).toHaveBeenCalledWith(devId);
+    expect(
+      thetaBle.nativeBluetoothControlCommandScanPeripheralDevice
+    ).toHaveBeenCalledWith({ id: devId, timeout: 100 });
+    expect(
+      thetaBle.nativeBluetoothControlCommandScanPeripheralDeviceStop
+    ).toHaveBeenCalledWith({ id: devId });
   });
 
   test('Exception scanPeripheralDevice', async () => {
-
-    thetaBle.nativeBluetoothControlCommandScanPeripheralDevice = jest.fn().mockImplementation( () => {
-      throw 'error';
-    });
+    thetaBle.nativeBluetoothControlCommandScanPeripheralDevice = jest
+      .fn()
+      .mockImplementation(() => {
+        throw 'error';
+      });
 
     const service = await setupService();
     try {
@@ -67,6 +80,8 @@ describe('BluetoothControlCommand scanPeripheralDevice', () => {
     } catch (error) {
       expect(error).toBe('error');
     }
-    expect(thetaBle.nativeBluetoothControlCommandScanPeripheralDeviceStop).toHaveBeenCalledWith(devId);
+    expect(
+      thetaBle.nativeBluetoothControlCommandScanPeripheralDeviceStop
+    ).toHaveBeenCalledWith({ id: devId });
   });
 });

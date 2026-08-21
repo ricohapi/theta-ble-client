@@ -309,6 +309,8 @@ class CameraControlCommandV2 internal constructor(thetaDevice: ThetaBle.ThetaDev
     /**
      * Property settings for shooting, the camera, etc.
      *
+     * RICOH THETA X and RICOH360 THETA A1. Not supported on RICOH THETA Z1.
+     *
      * Characteristic: F0BCD2F9-5862-4653-B50D-80DC51E8CB82
      *
      * @param options Camera setting options
@@ -381,6 +383,8 @@ class CameraControlCommandV2 internal constructor(thetaDevice: ThetaBle.ThetaDev
      * If CaptureMode is IMAGE, perform `camera.takePicture`
      * If CaptureMode is VIDEO, and CaptureState is IDLE, then `camera.startCapture` is executed
      * If CaptureMode is VIDEO, and CaptureStatus is SHOOTING, then `camera.stopCapture` is executed
+     *
+     * RICOH THETA X and RICOH360 THETA A1. Not supported on RICOH THETA Z1.
      *
      * Characteristic: 6E2DEEBE-88B0-42A5-829D-1B2C6ABCE750
      *

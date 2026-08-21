@@ -1,6 +1,14 @@
 import * as React from 'react';
 import { useDeviceContext } from '../../device-context';
-import { BleServiceEnum, ConnectedWifiInfo, NetworkTypeEnum, NotifyError, WlanControlCommandV2 } from '../../modules/theta-ble-client';
+import {
+  BleServiceEnum,
+  NetworkTypeEnum,
+  WlanControlCommandV2,
+} from '../../modules/theta-ble-client';
+import type {
+  ConnectedWifiInfo,
+  NotifyError,
+} from '../../modules/theta-ble-client';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import styles from './styles';
 import { Alert, ScrollView, Text, View } from 'react-native';
@@ -20,9 +28,9 @@ const WlanControlCommandV2Screen: React.FC<
   const { thetaDevice } = useDeviceContext();
   const [service, setService] = React.useState<WlanControlCommandV2>();
   const [message, setMessage] = React.useState('');
-  const [currentNetworkType, setCurrentNetworkType] = React.useState<NetworkTypeEnum>();
+  const [currentNetworkType, setCurrentNetworkType] =
+    React.useState<NetworkTypeEnum>();
   const scrollViewRef = React.useRef<ScrollView>(null);
-
 
   const alertToGoBack = (alertMessage: string) => {
     Alert.alert(TITLE, alertMessage, [
@@ -40,11 +48,13 @@ const WlanControlCommandV2Screen: React.FC<
       alertToGoBack(ERROR_MESSAGE_NO_DEVICE);
       return;
     }
-    if (!await thetaDevice.isConnected()) {
+    if (!(await thetaDevice.isConnected())) {
       alertToGoBack(ERROR_MESSAGE_NOT_CONNECTED);
       return;
     }
-    const wlanControlCommandV2 = await thetaDevice.getService(BleServiceEnum.WLAN_CONTROL_COMMAND_V2) as WlanControlCommandV2 | undefined;
+    const wlanControlCommandV2 = (await thetaDevice.getService(
+      BleServiceEnum.WLAN_CONTROL_COMMAND_V2
+    )) as WlanControlCommandV2 | undefined;
     if (wlanControlCommandV2 == null) {
       alertToGoBack(ERROR_MESSAGE_UNSUPPORTED);
       return;
@@ -59,12 +69,11 @@ const WlanControlCommandV2Screen: React.FC<
     try {
       await service.setNetworkTypeNotify();
       await service.setConnectedWifiInfoNotify();
-      /* eslint-disable-next-line no-empty */
-    } catch (_) { }
+    } catch {}
   };
 
   const addMessage = (newMessage: string) => {
-    setMessage(prevItem => {
+    setMessage((prevItem) => {
       return prevItem + '\n' + newMessage;
     });
   };
@@ -90,7 +99,9 @@ const WlanControlCommandV2Screen: React.FC<
     }
   };
 
-  const setNetworkTypeNotify = async (callback?: (value?: NetworkTypeEnum, error?: NotifyError) => void) => {
+  const setNetworkTypeNotify = async (
+    callback?: (value?: NetworkTypeEnum, error?: NotifyError) => void
+  ) => {
     if (service == null) {
       setMessage(ERROR_MESSAGE_UNSUPPORTED);
       return;
@@ -132,7 +143,9 @@ const WlanControlCommandV2Screen: React.FC<
     }
   };
 
-  const setConnectedWifiInfoNotify = async (callback?: (value?: ConnectedWifiInfo, error?: NotifyError) => void) => {
+  const setConnectedWifiInfoNotify = async (
+    callback?: (value?: ConnectedWifiInfo, error?: NotifyError) => void
+  ) => {
     if (service == null) {
       setMessage(ERROR_MESSAGE_UNSUPPORTED);
       return;
@@ -229,10 +242,7 @@ const WlanControlCommandV2Screen: React.FC<
           }}
         />
       </View>
-      <ScrollView
-        style={styles.messageArea}
-        ref={scrollViewRef}
-      >
+      <ScrollView style={styles.messageArea} ref={scrollViewRef}>
         <Text style={styles.messageText}>{message}</Text>
       </ScrollView>
     </SafeAreaView>

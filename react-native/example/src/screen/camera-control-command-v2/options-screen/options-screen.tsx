@@ -6,19 +6,19 @@ import Button from '../../../components/ui/button';
 import {
   BleServiceEnum,
   CameraControlCommandV2,
-  ThetaOptions,
 } from '../../../modules/theta-ble-client';
+import type { ThetaOptions } from '../../../modules/theta-ble-client';
 import { ItemSelectorView } from '../../../components/ui/item-list';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../../../App';
 import { useDeviceContext } from '../../../device-context';
-import { OptionItem, optionList } from './option-list';
+import { optionList } from './option-list';
+import type { OptionItem } from './option-list';
 
 const ERROR_MESSAGE_NO_DEVICE = 'No device.';
 const ERROR_MESSAGE_NOT_CONNECTED = 'Not connected.';
 const ERROR_MESSAGE_UNSUPPORTED = 'Unsupported.';
 const TITLE = 'Options';
-
 
 const OptionsScreen: React.FC<
   NativeStackScreenProps<RootStackParamList, 'Options'>
@@ -44,7 +44,9 @@ const OptionsScreen: React.FC<
       return;
     }
     try {
-      const options = await service.getOptions([selectedOption.value.optionName]);
+      const options = await service.getOptions([
+        selectedOption.value.optionName,
+      ]);
       setMessage(JSON.stringify(options, null, '\t'));
       setEditOptions(options);
     } catch (error) {
@@ -72,8 +74,8 @@ const OptionsScreen: React.FC<
     }
   };
 
-  const alertToGoBack = (message: string) => {
-    Alert.alert(TITLE, message, [
+  const alertToGoBack = (alertMessage: string) => {
+    Alert.alert(TITLE, alertMessage, [
       {
         text: 'OK',
         onPress: () => {
@@ -88,11 +90,13 @@ const OptionsScreen: React.FC<
       alertToGoBack(ERROR_MESSAGE_NO_DEVICE);
       return;
     }
-    if (!await thetaDevice.isConnected()) {
+    if (!(await thetaDevice.isConnected())) {
       alertToGoBack(ERROR_MESSAGE_NOT_CONNECTED);
       return;
     }
-    const cameraControlCommandV2 = await thetaDevice.getService(BleServiceEnum.CAMERA_CONTROL_COMMAND_V2) as CameraControlCommandV2 | undefined;
+    const cameraControlCommandV2 = (await thetaDevice.getService(
+      BleServiceEnum.CAMERA_CONTROL_COMMAND_V2
+    )) as CameraControlCommandV2 | undefined;
     if (cameraControlCommandV2 == null) {
       alertToGoBack(ERROR_MESSAGE_UNSUPPORTED);
       return;

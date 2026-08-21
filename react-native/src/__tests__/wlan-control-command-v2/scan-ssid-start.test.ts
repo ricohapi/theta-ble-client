@@ -1,5 +1,6 @@
 import { NativeModules } from 'react-native';
-import { BaseNotify, ThetaDevice } from '../../theta-device';
+import { ThetaDevice } from '../../theta-device';
+import type { BaseNotify } from '../../theta-device';
 import { BleServiceEnum, WlanControlCommandV2 } from '../../service';
 import { NativeEventEmitter_addListener } from '../../__mocks__/react-native';
 
@@ -13,7 +14,7 @@ describe('WlanControlCommandV2 scanSsidStart', () => {
     jest.mocked(thetaBle.nativeContainService).mockImplementation(
       jest.fn(async () => {
         return true;
-      }),
+      })
     );
   });
 
@@ -22,10 +23,12 @@ describe('WlanControlCommandV2 scanSsidStart', () => {
     thetaBle.nativeWlanControlCommandV2ScanSsidStart = jest.fn();
     thetaBle.nativeWlanControlCommandV2ScanSsidStop = jest.fn();
   });
-  
+
   const setupService = async () => {
     const device = new ThetaDevice(devId, devName);
-    const service = await device.getService(BleServiceEnum.WLAN_CONTROL_COMMAND_V2);
+    const service = await device.getService(
+      BleServiceEnum.WLAN_CONTROL_COMMAND_V2
+    );
     return service as WlanControlCommandV2;
   };
 
@@ -39,20 +42,24 @@ describe('WlanControlCommandV2 scanSsidStart', () => {
         return {
           remove: jest.fn(),
         };
-      }),
+      })
     );
-    thetaBle.nativeWlanControlCommandV2ScanSsidStart = jest.fn().mockImplementation( async (id, timeout) => {
-      expect(id).toBe(devId);
-      expect(timeout).toBe(100);
-      return;
-    });
+    thetaBle.nativeWlanControlCommandV2ScanSsidStart = jest
+      .fn()
+      .mockImplementation(async ({ id, timeout }) => {
+        expect(id).toBe(devId);
+        expect(timeout).toBe(100);
+        return;
+      });
 
     const service = await setupService();
     const onNotify = jest.fn();
     const onCompleted = jest.fn();
 
     await service.scanSsidStart(100, onNotify, onCompleted);
-    expect(service.device.notifyList.get('NOTIFICATION_SCANNED_SSID')).toBeDefined();
+    expect(
+      service.device.notifyList.get('NOTIFICATION_SCANNED_SSID')
+    ).toBeDefined();
 
     notifyCallback({
       deviceId: devId,
@@ -81,14 +88,20 @@ describe('WlanControlCommandV2 scanSsidStart', () => {
     expect(onNotify).nthCalledWith(1, 'ssid_1');
     expect(onNotify).nthCalledWith(2, 'ssid_2');
     expect(onCompleted).toBeCalledWith(['ssid_1', 'ssid_2']);
-    expect(service.device.notifyList.get('NOTIFICATION_SCANNED_SSID')).toBeUndefined();
-    expect(thetaBle.nativeWlanControlCommandV2ScanSsidStart).toHaveBeenCalledWith(devId, 100);
+    expect(
+      service.device.notifyList.get('NOTIFICATION_SCANNED_SSID')
+    ).toBeUndefined();
+    expect(
+      thetaBle.nativeWlanControlCommandV2ScanSsidStart
+    ).toHaveBeenCalledWith({ id: devId, timeout: 100 });
   });
 
   test('Exception scanSsidStart', async () => {
-    thetaBle.nativeWlanControlCommandV2ScanSsidStart = jest.fn().mockImplementation( () => {
-      throw 'error';
-    });
+    thetaBle.nativeWlanControlCommandV2ScanSsidStart = jest
+      .fn()
+      .mockImplementation(() => {
+        throw 'error';
+      });
 
     const service = await setupService();
     try {
@@ -98,6 +111,8 @@ describe('WlanControlCommandV2 scanSsidStart', () => {
     } catch (error) {
       expect(error).toBe('error');
     }
-    expect(thetaBle.nativeWlanControlCommandV2ScanSsidStart).toHaveBeenCalledWith(devId, 100);
+    expect(
+      thetaBle.nativeWlanControlCommandV2ScanSsidStart
+    ).toHaveBeenCalledWith({ id: devId, timeout: 100 });
   });
 });

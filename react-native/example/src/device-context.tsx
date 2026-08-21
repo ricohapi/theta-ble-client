@@ -1,4 +1,5 @@
-import React, { createContext, ReactNode } from 'react';
+import React, { createContext } from 'react';
+import type { ReactNode } from 'react';
 import type { ThetaDevice } from './modules/theta-ble-client';
 
 interface Props {

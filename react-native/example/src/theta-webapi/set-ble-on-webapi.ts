@@ -12,7 +12,7 @@ export async function setBleOnWebApi(isOn: boolean): Promise<void> {
       signal: controller.signal,
       method: 'POST',
       headers: {
-        Accept: 'application/json',
+        'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({

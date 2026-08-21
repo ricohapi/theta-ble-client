@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { DeviceProvider } from './device-context';
@@ -16,19 +14,21 @@ import WlanSsidScreen from './screen/wlan-control-command-v2/wlan-ssid-screen';
 import SetAccessPointScreen from './screen/wlan-control-command-v2/set-access-point-screen';
 
 export type RootStackParamList = {
-  Menu: undefined,
-  BluetoothControlCommand: undefined,
-  CameraStatus: undefined,
-  CameraControlCommandV2: undefined,
-  Options: undefined,
-  OptionsByString: undefined,
-  ScanSsid: undefined,
-  WlanControlCommand: undefined,
-  WlanControlCommandV2: undefined,
-  WlanSsid: undefined,
-  WlanSetAccessPoint: undefined | {
-    ssid?: string,
-  },
+  Menu: undefined;
+  BluetoothControlCommand: undefined;
+  CameraStatus: undefined;
+  CameraControlCommandV2: undefined;
+  Options: undefined;
+  OptionsByString: undefined;
+  ScanSsid: undefined;
+  WlanControlCommand: undefined;
+  WlanControlCommandV2: undefined;
+  WlanSsid: undefined;
+  WlanSetAccessPoint:
+    | undefined
+    | {
+        ssid?: string;
+      };
 };
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -43,7 +43,8 @@ const RootStack = () => {
         headerTitleStyle: {
           fontWeight: 'bold',
         },
-      }}>
+      }}
+    >
       <Stack.Screen
         options={{ title: 'THETA BLE Client' }}
         name="Menu"

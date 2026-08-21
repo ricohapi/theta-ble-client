@@ -2,7 +2,8 @@ import { NativeModules } from 'react-native';
 import { NativeEventEmitter_addListener } from '../../__mocks__/react-native';
 import type { BaseNotify } from '../../theta-device/notify';
 import { ThetaDevice } from '../../theta-device';
-import { CameraStatusCommand, PluginControl, PluginPowerStatusEnum } from '../../service';
+import { CameraStatusCommand, PluginPowerStatusEnum } from '../../service';
+import type { PluginControl } from '../../service';
 
 describe('setPluginControlNotify', () => {
   const devId = 1;
@@ -27,7 +28,7 @@ describe('setPluginControlNotify', () => {
         return {
           remove: jest.fn(),
         };
-      }),
+      })
     );
 
     const testValue = {
@@ -52,7 +53,10 @@ describe('setPluginControlNotify', () => {
 
     expect(device.notifyList.get('PLUGIN_CONTROL')).toBeDefined();
     expect(onNotify).toBeCalled();
-    expect(thetaBle.nativeSetPluginControlNotify).toBeCalledWith(devId, true);
+    expect(thetaBle.nativeSetPluginControlNotify).toBeCalledWith({
+      id: devId,
+      enable: true,
+    });
   });
 
   test('Not called different characteristic', async () => {
@@ -65,7 +69,7 @@ describe('setPluginControlNotify', () => {
         return {
           remove: jest.fn(),
         };
-      }),
+      })
     );
 
     const testValue = {
@@ -90,7 +94,10 @@ describe('setPluginControlNotify', () => {
 
     expect(device.notifyList.get('PLUGIN_CONTROL')).toBeDefined();
     expect(onNotify).toBeCalledTimes(0);
-    expect(thetaBle.nativeSetPluginControlNotify).toBeCalledWith(devId, true);
+    expect(thetaBle.nativeSetPluginControlNotify).toBeCalledWith({
+      id: devId,
+      enable: true,
+    });
   });
 
   test('Set empty', async () => {
@@ -103,7 +110,7 @@ describe('setPluginControlNotify', () => {
         return {
           remove: jest.fn(),
         };
-      }),
+      })
     );
 
     const testValue = {
@@ -130,14 +137,17 @@ describe('setPluginControlNotify', () => {
     expect(device.notifyList.get('PLUGIN_CONTROL')).toBeUndefined();
     expect(onNotify).toBeCalledTimes(0);
     expect(thetaBle.nativeSetPluginControlNotify).toBeCalledTimes(2);
-    expect(thetaBle.nativeSetPluginControlNotify).toHaveBeenLastCalledWith(devId, false);
+    expect(thetaBle.nativeSetPluginControlNotify).toHaveBeenLastCalledWith({
+      id: devId,
+      enable: false,
+    });
   });
 
   test('exception', async () => {
     jest.mocked(thetaBle.nativeSetPluginControlNotify).mockImplementation(
       jest.fn(async () => {
         throw 'error';
-      }),
+      })
     );
 
     const onNotify = jest.fn();
@@ -149,7 +159,7 @@ describe('setPluginControlNotify', () => {
         onNotify();
       });
       expect(true).toBeFalsy();
-    } catch(error) {
+    } catch (error) {
       expect(error).toBe('error');
     }
     expect(onNotify).toBeCalledTimes(0);
@@ -166,7 +176,7 @@ describe('setPluginControlNotify', () => {
         return {
           remove: jest.fn(),
         };
-      }),
+      })
     );
 
     const errorMessage = 'Error receive';
@@ -190,6 +200,9 @@ describe('setPluginControlNotify', () => {
 
     expect(device.notifyList.get('PLUGIN_CONTROL')).toBeDefined();
     expect(onNotify).toBeCalled();
-    expect(thetaBle.nativeSetPluginControlNotify).toBeCalledWith(devId, true);
+    expect(thetaBle.nativeSetPluginControlNotify).toBeCalledWith({
+      id: devId,
+      enable: true,
+    });
   });
 });

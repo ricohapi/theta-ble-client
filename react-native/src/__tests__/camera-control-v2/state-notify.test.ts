@@ -14,7 +14,7 @@ describe('CameraControlCommandV2 setStateNotify', () => {
     jest.mocked(thetaBle.nativeContainService).mockImplementation(
       jest.fn(async () => {
         return true;
-      }),
+      })
     );
   });
 
@@ -25,7 +25,9 @@ describe('CameraControlCommandV2 setStateNotify', () => {
 
   const setupService = async () => {
     const device = new ThetaDevice(devId, devName);
-    const service = await device.getService(BleServiceEnum.CAMERA_CONTROL_COMMAND_V2);
+    const service = await device.getService(
+      BleServiceEnum.CAMERA_CONTROL_COMMAND_V2
+    );
     return service as CameraControlCommandV2;
   };
 
@@ -39,7 +41,7 @@ describe('CameraControlCommandV2 setStateNotify', () => {
         return {
           remove: jest.fn(),
         };
-      }),
+      })
     );
     const service = await setupService();
     expect(service).toBeDefined();
@@ -62,7 +64,10 @@ describe('CameraControlCommandV2 setStateNotify', () => {
 
     expect(service.device.notifyList.get('NOTIFY_STATE')).toBeDefined();
     expect(onNotify).toBeCalled();
-    expect(thetaBle.nativeCameraControlCommandV2SetStateNotify).toBeCalledWith(devId, true);
+    expect(thetaBle.nativeCameraControlCommandV2SetStateNotify).toBeCalledWith({
+      id: devId,
+      enable: true,
+    });
   });
 
   test('Not called different characteristic', async () => {
@@ -75,7 +80,7 @@ describe('CameraControlCommandV2 setStateNotify', () => {
         return {
           remove: jest.fn(),
         };
-      }),
+      })
     );
 
     const testValue = 10;
@@ -98,7 +103,10 @@ describe('CameraControlCommandV2 setStateNotify', () => {
 
     expect(service.device.notifyList.get('NOTIFY_STATE')).toBeDefined();
     expect(onNotify).toBeCalledTimes(0);
-    expect(thetaBle.nativeCameraControlCommandV2SetStateNotify).toBeCalledWith(devId, true);
+    expect(thetaBle.nativeCameraControlCommandV2SetStateNotify).toBeCalledWith({
+      id: devId,
+      enable: true,
+    });
   });
 
   test('Set empty', async () => {
@@ -111,7 +119,7 @@ describe('CameraControlCommandV2 setStateNotify', () => {
         return {
           remove: jest.fn(),
         };
-      }),
+      })
     );
 
     const testValue = 10;
@@ -136,16 +144,22 @@ describe('CameraControlCommandV2 setStateNotify', () => {
 
     expect(service.device.notifyList.get('NOTIFY_STATE')).toBeUndefined();
     expect(onNotify).toBeCalledTimes(0);
-    expect(thetaBle.nativeCameraControlCommandV2SetStateNotify).toBeCalledTimes(2);
-    expect(thetaBle.nativeCameraControlCommandV2SetStateNotify).toHaveBeenLastCalledWith(devId, false);
+    expect(thetaBle.nativeCameraControlCommandV2SetStateNotify).toBeCalledTimes(
+      2
+    );
+    expect(
+      thetaBle.nativeCameraControlCommandV2SetStateNotify
+    ).toHaveBeenLastCalledWith({ id: devId, enable: false });
   });
 
   test('exception', async () => {
-    jest.mocked(thetaBle.nativeCameraControlCommandV2SetStateNotify).mockImplementation(
-      jest.fn(async () => {
-        throw 'error';
-      }),
-    );
+    jest
+      .mocked(thetaBle.nativeCameraControlCommandV2SetStateNotify)
+      .mockImplementation(
+        jest.fn(async () => {
+          throw 'error';
+        })
+      );
 
     const onNotify = jest.fn();
     const service = await setupService();
@@ -155,11 +169,13 @@ describe('CameraControlCommandV2 setStateNotify', () => {
         onNotify();
       });
       expect(true).toBeFalsy();
-    } catch(error) {
+    } catch (error) {
       expect(error).toBe('error');
     }
     expect(onNotify).toBeCalledTimes(0);
-    expect(thetaBle.nativeCameraControlCommandV2SetStateNotify).toBeCalledTimes(1);
+    expect(thetaBle.nativeCameraControlCommandV2SetStateNotify).toBeCalledTimes(
+      1
+    );
   });
 
   test('receive error', async () => {
@@ -172,7 +188,7 @@ describe('CameraControlCommandV2 setStateNotify', () => {
         return {
           remove: jest.fn(),
         };
-      }),
+      })
     );
 
     const errorMessage = 'Error receive';
@@ -195,6 +211,9 @@ describe('CameraControlCommandV2 setStateNotify', () => {
 
     expect(service.device.notifyList.get('NOTIFY_STATE')).toBeDefined();
     expect(onNotify).toBeCalled();
-    expect(thetaBle.nativeCameraControlCommandV2SetStateNotify).toBeCalledWith(devId, true);
+    expect(thetaBle.nativeCameraControlCommandV2SetStateNotify).toBeCalledWith({
+      id: devId,
+      enable: true,
+    });
   });
 });

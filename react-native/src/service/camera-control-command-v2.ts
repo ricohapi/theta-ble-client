@@ -1,4 +1,8 @@
-import type { NotifyError, ThetaDevice, ThetaStateNotify } from '../theta-device';
+import type {
+  NotifyError,
+  ThetaDevice,
+  ThetaStateNotify,
+} from '../theta-device';
 import { ThetaService } from './theta-service';
 import { BleServiceEnum, OptionName } from './values';
 import * as ThetaBleClient from '../native';
@@ -25,14 +29,16 @@ export class CameraControlCommandV2 extends ThetaService {
 
   /**
    * Acquires basic information of the camera and supported functions.
-   * 
+   *
    * Characteristic: A0452E2D-C7D8-4314-8CD6-7B8BBAB4D523
-   * 
+   *
    * @returns Static attributes of Theta.
    */
   async getInfo(): Promise<ThetaInfo> {
     try {
-      return await ThetaBleClient.nativeCameraControlCommandV2GetInfo(this.device.id);
+      return await ThetaBleClient.nativeCameraControlCommandV2GetInfo(
+        this.device.id
+      );
     } catch (error) {
       throw error;
     }
@@ -40,14 +46,16 @@ export class CameraControlCommandV2 extends ThetaService {
 
   /**
    * Acquires the camera states.
-   * 
+   *
    * Characteristic: 083D92B0-21E0-4FB2-9503-7D8B2C2BB1D1
-   * 
+   *
    * @returns Mutable values representing Theta status.
    */
   async getState(): Promise<ThetaState> {
     try {
-      return await ThetaBleClient.nativeCameraControlCommandV2GetState(this.device.id);
+      return await ThetaBleClient.nativeCameraControlCommandV2GetState(
+        this.device.id
+      );
     } catch (error) {
       throw error;
     }
@@ -55,17 +63,27 @@ export class CameraControlCommandV2 extends ThetaService {
 
   /**
    * Set camera state notification.
-   * 
+   *
    * Characteristic: D32CE140-B0C2-4C07-AF15-2301B5057B8C
-   * 
+   *
    * @param callback Notification function
    */
-  async setStateNotify(callback?: (value?: ThetaState, error?: NotifyError) => void) {
+  async setStateNotify(
+    callback?: (value?: ThetaState, error?: NotifyError) => void
+  ) {
     try {
-      await ThetaBleClient.nativeCameraControlCommandV2SetStateNotify(this.device.id, callback ? true : false);
-      this.device.notifyList.set('NOTIFY_STATE', callback ? (event: ThetaStateNotify) => {
-        callback(event.params, event.error);
-      } : undefined);
+      await ThetaBleClient.nativeCameraControlCommandV2SetStateNotify(
+        this.device.id,
+        callback ? true : false
+      );
+      this.device.notifyList.set(
+        'NOTIFY_STATE',
+        callback
+          ? (event: ThetaStateNotify) => {
+              callback(event.params, event.error);
+            }
+          : undefined
+      );
     } catch (error) {
       throw error;
     }
@@ -73,14 +91,16 @@ export class CameraControlCommandV2 extends ThetaService {
 
   /**
    * Acquires the camera states.
-   * 
+   *
    * Characteristic: 8881CE4E-96FC-4C6C-8103-5DDA0AD138FB
-   * 
+   *
    * @returns Mutable values representing Theta status.
    */
   async getState2(): Promise<ThetaState2> {
     try {
-      return await ThetaBleClient.nativeCameraControlCommandV2GetState2(this.device.id);
+      return await ThetaBleClient.nativeCameraControlCommandV2GetState2(
+        this.device.id
+      );
     } catch (error) {
       throw error;
     }
@@ -99,7 +119,10 @@ export class CameraControlCommandV2 extends ThetaService {
       throw new Error(MESSAGE_NO_ARGUMENT);
     }
     try {
-      return await ThetaBleClient.nativeCameraControlCommandV2GetOptions(this.device.id, optionNames ?? []);
+      return await ThetaBleClient.nativeCameraControlCommandV2GetOptions(
+        this.device.id,
+        optionNames ?? []
+      );
     } catch (error) {
       throw error;
     }
@@ -113,13 +136,16 @@ export class CameraControlCommandV2 extends ThetaService {
    * @param optionNames List of strings representing the names of the options
    * @return A map where each key is an option name and each value is the corresponding value for that option.
    */
-  async getOptionsByString(optionNames: string[]): Promise<Record<string, unknown>> {
+  async getOptionsByString(
+    optionNames: string[]
+  ): Promise<Record<string, unknown>> {
     if (optionNames.length === 0) {
       throw new Error(MESSAGE_NO_ARGUMENT);
     }
     try {
       return await ThetaBleClient.nativeCameraControlCommandV2GetOptionsByString(
-        this.device.id, optionNames ?? [],
+        this.device.id,
+        optionNames ?? []
       );
     } catch (error) {
       throw error;
@@ -135,7 +161,10 @@ export class CameraControlCommandV2 extends ThetaService {
    */
   async setOptions(options: ThetaOptions) {
     try {
-      return await ThetaBleClient.nativeCameraControlCommandV2SetOptions(this.device.id, options);
+      return await ThetaBleClient.nativeCameraControlCommandV2SetOptions(
+        this.device.id,
+        options
+      );
     } catch (error) {
       throw error;
     }
@@ -152,7 +181,9 @@ export class CameraControlCommandV2 extends ThetaService {
    */
   async releaseShutter() {
     try {
-      return await ThetaBleClient.nativeCameraControlCommandV2ReleaseShutter(this.device.id);
+      return await ThetaBleClient.nativeCameraControlCommandV2ReleaseShutter(
+        this.device.id
+      );
     } catch (error) {
       throw error;
     }

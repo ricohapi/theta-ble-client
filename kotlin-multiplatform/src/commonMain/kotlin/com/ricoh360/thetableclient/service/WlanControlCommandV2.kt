@@ -377,6 +377,8 @@ class WlanControlCommandV2 internal constructor(thetaDevice: ThetaBle.ThetaDevic
     /**
      * Set access point. IP address is set dynamically.
      *
+     * RICOH THETA Z1 only. Not supported on RICOH THETA X and RICOH360 THETA A1.
+     *
      * Characteristic: 4980ACBA-E2A5-460B-998B-9AD4C49FBE39
      *
      * @param ssid SSID of the access point.
@@ -411,6 +413,8 @@ class WlanControlCommandV2 internal constructor(thetaDevice: ThetaBle.ThetaDevic
 
     /**
      * Set access point. IP address is set statically.
+     *
+     * RICOH THETA Z1 only. Not supported on RICOH THETA X and RICOH360 THETA A1.
      *
      * Characteristic: 4980ACBA-E2A5-460B-998B-9AD4C49FBE39
      *

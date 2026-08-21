@@ -1,12 +1,6 @@
 import * as React from 'react';
-import {
-  StyleProp,
-  TouchableOpacity,
-  View,
-  ViewStyle,
-  type ButtonProps,
-  Text,
-} from 'react-native';
+import type { StyleProp, ViewStyle } from 'react-native';
+import { TouchableOpacity, View, type ButtonProps, Text } from 'react-native';
 import styles from './styles';
 import type { Item } from '..';
 import { ItemListPopupView } from '../item-list-popup-view';
