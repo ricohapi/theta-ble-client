@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   s.source_files = "ios/*.{h,m,mm,swift,cpp}"
   s.swift_version = "5.0"
 
-  s.dependency "THETABleClient", "1.3.3"
+  s.dependency "THETABleClient", "1.4.0"
 
   install_modules_dependencies(s)
 end
