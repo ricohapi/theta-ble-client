@@ -1,6 +1,10 @@
 import * as React from 'react';
 import { useDeviceContext } from '../../device-context';
-import { BleServiceEnum, BluetoothControlCommand, PeripheralDevice } from '../../modules/theta-ble-client';
+import {
+  BleServiceEnum,
+  BluetoothControlCommand,
+} from '../../modules/theta-ble-client';
+import type { PeripheralDevice } from '../../modules/theta-ble-client';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import styles from './styles';
 import { Alert, ScrollView, Text, View } from 'react-native';
@@ -31,7 +35,8 @@ const BluetoothControlCommandScreen: React.FC<
   const [message, setMessage] = React.useState('');
   const [deviceList, setDeviceList] = React.useState<PeripheralDevice[]>([]);
   const [scanStatus, SetScanStatus] = React.useState(ScanStatus.IDLE);
-  const [selectedDevice, setSelectedDevice] = React.useState<PeripheralDevice>();
+  const [selectedDevice, setSelectedDevice] =
+    React.useState<PeripheralDevice>();
   const [scanTimeout, setScanTimeout] = React.useState(TIMEOUT);
 
   const initList = () => {
@@ -65,25 +70,30 @@ const BluetoothControlCommandScreen: React.FC<
     try {
       initList();
       SetScanStatus(ScanStatus.SCANNING);
-      await service.scanPeripheralDeviceStart(scanTimeout, (device) => {
-        console.log('onNotify:' + JSON.stringify(device));
-        setMessage('onNotify:' + JSON.stringify(device));
-        setDeviceList((prevState) => {
-          const newList = [...prevState];
-          const index = newList.findIndex((item) => item.macAddress === device.macAddress);
-          if (index >= 0) {
-            newList.splice(index, 1, device);
-          } else {
-            newList.push(device);
-          }
-          return newList;
-        });
-      },
-      (devList) => {
-        setMessage(`Scan onCompleted. ${devList.length} device found.`);
-        console.log('Scan onCompleted:' + JSON.stringify(devList));
-        SetScanStatus(ScanStatus.IDLE);
-      });
+      await service.scanPeripheralDeviceStart(
+        scanTimeout,
+        (device) => {
+          console.log('onNotify:' + JSON.stringify(device));
+          setMessage('onNotify:' + JSON.stringify(device));
+          setDeviceList((prevState) => {
+            const newList = [...prevState];
+            const index = newList.findIndex(
+              (item) => item.macAddress === device.macAddress
+            );
+            if (index >= 0) {
+              newList.splice(index, 1, device);
+            } else {
+              newList.push(device);
+            }
+            return newList;
+          });
+        },
+        (devList) => {
+          setMessage(`Scan onCompleted. ${devList.length} device found.`);
+          console.log('Scan onCompleted:' + JSON.stringify(devList));
+          SetScanStatus(ScanStatus.IDLE);
+        }
+      );
 
       setMessage('Scan Start OK.');
     } catch (error) {
@@ -153,17 +163,19 @@ const BluetoothControlCommandScreen: React.FC<
       },
     ]);
   };
-  
+
   const initService = async () => {
     if (thetaDevice == null) {
       alertToGoBack(ERROR_MESSAGE_NO_DEVICE);
       return;
     }
-    if (!await thetaDevice.isConnected()) {
+    if (!(await thetaDevice.isConnected())) {
       alertToGoBack(ERROR_MESSAGE_NOT_CONNECTED);
       return;
     }
-    const bluetoothControlCommand = await thetaDevice.getService(BleServiceEnum.BLUETOOTH_CONTROL_COMMAND) as BluetoothControlCommand | undefined;
+    const bluetoothControlCommand = (await thetaDevice.getService(
+      BleServiceEnum.BLUETOOTH_CONTROL_COMMAND
+    )) as BluetoothControlCommand | undefined;
     if (bluetoothControlCommand == null) {
       alertToGoBack(ERROR_MESSAGE_UNSUPPORTED);
       return;
@@ -175,7 +187,7 @@ const BluetoothControlCommandScreen: React.FC<
     initService();
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
-  
+
   return (
     <SafeAreaView
       style={styles.safeAreaContainer}

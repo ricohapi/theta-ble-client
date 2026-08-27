@@ -1,6 +1,10 @@
 import { NativeModules } from 'react-native';
 import { ThetaDevice } from '../../theta-device';
-import { BleServiceEnum, BluetoothControlCommand, PeripheralDeviceStatusEnum } from '../../service';
+import {
+  BleServiceEnum,
+  BluetoothControlCommand,
+  PeripheralDeviceStatusEnum,
+} from '../../service';
 
 describe('BluetoothControlCommand deletePeripheralDevice', () => {
   const devId = 1;
@@ -19,7 +23,7 @@ describe('BluetoothControlCommand deletePeripheralDevice', () => {
     jest.mocked(thetaBle.nativeContainService).mockImplementation(
       jest.fn(async () => {
         return true;
-      }),
+      })
     );
   });
 
@@ -27,30 +31,37 @@ describe('BluetoothControlCommand deletePeripheralDevice', () => {
     thetaBle.nativeContainService = jest.fn();
     thetaBle.nativeBluetoothControlCommandDeletePeripheralDevice = jest.fn();
   });
-  
+
   const setupService = async () => {
     const device = new ThetaDevice(devId, devName);
-    const service = await device.getService(BleServiceEnum.BLUETOOTH_CONTROL_COMMAND);
+    const service = await device.getService(
+      BleServiceEnum.BLUETOOTH_CONTROL_COMMAND
+    );
     return service as BluetoothControlCommand;
   };
 
   test('deletePeripheralDevice', async () => {
-    thetaBle.nativeBluetoothControlCommandDeletePeripheralDevice = jest.fn().mockImplementation( async (id, macAddress) => {
-      expect(id).toBe(devId);
-      expect(macAddress).toBe(peripheralMacAddress);
-    });
+    thetaBle.nativeBluetoothControlCommandDeletePeripheralDevice = jest
+      .fn()
+      .mockImplementation(async ({ id, macAddress }) => {
+        expect(id).toBe(devId);
+        expect(macAddress).toBe(peripheralMacAddress);
+      });
 
     const service = await setupService();
     await service.deletePeripheralDevice(peripheralDevice);
 
-    expect(thetaBle.nativeBluetoothControlCommandDeletePeripheralDevice).toHaveBeenCalledWith(devId, peripheralMacAddress);
+    expect(
+      thetaBle.nativeBluetoothControlCommandDeletePeripheralDevice
+    ).toHaveBeenCalledWith({ id: devId, macAddress: peripheralMacAddress });
   });
 
   test('Exception deletePeripheralDevice', async () => {
-
-    thetaBle.nativeBluetoothControlCommandDeletePeripheralDevice = jest.fn().mockImplementation( () => {
-      throw 'error';
-    });
+    thetaBle.nativeBluetoothControlCommandDeletePeripheralDevice = jest
+      .fn()
+      .mockImplementation(() => {
+        throw 'error';
+      });
 
     const service = await setupService();
     try {

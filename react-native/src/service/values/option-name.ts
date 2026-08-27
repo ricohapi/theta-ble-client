@@ -25,5 +25,4 @@ export const OptionName = {
 } as const;
 
 /** type definition of OptionNameEnum */
-export type OptionName =
-  (typeof OptionName)[keyof typeof OptionName];
+export type OptionName = (typeof OptionName)[keyof typeof OptionName];

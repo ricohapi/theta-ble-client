@@ -1,6 +1,10 @@
 import { NativeModules } from 'react-native';
 import { ThetaDevice } from '../../theta-device';
-import { BleServiceEnum, CameraControlCommandV2, ThetaModel } from '../../service';
+import {
+  BleServiceEnum,
+  CameraControlCommandV2,
+  ThetaModel,
+} from '../../service';
 
 describe('CameraControlCommandV2 getInfo', () => {
   const devId = 1;
@@ -12,7 +16,7 @@ describe('CameraControlCommandV2 getInfo', () => {
     jest.mocked(thetaBle.nativeContainService).mockImplementation(
       jest.fn(async () => {
         return true;
-      }),
+      })
     );
   });
 
@@ -20,10 +24,12 @@ describe('CameraControlCommandV2 getInfo', () => {
     thetaBle.nativeContainService = jest.fn();
     thetaBle.nativeCameraControlCommandV2GetInfo = jest.fn();
   });
-  
+
   const setupService = async () => {
     const device = new ThetaDevice(devId, devName);
-    const service = await device.getService(BleServiceEnum.CAMERA_CONTROL_COMMAND_V2);
+    const service = await device.getService(
+      BleServiceEnum.CAMERA_CONTROL_COMMAND_V2
+    );
     return service as CameraControlCommandV2;
   };
 
@@ -37,10 +43,12 @@ describe('CameraControlCommandV2 getInfo', () => {
       wlanMacAddress: 'AA:AA:AA:AA:AA:AA',
       uptime: 1213,
     };
-    thetaBle.nativeCameraControlCommandV2GetInfo = jest.fn().mockImplementation( async (id) => {
-      expect(id).toBe(devId);
-      return testData;
-    });
+    thetaBle.nativeCameraControlCommandV2GetInfo = jest
+      .fn()
+      .mockImplementation(async ({ id }) => {
+        expect(id).toBe(devId);
+        return testData;
+      });
 
     const service = await setupService();
     const thetaInfo = await service.getInfo();
@@ -54,14 +62,17 @@ describe('CameraControlCommandV2 getInfo', () => {
     expect(thetaInfo.wlanMacAddress).toBe(testData.wlanMacAddress);
     expect(thetaInfo.uptime).toBe(testData.uptime);
 
-    expect(thetaBle.nativeCameraControlCommandV2GetInfo).toHaveBeenCalledWith(devId);
-  });
-  
-  test('Exception getInfo', async () => {
-
-    thetaBle.nativeCameraControlCommandV2GetInfo = jest.fn().mockImplementation( () => {
-      throw 'error';
+    expect(thetaBle.nativeCameraControlCommandV2GetInfo).toHaveBeenCalledWith({
+      id: devId,
     });
+  });
+
+  test('Exception getInfo', async () => {
+    thetaBle.nativeCameraControlCommandV2GetInfo = jest
+      .fn()
+      .mockImplementation(() => {
+        throw 'error';
+      });
 
     const service = await setupService();
     try {

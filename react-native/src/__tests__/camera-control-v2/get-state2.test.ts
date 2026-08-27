@@ -1,9 +1,6 @@
 import { NativeModules } from 'react-native';
 import { ThetaDevice } from '../../theta-device';
-import {
-  BleServiceEnum,
-  CameraControlCommandV2, 
-} from '../../service';
+import { BleServiceEnum, CameraControlCommandV2 } from '../../service';
 
 describe('CameraControlCommandV2 getState', () => {
   const devId = 1;
@@ -15,7 +12,7 @@ describe('CameraControlCommandV2 getState', () => {
     jest.mocked(thetaBle.nativeContainService).mockImplementation(
       jest.fn(async () => {
         return true;
-      }),
+      })
     );
   });
 
@@ -23,10 +20,12 @@ describe('CameraControlCommandV2 getState', () => {
     thetaBle.nativeContainService = jest.fn();
     thetaBle.nativeCameraControlCommandV2GetState2 = jest.fn();
   });
-  
+
   const setupService = async () => {
     const device = new ThetaDevice(devId, devName);
-    const service = await device.getService(BleServiceEnum.CAMERA_CONTROL_COMMAND_V2);
+    const service = await device.getService(
+      BleServiceEnum.CAMERA_CONTROL_COMMAND_V2
+    );
     return service as CameraControlCommandV2;
   };
 
@@ -51,10 +50,12 @@ describe('CameraControlCommandV2 getState', () => {
         },
       },
     };
-    thetaBle.nativeCameraControlCommandV2GetState2 = jest.fn().mockImplementation( async (id) => {
-      expect(id).toBe(devId);
-      return testData;
-    });
+    thetaBle.nativeCameraControlCommandV2GetState2 = jest
+      .fn()
+      .mockImplementation(async ({ id }) => {
+        expect(id).toBe(devId);
+        return testData;
+      });
 
     const service = await setupService();
     const thetaState2 = await service.getState2();
@@ -64,7 +65,9 @@ describe('CameraControlCommandV2 getState', () => {
     expect(externalGpsInfo).toBeDefined();
     let gpsInfo = externalGpsInfo.gpsInfo;
     expect(gpsInfo).toBeDefined();
-    expect(gpsInfo.dateTimeZone).toBe(testData.externalGpsInfo.gpsInfo.dateTimeZone);
+    expect(gpsInfo.dateTimeZone).toBe(
+      testData.externalGpsInfo.gpsInfo.dateTimeZone
+    );
     expect(gpsInfo.altitude).toBe(testData.externalGpsInfo.gpsInfo.altitude);
     expect(gpsInfo.lat).toBe(testData.externalGpsInfo.gpsInfo.lat);
     expect(gpsInfo.lng).toBe(testData.externalGpsInfo.gpsInfo.lng);
@@ -73,19 +76,24 @@ describe('CameraControlCommandV2 getState', () => {
     expect(internalGpsInfo).toBeDefined();
     gpsInfo = internalGpsInfo.gpsInfo;
     expect(gpsInfo).toBeDefined();
-    expect(gpsInfo.dateTimeZone).toBe(testData.internalGpsInfo.gpsInfo.dateTimeZone);
+    expect(gpsInfo.dateTimeZone).toBe(
+      testData.internalGpsInfo.gpsInfo.dateTimeZone
+    );
     expect(gpsInfo.altitude).toBe(testData.internalGpsInfo.gpsInfo.altitude);
     expect(gpsInfo.lat).toBe(testData.internalGpsInfo.gpsInfo.lat);
     expect(gpsInfo.lng).toBe(testData.internalGpsInfo.gpsInfo.lng);
     expect(gpsInfo.datum).toBe(testData.internalGpsInfo.gpsInfo.datum);
-    expect(thetaBle.nativeCameraControlCommandV2GetState2).toHaveBeenCalledWith(devId);
+    expect(thetaBle.nativeCameraControlCommandV2GetState2).toHaveBeenCalledWith(
+      { id: devId }
+    );
   });
-  
-  test('Exception getState2', async () => {
 
-    thetaBle.nativeCameraControlCommandV2GetState2 = jest.fn().mockImplementation( () => {
-      throw 'error';
-    });
+  test('Exception getState2', async () => {
+    thetaBle.nativeCameraControlCommandV2GetState2 = jest
+      .fn()
+      .mockImplementation(() => {
+        throw 'error';
+      });
 
     const service = await setupService();
     try {

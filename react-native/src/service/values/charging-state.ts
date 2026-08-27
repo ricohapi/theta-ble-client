@@ -25,4 +25,4 @@ export const ChargingStateEnum = {
 
 /** type definition of ChargingStateEnum */
 export type ChargingStateEnum =
-  typeof ChargingStateEnum[keyof typeof ChargingStateEnum];
+  (typeof ChargingStateEnum)[keyof typeof ChargingStateEnum];

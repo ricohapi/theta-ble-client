@@ -12,7 +12,7 @@ enum WlanControlCommandService {
                                      resolve: @escaping RCTPromiseResolveBlock,
                                      reject: @escaping RCTPromiseRejectBlock)
     {
-        guard let device = ThetaBleClientReactNative.deviceList[id] else {
+        guard let device = ThetaBleClientReactNativeImpl.deviceList[id] else {
             reject(ERROR_TITLE, ERROR_MESSAGE_DEVICE_NOT_FOUND, nil)
             return
         }

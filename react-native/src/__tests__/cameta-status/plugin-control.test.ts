@@ -1,6 +1,7 @@
 import { NativeModules } from 'react-native';
 import { ThetaDevice } from '../../theta-device';
-import { CameraStatusCommand, PluginControl, PluginPowerStatusEnum } from '../../service';
+import { CameraStatusCommand, PluginPowerStatusEnum } from '../../service';
+import type { PluginControl } from '../../service';
 
 describe('Plugin Control', () => {
   const devId = 99;
@@ -15,32 +16,34 @@ describe('Plugin Control', () => {
     thetaBle.nativeGetPluginControl = jest.fn();
     thetaBle.nativeSetPluginControl = jest.fn();
   });
-  
+
   test('Call normal get', async () => {
     const bleValue = {
       pluginControl: PluginPowerStatusEnum.RUNNING,
       plugin: 2,
     } as PluginControl;
     jest.mocked(thetaBle.nativeGetPluginControl).mockImplementation(
-      jest.fn(async (id) => {
+      jest.fn(async ({ id }) => {
         expect(id).toBe(devId);
         return bleValue;
-      }),
+      })
     );
 
     const device = new ThetaDevice(devId, devName);
     const service = new CameraStatusCommand(device);
     const response = await service.getPluginControl();
-  
+
     expect(response).toBe(bleValue);
-    expect(thetaBle.nativeGetPluginControl).toHaveBeenCalledWith(devId);
+    expect(thetaBle.nativeGetPluginControl).toHaveBeenCalledWith({
+      id: devId,
+    });
   });
-  
+
   test('Exception get', async () => {
     jest.mocked(thetaBle.nativeGetPluginControl).mockImplementation(
       jest.fn(async () => {
         throw 'error';
-      }),
+      })
     );
 
     const device = new ThetaDevice(devId, devName);
@@ -51,32 +54,37 @@ describe('Plugin Control', () => {
     } catch (error) {
       expect(error).toBe('error');
     }
-  
-    expect(thetaBle.nativeGetPluginControl).toHaveBeenCalledWith(devId);
+
+    expect(thetaBle.nativeGetPluginControl).toHaveBeenCalledWith({
+      id: devId,
+    });
   });
 
-  test.each([
-    PluginPowerStatusEnum.RUNNING,
-    PluginPowerStatusEnum.STOP,
-  ])('Call normal set', async (targetValue: PluginPowerStatusEnum ) => {
-    const testValue = {
-      pluginControl: targetValue,
-      plugin: 1,
-    } as PluginControl;
+  test.each([PluginPowerStatusEnum.RUNNING, PluginPowerStatusEnum.STOP])(
+    'Call normal set',
+    async (targetValue: PluginPowerStatusEnum) => {
+      const testValue = {
+        pluginControl: targetValue,
+        plugin: 1,
+      } as PluginControl;
 
-    jest.mocked(thetaBle.nativeSetPluginControl).mockImplementation(
-      jest.fn(async (id, value) => {
-        expect(id).toBe(devId);
-        expect(value).toBe(testValue);
-      }),
-    );
+      jest.mocked(thetaBle.nativeSetPluginControl).mockImplementation(
+        jest.fn(async ({ id, value }) => {
+          expect(id).toBe(devId);
+          expect(value).toBe(testValue);
+        })
+      );
 
-    const device = new ThetaDevice(devId, devName);
-    const service = new CameraStatusCommand(device);
-    await service.setPluginControl(testValue);
-  
-    expect(thetaBle.nativeSetPluginControl).toHaveBeenCalledWith(devId, testValue);
-  });
+      const device = new ThetaDevice(devId, devName);
+      const service = new CameraStatusCommand(device);
+      await service.setPluginControl(testValue);
+
+      expect(thetaBle.nativeSetPluginControl).toHaveBeenCalledWith({
+        id: devId,
+        value: testValue,
+      });
+    }
+  );
 
   test('Exception for set', async () => {
     const testValue = {
@@ -86,7 +94,7 @@ describe('Plugin Control', () => {
     jest.mocked(thetaBle.nativeSetPluginControl).mockImplementation(
       jest.fn(async () => {
         throw 'error';
-      }),
+      })
     );
 
     const device = new ThetaDevice(devId, devName);
@@ -97,6 +105,9 @@ describe('Plugin Control', () => {
     } catch (error) {
       expect(error).toBe('error');
     }
-    expect(thetaBle.nativeSetPluginControl).toHaveBeenCalledWith(devId, testValue);
+    expect(thetaBle.nativeSetPluginControl).toHaveBeenCalledWith({
+      id: devId,
+      value: testValue,
+    });
   });
 });

@@ -9,54 +9,65 @@ beforeEach(() => {
 });
 
 describe('ThetaDevice', () => {
-
   const devId = 1;
   const devName = '0123456789';
   const appUuid = 'uuid 0123456789';
 
   test('Call connect normal', async () => {
     jest.mocked(thetaBle.nativeConnect).mockImplementation(
-      jest.fn(async (id) => {
+      jest.fn(async ({ id }) => {
         expect(id).toBe(devId);
-      }),
+      })
     );
 
     const device = new ThetaDevice(devId, devName);
     await device.connect();
 
-    expect(thetaBle.nativeConnect).toHaveBeenCalledWith(devId, undefined);
+    expect(thetaBle.nativeConnect).toHaveBeenCalledWith({
+      id: devId,
+      uuid: undefined,
+    });
     expect(device.id).toBe(devId);
     expect(device.name).toBe(devName);
     expect(device.uuid).toBeUndefined();
 
-    expect(NativeEventEmitter_addListener).toHaveBeenCalledWith('ThetaBleNotify', expect.anything());
+    expect(NativeEventEmitter_addListener).toHaveBeenCalledWith(
+      'ThetaBleNotify',
+      expect.anything()
+    );
   });
 
   test('Call connect normal with uuid', async () => {
     jest.mocked(thetaBle.nativeConnect).mockImplementation(
-      jest.fn(async (id) => {
+      jest.fn(async ({ id }) => {
         expect(id).toBe(devId);
-      }),
+      })
     );
 
     const device = new ThetaDevice(devId, devName);
     await device.connect(appUuid);
 
-    expect(thetaBle.nativeConnect).toHaveBeenCalledWith(devId, appUuid);
+    expect(thetaBle.nativeConnect).toHaveBeenCalledWith({
+      id: devId,
+      uuid: appUuid,
+    });
     expect(device.id).toBe(devId);
     expect(device.name).toBe(devName);
     expect(device.uuid).toBe(appUuid);
 
-    expect(NativeEventEmitter_addListener).toHaveBeenCalledWith('ThetaBleNotify', expect.anything());
+    expect(NativeEventEmitter_addListener).toHaveBeenCalledWith(
+      'ThetaBleNotify',
+      expect.anything()
+    );
   });
 
   test('Exception for Call connect', async () => {
     jest.mocked(thetaBle.nativeConnect).mockImplementation(
       jest.fn(async () => {
         throw 'error';
-      }),
+      })
     );
-  
+
     const device = new ThetaDevice(devId, devName);
     try {
       await device.connect();
@@ -66,16 +77,19 @@ describe('ThetaDevice', () => {
       expect(error).toBe('error');
     }
 
-    expect(thetaBle.nativeConnect).toHaveBeenCalledWith(devId, undefined);
+    expect(thetaBle.nativeConnect).toHaveBeenCalledWith({
+      id: devId,
+      uuid: undefined,
+    });
   });
 
   test('Exception for Call connect with uuid', async () => {
     jest.mocked(thetaBle.nativeConnect).mockImplementation(
       jest.fn(async () => {
         throw 'error';
-      }),
+      })
     );
-  
+
     const device = new ThetaDevice(devId, devName);
     try {
       await device.connect(appUuid);
@@ -85,29 +99,32 @@ describe('ThetaDevice', () => {
       expect(error).toBe('error');
     }
 
-    expect(thetaBle.nativeConnect).toHaveBeenCalledWith(devId, appUuid);
+    expect(thetaBle.nativeConnect).toHaveBeenCalledWith({
+      id: devId,
+      uuid: appUuid,
+    });
   });
 
   test('Call disconnect normal', async () => {
     jest.mocked(thetaBle.nativeDisconnect).mockImplementation(
-      jest.fn(async (id) => {
+      jest.fn(async ({ id }) => {
         expect(id).toBe(devId);
-      }),
+      })
     );
 
     const device = new ThetaDevice(devId, devName);
     await device.disconnect();
 
-    expect(thetaBle.nativeDisconnect).toHaveBeenCalledWith(devId);
+    expect(thetaBle.nativeDisconnect).toHaveBeenCalledWith({ id: devId });
   });
 
   test('Exception for Call disconnect', async () => {
     jest.mocked(thetaBle.nativeDisconnect).mockImplementation(
       jest.fn(async () => {
         throw 'error';
-      }),
+      })
     );
-  
+
     const device = new ThetaDevice(devId, devName);
     try {
       await device.disconnect();
@@ -116,14 +133,14 @@ describe('ThetaDevice', () => {
       expect(error).toBe('error');
     }
 
-    expect(thetaBle.nativeDisconnect).toHaveBeenCalledWith(devId);
+    expect(thetaBle.nativeDisconnect).toHaveBeenCalledWith({ id: devId });
   });
 
   test('Call release normal', async () => {
     jest.mocked(thetaBle.nativeReleaseDevice).mockImplementation(
-      jest.fn(async (id) => {
+      jest.fn(async ({ id }) => {
         expect(id).toBe(devId);
-      }),
+      })
     );
 
     const remove = jest.fn();
@@ -132,44 +149,43 @@ describe('ThetaDevice', () => {
         return {
           remove,
         };
-      }),
+      })
     );
 
     const device = new ThetaDevice(devId, devName);
     await device.release();
 
-    expect(thetaBle.nativeReleaseDevice).toHaveBeenCalledWith(devId);
+    expect(thetaBle.nativeReleaseDevice).toHaveBeenCalledWith({ id: devId });
     expect(remove).toBeCalledTimes(1);
   });
 
   test('Call isConnected normal', async () => {
     jest.mocked(thetaBle.nativeIsConnected).mockImplementation(
-      jest.fn(async (id) => {
+      jest.fn(async ({ id }) => {
         expect(id).toBe(devId);
         return true;
-      }),
+      })
     );
 
     const device = new ThetaDevice(devId, devName);
     const isConnected = await device.isConnected();
 
-    expect(thetaBle.nativeIsConnected).toHaveBeenCalledWith(devId);
+    expect(thetaBle.nativeIsConnected).toHaveBeenCalledWith({ id: devId });
     expect(isConnected).toBeTruthy();
   });
 
   test('Call isConnected disconnected', async () => {
     jest.mocked(thetaBle.nativeIsConnected).mockImplementation(
-      jest.fn(async (id) => {
+      jest.fn(async ({ id }) => {
         expect(id).toBe(devId);
         return false;
-      }),
+      })
     );
 
     const device = new ThetaDevice(devId, devName);
     const isConnected = await device.isConnected();
 
-    expect(thetaBle.nativeIsConnected).toHaveBeenCalledWith(devId);
+    expect(thetaBle.nativeIsConnected).toHaveBeenCalledWith({ id: devId });
     expect(isConnected).toBeFalsy();
   });
-
 });

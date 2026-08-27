@@ -10,15 +10,15 @@ export interface PluginOrders {
   /**
    * Plugin number to be set the first plugin
    */
-  first: number,
+  first: number;
 
   /**
    * Plugin number to be set the second plugin
    */
-  second: number,
+  second: number;
 
   /**
    * Plugin number to be set the third plugin
    */
-  third: number,
+  third: number;
 }

@@ -19,7 +19,7 @@ describe('CameraControlCommandV2 getState', () => {
     jest.mocked(thetaBle.nativeContainService).mockImplementation(
       jest.fn(async () => {
         return true;
-      }),
+      })
     );
   });
 
@@ -27,10 +27,12 @@ describe('CameraControlCommandV2 getState', () => {
     thetaBle.nativeContainService = jest.fn();
     thetaBle.nativeCameraControlCommandV2GetState = jest.fn();
   });
-  
+
   const setupService = async () => {
     const device = new ThetaDevice(devId, devName);
-    const service = await device.getService(BleServiceEnum.CAMERA_CONTROL_COMMAND_V2);
+    const service = await device.getService(
+      BleServiceEnum.CAMERA_CONTROL_COMMAND_V2
+    );
     return service as CameraControlCommandV2;
   };
 
@@ -52,10 +54,12 @@ describe('CameraControlCommandV2 getState', () => {
       capturedPictures: 10,
       shootingFunction: ShootingFunctionEnum.NORMAL,
     };
-    thetaBle.nativeCameraControlCommandV2GetState = jest.fn().mockImplementation( async (id) => {
-      expect(id).toBe(devId);
-      return testData;
-    });
+    thetaBle.nativeCameraControlCommandV2GetState = jest
+      .fn()
+      .mockImplementation(async ({ id }) => {
+        expect(id).toBe(devId);
+        return testData;
+      });
 
     const service = await setupService();
     const thetaState = await service.getState();
@@ -74,14 +78,17 @@ describe('CameraControlCommandV2 getState', () => {
     expect(thetaState.capturedPictures).toBe(testData.capturedPictures);
     expect(thetaState.shootingFunction).toBe(testData.shootingFunction);
 
-    expect(thetaBle.nativeCameraControlCommandV2GetState).toHaveBeenCalledWith(devId);
-  });
-  
-  test('Exception getState', async () => {
-
-    thetaBle.nativeCameraControlCommandV2GetState = jest.fn().mockImplementation( () => {
-      throw 'error';
+    expect(thetaBle.nativeCameraControlCommandV2GetState).toHaveBeenCalledWith({
+      id: devId,
     });
+  });
+
+  test('Exception getState', async () => {
+    thetaBle.nativeCameraControlCommandV2GetState = jest
+      .fn()
+      .mockImplementation(() => {
+        throw 'error';
+      });
 
     const service = await setupService();
     try {

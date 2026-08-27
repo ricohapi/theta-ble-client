@@ -1,4 +1,8 @@
-import { MaxRecordableTimeEnum, ShootingControlCommand, ThetaDevice } from '../..';
+import {
+  MaxRecordableTimeEnum,
+  ShootingControlCommand,
+  ThetaDevice,
+} from '../..';
 import { NativeModules } from 'react-native';
 
 const thetaBle = NativeModules.ThetaBleClientReactNative;
@@ -17,10 +21,10 @@ const devName = '0123456789';
 
 async function getMaxRecordableTimeTest(value: MaxRecordableTimeEnum) {
   jest.mocked(thetaBle.nativeGetMaxRecordableTime).mockImplementation(
-    jest.fn(async (id) => {
+    jest.fn(async ({ id }) => {
       expect(id).toBe(devId);
       return value as string;
-    }),
+    })
   );
 
   const device = new ThetaDevice(devId, devName);
@@ -28,7 +32,9 @@ async function getMaxRecordableTimeTest(value: MaxRecordableTimeEnum) {
   const response = await service.getMaxRecordableTime();
 
   expect(response).toBe(value);
-  expect(thetaBle.nativeGetMaxRecordableTime).toHaveBeenCalledWith(devId);
+  expect(thetaBle.nativeGetMaxRecordableTime).toHaveBeenCalledWith({
+    id: devId,
+  });
 }
 
 test('Call getMaxRecordableTime normal', () => {
@@ -37,7 +43,7 @@ test('Call getMaxRecordableTime normal', () => {
     MaxRecordableTimeEnum.RECORDABLE_TIME_1500,
     MaxRecordableTimeEnum.RECORDABLE_TIME_3000,
   ];
-  valueList.forEach(function(element){
+  valueList.forEach(function (element) {
     getMaxRecordableTimeTest(element);
   });
 });
@@ -46,9 +52,9 @@ test('Exception for Call getMaxRecordableTime', async () => {
   jest.mocked(thetaBle.nativeGetMaxRecordableTime).mockImplementation(
     jest.fn(async () => {
       throw 'error';
-    }),
+    })
   );
-  
+
   const device = new ThetaDevice(devId, devName);
   const service = new ShootingControlCommand(device);
   try {
@@ -58,22 +64,27 @@ test('Exception for Call getMaxRecordableTime', async () => {
     expect(error).toBe('error');
   }
 
-  expect(thetaBle.nativeGetMaxRecordableTime).toHaveBeenCalledWith(devId);
+  expect(thetaBle.nativeGetMaxRecordableTime).toHaveBeenCalledWith({
+    id: devId,
+  });
 });
 
 async function setMaxRecordableTimeTest(value: MaxRecordableTimeEnum) {
   jest.mocked(thetaBle.nativeSetMaxRecordableTime).mockImplementation(
-    jest.fn(async (id, mode: string) => {
+    jest.fn(async ({ id, value: mode }) => {
       expect(id).toBe(devId);
       expect(mode).toBe(value as string);
-    }),
+    })
   );
 
   const device = new ThetaDevice(devId, devName);
   const service = new ShootingControlCommand(device);
   await service.setMaxRecordableTime(value);
 
-  expect(thetaBle.nativeSetMaxRecordableTime).toHaveBeenCalledWith(devId, value as string);
+  expect(thetaBle.nativeSetMaxRecordableTime).toHaveBeenCalledWith({
+    id: devId,
+    value: value as string,
+  });
 }
 
 test('Call setMaxRecordableTime normal', () => {
@@ -82,7 +93,7 @@ test('Call setMaxRecordableTime normal', () => {
     MaxRecordableTimeEnum.RECORDABLE_TIME_1500,
     MaxRecordableTimeEnum.RECORDABLE_TIME_3000,
   ];
-  valueList.forEach(function(element){
+  valueList.forEach(function (element) {
     setMaxRecordableTimeTest(element);
   });
 });
@@ -91,18 +102,22 @@ test('Exception for Call setMaxRecordableTime', async () => {
   jest.mocked(thetaBle.nativeSetMaxRecordableTime).mockImplementation(
     jest.fn(async () => {
       throw 'error';
-    }),
+    })
   );
-  
+
   const device = new ThetaDevice(devId, devName);
   const service = new ShootingControlCommand(device);
   try {
-    await service.setMaxRecordableTime(MaxRecordableTimeEnum.RECORDABLE_TIME_1500);
+    await service.setMaxRecordableTime(
+      MaxRecordableTimeEnum.RECORDABLE_TIME_1500
+    );
     throw new Error('failed');
   } catch (error) {
     expect(error).toBe('error');
   }
 
-  expect(thetaBle.nativeSetMaxRecordableTime)
-    .toHaveBeenCalledWith(devId, MaxRecordableTimeEnum.RECORDABLE_TIME_1500 as string);
+  expect(thetaBle.nativeSetMaxRecordableTime).toHaveBeenCalledWith({
+    id: devId,
+    value: MaxRecordableTimeEnum.RECORDABLE_TIME_1500 as string,
+  });
 });

@@ -52,4 +52,4 @@ export const CommandErrorDescriptionEnum = {
 
 /** type definition of CommandErrorDescriptionEnum */
 export type CommandErrorDescriptionEnum =
-  typeof CommandErrorDescriptionEnum[keyof typeof CommandErrorDescriptionEnum];
+  (typeof CommandErrorDescriptionEnum)[keyof typeof CommandErrorDescriptionEnum];

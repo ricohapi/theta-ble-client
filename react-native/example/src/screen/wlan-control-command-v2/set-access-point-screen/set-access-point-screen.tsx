@@ -2,10 +2,10 @@ import * as React from 'react';
 import { useDeviceContext } from '../../../device-context';
 import {
   BleServiceEnum,
-  Proxy,
   WifiSecurityModeEnum,
   WlanControlCommandV2,
 } from '../../../modules/theta-ble-client';
+import type { Proxy } from '../../../modules/theta-ble-client';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import styles from './styles';
 import { Alert, ScrollView, Text, View } from 'react-native';
@@ -23,39 +23,42 @@ const ERROR_MESSAGE_NOT_CONNECTED = 'Not connected.';
 const ERROR_MESSAGE_UNSUPPORTED = 'Unsupported.';
 const TITLE = 'Set AccessPoint';
 
-type WlanSetAccessPointProps = NativeStackScreenProps<RootStackParamList, 'WlanSetAccessPoint'>;
+type WlanSetAccessPointProps = NativeStackScreenProps<
+  RootStackParamList,
+  'WlanSetAccessPoint'
+>;
 
 interface AccessPointParams {
-  ssid: string,
-  ssidStealth?: boolean,
-  security?: WifiSecurityModeEnum,
-  password?: string,
-  connectionPriority?: number,
-  ipAddress?: string,
-  subnetMask?: string,
-  defaultGateway?: string,
-  proxy?: Proxy,
+  ssid: string;
+  ssidStealth?: boolean;
+  security?: WifiSecurityModeEnum;
+  password?: string;
+  connectionPriority?: number;
+  ipAddress?: string;
+  subnetMask?: string;
+  defaultGateway?: string;
+  proxy?: Proxy;
 }
 
-const SetAccessPointScreen: React.FC<
-WlanSetAccessPointProps
-> = ({ navigation, route }) => {
+const SetAccessPointScreen: React.FC<WlanSetAccessPointProps> = ({
+  navigation,
+  route,
+}) => {
   const { thetaDevice } = useDeviceContext();
   const [service, setService] = React.useState<WlanControlCommandV2>();
   const [message, setMessage] = React.useState('');
   const [isDynamic, setIsDynamic] = React.useState<boolean>(true);
 
-  const [accessPointParams, setAccessPointParams] = React.useState<AccessPointParams>({
-    ssid: route.params?.ssid ?? '',
-    security: WifiSecurityModeEnum.NONE,
-    connectionPriority: 1,
-    subnetMask: '255.255.255.0',
+  const [accessPointParams, setAccessPointParams] =
+    React.useState<AccessPointParams>({
+      ssid: route.params?.ssid ?? '',
+      security: WifiSecurityModeEnum.NONE,
+      connectionPriority: 1,
+      subnetMask: '255.255.255.0',
+    });
+  const [proxy, setProxy] = React.useState<Proxy>({
+    use: false,
   });
-  const [proxy, setProxy] = React.useState<Proxy>(
-    {
-      use: false,
-    },
-  );
 
   const connectTypes = [
     { label: 'dynamic', value: 0 },
@@ -72,19 +75,19 @@ WlanSetAccessPointProps
       },
     ]);
   };
-  
+
   const initService = async () => {
     if (thetaDevice == null) {
       alertToGoBack(ERROR_MESSAGE_NO_DEVICE);
       return;
     }
-    if (!await thetaDevice.isConnected()) {
+    if (!(await thetaDevice.isConnected())) {
       alertToGoBack(ERROR_MESSAGE_NOT_CONNECTED);
       return;
     }
-    const wlanControlCommandV2 = await thetaDevice.getService(
-      BleServiceEnum.WLAN_CONTROL_COMMAND_V2,
-    ) as WlanControlCommandV2 | undefined;
+    const wlanControlCommandV2 = (await thetaDevice.getService(
+      BleServiceEnum.WLAN_CONTROL_COMMAND_V2
+    )) as WlanControlCommandV2 | undefined;
     if (wlanControlCommandV2 == null) {
       alertToGoBack(ERROR_MESSAGE_UNSUPPORTED);
       return;
@@ -93,9 +96,9 @@ WlanSetAccessPointProps
   };
 
   const addMessage = (newMessage: string) => {
-    setMessage(prevItem => {
+    setMessage((prevItem) => {
       return prevItem + '\n' + newMessage;
-    }); 
+    });
   };
 
   const makeProxyParams = () => {
@@ -104,11 +107,7 @@ WlanSetAccessPointProps
       return undefined;
     }
 
-    let {
-      url,
-      userid,
-      password,
-    } = proxy;
+    let { url, userid, password } = proxy;
     if (url != null && url.length === 0) {
       url = undefined;
     }
@@ -129,16 +128,10 @@ WlanSetAccessPointProps
   };
 
   const makeDynamicallyParams = () => {
-    const {
-      ssid,
-      ssidStealth,
-      security,
-      connectionPriority,
-    } = accessPointParams;
+    const { ssid, ssidStealth, security, connectionPriority } =
+      accessPointParams;
 
-    let {
-      password,
-    } = accessPointParams;
+    let { password } = accessPointParams;
 
     if (password != null && password.length === 0) {
       password = undefined;
@@ -156,11 +149,7 @@ WlanSetAccessPointProps
   };
 
   const makeStaticallyParams = () => {
-    let {
-      ipAddress,
-      subnetMask,
-      defaultGateway,
-    } = accessPointParams;
+    let { ipAddress, subnetMask, defaultGateway } = accessPointParams;
 
     if (ipAddress == null) {
       ipAddress = '';
@@ -195,9 +184,10 @@ WlanSetAccessPointProps
       const {
         ssid,
         ssidStealth,
-        security, password,
+        security,
+        password,
         connectionPriority,
-        proxy,
+        proxy: accessPointProxy,
       } = params;
       await service.setAccessPointDynamically(
         ssid,
@@ -205,7 +195,7 @@ WlanSetAccessPointProps
         security,
         password,
         connectionPriority,
-        proxy,
+        accessPointProxy
       );
       addMessage('OK');
     } catch (error) {
@@ -232,7 +222,7 @@ WlanSetAccessPointProps
         ipAddress,
         subnetMask,
         defaultGateway,
-        proxy,
+        proxy: accessPointProxy,
       } = params;
       await service.setAccessPointStatically(
         ssid,
@@ -243,7 +233,7 @@ WlanSetAccessPointProps
         ipAddress,
         subnetMask,
         defaultGateway,
-        proxy,
+        accessPointProxy
       );
       addMessage('OK');
     } catch (error) {
@@ -252,25 +242,21 @@ WlanSetAccessPointProps
   };
 
   const onSetAccessPoint = () => {
-    isDynamic ? setAccessPointDynamically(): setAccessPointStatically();
+    isDynamic ? setAccessPointDynamically() : setAccessPointStatically();
   };
 
   React.useEffect(() => {
     initService();
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
-  
+
   return (
     <SafeAreaView
       style={styles.safeAreaContainer}
       edges={['left', 'right', 'bottom']}
     >
-      <View
-        style={styles.messageContainerLayout}
-      >
-        <ScrollView
-          style={styles.messageArea}
-        >
+      <View style={styles.messageContainerLayout}>
+        <ScrollView style={styles.messageArea}>
           <Text style={styles.messageText}>{message}</Text>
         </ScrollView>
       </View>
@@ -282,10 +268,10 @@ WlanSetAccessPointProps
         />
         <RadioButton
           options={connectTypes}
-          selected={isDynamic ? 0: 1}
+          selected={isDynamic ? 0 : 1}
           onSelected={(value) => {
             console.log(`onSelect: ${value}`);
-            setIsDynamic(value===0 ? true: false);
+            setIsDynamic(value === 0 ? true : false);
           }}
         />
       </View>
@@ -295,7 +281,7 @@ WlanSetAccessPointProps
             title={'ssid'}
             style={styles.inputText}
             onChange={(newValue) => {
-              setAccessPointParams(prevItem => {
+              setAccessPointParams((prevItem) => {
                 return { ...prevItem, ssid: newValue };
               });
             }}
@@ -305,7 +291,7 @@ WlanSetAccessPointProps
             title="ssidStealth"
             value={accessPointParams.ssidStealth}
             onChange={(newValue) => {
-              setAccessPointParams(prevItem => {
+              setAccessPointParams((prevItem) => {
                 return { ...prevItem, ssidStealth: newValue };
               });
             }}
@@ -314,7 +300,7 @@ WlanSetAccessPointProps
             title={'security'}
             option={accessPointParams.security}
             onChange={(newValue) => {
-              setAccessPointParams(prevItem => {
+              setAccessPointParams((prevItem) => {
                 return { ...prevItem, security: newValue };
               });
             }}
@@ -324,7 +310,7 @@ WlanSetAccessPointProps
             title={'password'}
             style={styles.inputText}
             onChange={(newValue) => {
-              setAccessPointParams(prevItem => {
+              setAccessPointParams((prevItem) => {
                 return { ...prevItem, password: newValue };
               });
             }}
@@ -334,7 +320,7 @@ WlanSetAccessPointProps
             title={'connectionPriority'}
             style={styles.inputText}
             onChange={(newValue) => {
-              setAccessPointParams(prevItem => {
+              setAccessPointParams((prevItem) => {
                 return { ...prevItem, connectionPriority: newValue };
               });
             }}
@@ -347,7 +333,7 @@ WlanSetAccessPointProps
               title={'ipAddress'}
               style={styles.inputText}
               onChange={(newValue) => {
-                setAccessPointParams(prevItem => {
+                setAccessPointParams((prevItem) => {
                   return { ...prevItem, ipAddress: newValue };
                 });
               }}
@@ -357,7 +343,7 @@ WlanSetAccessPointProps
               title={'subnetMask'}
               style={styles.inputText}
               onChange={(newValue) => {
-                setAccessPointParams(prevItem => {
+                setAccessPointParams((prevItem) => {
                   return { ...prevItem, subnetMask: newValue };
                 });
               }}
@@ -367,19 +353,20 @@ WlanSetAccessPointProps
               title={'defaultGateway'}
               style={styles.inputText}
               onChange={(newValue) => {
-                setAccessPointParams(prevItem => {
+                setAccessPointParams((prevItem) => {
                   return { ...prevItem, defaultGateway: newValue };
                 });
               }}
               value={accessPointParams.defaultGateway}
             />
-          </View>)}
+          </View>
+        )}
         <View style={styles.editViewContainerLayout}>
           <TitledSwitch
             title="Proxy"
             value={proxy.use}
             onChange={(newValue) => {
-              setProxy(prevItem => {
+              setProxy((prevItem) => {
                 return { ...prevItem, use: newValue };
               });
             }}
@@ -390,7 +377,7 @@ WlanSetAccessPointProps
                 title={'url'}
                 style={styles.inputText}
                 onChange={(newValue) => {
-                  setProxy(prevItem => {
+                  setProxy((prevItem) => {
                     return { ...prevItem, url: newValue };
                   });
                 }}
@@ -400,7 +387,7 @@ WlanSetAccessPointProps
                 title={'port'}
                 style={styles.inputText}
                 onChange={(newValue) => {
-                  setProxy(prevItem => {
+                  setProxy((prevItem) => {
                     return { ...prevItem, port: newValue };
                   });
                 }}
@@ -410,7 +397,7 @@ WlanSetAccessPointProps
                 title={'userid'}
                 style={styles.inputText}
                 onChange={(newValue) => {
-                  setProxy(prevItem => {
+                  setProxy((prevItem) => {
                     return { ...prevItem, userid: newValue };
                   });
                 }}
@@ -420,13 +407,14 @@ WlanSetAccessPointProps
                 title={'password'}
                 style={styles.inputText}
                 onChange={(newValue) => {
-                  setProxy(prevItem => {
+                  setProxy((prevItem) => {
                     return { ...prevItem, password: newValue };
                   });
                 }}
                 value={proxy.password}
               />
-            </View>)}
+            </View>
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>

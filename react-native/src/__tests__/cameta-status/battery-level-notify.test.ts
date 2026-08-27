@@ -16,7 +16,7 @@ describe('setBatteryLevelNotify', () => {
   afterEach(() => {
     thetaBle.nativeSetBatteryLevelNotify = jest.fn();
   });
-  
+
   test('Call normal', async () => {
     let notifyCallback: (notify: BaseNotify) => void = () => {
       expect(true).toBeFalsy();
@@ -27,7 +27,7 @@ describe('setBatteryLevelNotify', () => {
         return {
           remove: jest.fn(),
         };
-      }),
+      })
     );
 
     const testValue = 10;
@@ -51,7 +51,10 @@ describe('setBatteryLevelNotify', () => {
 
     expect(device.notifyList.get('BATTERY_LEVEL')).toBeDefined();
     expect(onNotify).toBeCalled();
-    expect(thetaBle.nativeSetBatteryLevelNotify).toBeCalledWith(devId, true);
+    expect(thetaBle.nativeSetBatteryLevelNotify).toBeCalledWith({
+      id: devId,
+      enable: true,
+    });
   });
 
   test('Not called different characteristic', async () => {
@@ -64,7 +67,7 @@ describe('setBatteryLevelNotify', () => {
         return {
           remove: jest.fn(),
         };
-      }),
+      })
     );
 
     const testValue = 10;
@@ -88,7 +91,10 @@ describe('setBatteryLevelNotify', () => {
 
     expect(device.notifyList.get('BATTERY_LEVEL')).toBeDefined();
     expect(onNotify).toBeCalledTimes(0);
-    expect(thetaBle.nativeSetBatteryLevelNotify).toBeCalledWith(devId, true);
+    expect(thetaBle.nativeSetBatteryLevelNotify).toBeCalledWith({
+      id: devId,
+      enable: true,
+    });
   });
 
   test('Set empty', async () => {
@@ -101,7 +107,7 @@ describe('setBatteryLevelNotify', () => {
         return {
           remove: jest.fn(),
         };
-      }),
+      })
     );
 
     const testValue = 10;
@@ -127,14 +133,17 @@ describe('setBatteryLevelNotify', () => {
     expect(device.notifyList.get('BATTERY_LEVEL')).toBeUndefined();
     expect(onNotify).toBeCalledTimes(0);
     expect(thetaBle.nativeSetBatteryLevelNotify).toBeCalledTimes(2);
-    expect(thetaBle.nativeSetBatteryLevelNotify).toHaveBeenLastCalledWith(devId, false);
+    expect(thetaBle.nativeSetBatteryLevelNotify).toHaveBeenLastCalledWith({
+      id: devId,
+      enable: false,
+    });
   });
 
   test('exception', async () => {
     jest.mocked(thetaBle.nativeSetBatteryLevelNotify).mockImplementation(
       jest.fn(async () => {
         throw 'error';
-      }),
+      })
     );
 
     const onNotify = jest.fn();
@@ -146,7 +155,7 @@ describe('setBatteryLevelNotify', () => {
         onNotify();
       });
       expect(true).toBeFalsy();
-    } catch(error) {
+    } catch (error) {
       expect(error).toBe('error');
     }
     expect(onNotify).toBeCalledTimes(0);
@@ -163,7 +172,7 @@ describe('setBatteryLevelNotify', () => {
         return {
           remove: jest.fn(),
         };
-      }),
+      })
     );
 
     const errorMessage = 'Error receive';
@@ -187,6 +196,9 @@ describe('setBatteryLevelNotify', () => {
 
     expect(device.notifyList.get('BATTERY_LEVEL')).toBeDefined();
     expect(onNotify).toBeCalled();
-    expect(thetaBle.nativeSetBatteryLevelNotify).toBeCalledWith(devId, true);
+    expect(thetaBle.nativeSetBatteryLevelNotify).toBeCalledWith({
+      id: devId,
+      enable: true,
+    });
   });
 });

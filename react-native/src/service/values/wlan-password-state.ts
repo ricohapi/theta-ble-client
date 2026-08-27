@@ -25,4 +25,4 @@ export const WlanPasswordStateEnum = {
 
 /** type definition of WlanPasswordStateEnum */
 export type WlanPasswordStateEnum =
-  typeof WlanPasswordStateEnum[keyof typeof WlanPasswordStateEnum];
+  (typeof WlanPasswordStateEnum)[keyof typeof WlanPasswordStateEnum];

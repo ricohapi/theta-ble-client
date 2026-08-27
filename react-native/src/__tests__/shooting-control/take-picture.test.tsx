@@ -12,9 +12,9 @@ const devName = '0123456789';
 
 test('Call takePicture normal', async () => {
   jest.mocked(thetaBle.nativeTakePicture).mockImplementation(
-    jest.fn(async (id) => {
+    jest.fn(async ({ id }) => {
       expect(id).toBe(devId);
-    }),
+    })
   );
 
   async function callTakePicture(device: ThetaDevice) {
@@ -29,29 +29,29 @@ test('Call takePicture normal', async () => {
 
   await callTakePicture(new ThetaDevice(devId, devName));
 
-  expect(thetaBle.nativeTakePicture).toHaveBeenCalledWith(devId);
+  expect(thetaBle.nativeTakePicture).toHaveBeenCalledWith({ id: devId });
 });
 
 test('Call takePicture without complete', async () => {
   jest.mocked(thetaBle.nativeTakePicture).mockImplementation(
-    jest.fn(async (id) => {
+    jest.fn(async ({ id }) => {
       expect(id).toBe(devId);
-    }),
+    })
   );
 
   const device = new ThetaDevice(devId, devName);
   const service = new ShootingControlCommand(device);
   service.takePicture();
 
-  expect(thetaBle.nativeTakePicture).toHaveBeenCalledWith(devId);
+  expect(thetaBle.nativeTakePicture).toHaveBeenCalledWith({ id: devId });
 });
 
 test('Exception for Call takePicture', async () => {
   jest.mocked(thetaBle.nativeTakePicture).mockImplementation(
-    jest.fn(async (id) => {
+    jest.fn(async ({ id }) => {
       expect(id).toBe(devId);
       throw 'error';
-    }),
+    })
   );
 
   async function callTakePicture(device: ThetaDevice) {
@@ -66,5 +66,5 @@ test('Exception for Call takePicture', async () => {
 
   await callTakePicture(new ThetaDevice(devId, devName));
 
-  expect(thetaBle.nativeTakePicture).toHaveBeenCalledWith(devId);
+  expect(thetaBle.nativeTakePicture).toHaveBeenCalledWith({ id: devId });
 });

@@ -14,24 +14,28 @@ describe('Battery Status', () => {
   afterEach(() => {
     thetaBle.nativeGetBatteryStatus = jest.fn();
   });
-  
+
   test('Call normal get', async () => {
     const bleValue = ChargingStateEnum.CHARGED;
-    thetaBle.nativeGetBatteryStatus = jest.fn().mockImplementation( async (id) => {
-      expect(id).toBe(devId);
-      return bleValue;
-    });
+    thetaBle.nativeGetBatteryStatus = jest
+      .fn()
+      .mockImplementation(async ({ id }) => {
+        expect(id).toBe(devId);
+        return bleValue;
+      });
 
     const device = new ThetaDevice(devId, devName);
     const service = new CameraStatusCommand(device);
     const response = await service.getBatteryStatus();
-  
+
     expect(response).toBe(bleValue);
-    expect(thetaBle.nativeGetBatteryStatus).toHaveBeenCalledWith(devId);
+    expect(thetaBle.nativeGetBatteryStatus).toHaveBeenCalledWith({
+      id: devId,
+    });
   });
-  
+
   test('Exception get', async () => {
-    thetaBle.nativeGetBatteryStatus = jest.fn().mockImplementation( (id) => {
+    thetaBle.nativeGetBatteryStatus = jest.fn().mockImplementation(({ id }) => {
       expect(id).toBe(devId);
       throw 'error';
     });
@@ -44,7 +48,9 @@ describe('Battery Status', () => {
     } catch (error) {
       expect(error).toBe('error');
     }
-  
-    expect(thetaBle.nativeGetBatteryStatus).toHaveBeenCalledWith(devId);
+
+    expect(thetaBle.nativeGetBatteryStatus).toHaveBeenCalledWith({
+      id: devId,
+    });
   });
 });

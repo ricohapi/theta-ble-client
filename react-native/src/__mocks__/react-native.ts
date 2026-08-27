@@ -63,7 +63,17 @@ export const NativeModules = {
     nativeWlanControlCommandV2ScanSsidStop: jest.fn(),
     nativeWlanControlCommandV2SetAccessPointDynamically: jest.fn(),
     nativeWlanControlCommandV2SetAccessPointStatically: jest.fn(),
+
+    addListener: jest.fn(),
+    removeListeners: jest.fn(),
   },
+};
+
+// The TurboModule spec resolves to the same mocked native module object, so
+// tests keep asserting against `NativeModules.ThetaBleClientReactNative`.
+export const TurboModuleRegistry = {
+  getEnforcing: jest.fn(() => NativeModules.ThetaBleClientReactNative),
+  get: jest.fn(() => NativeModules.ThetaBleClientReactNative),
 };
 
 export const Platform = {

@@ -15,7 +15,8 @@ import { setBleUuidWebApi } from '../../theta-webapi/set-ble-uuid-webapi';
 import { setBleOnWebApi } from '../../theta-webapi/set-ble-on-webapi';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDeviceContext } from '../../device-context';
-import { ThetaInfo, getThetaInfoWebApi } from '../../theta-webapi/get-theta-info-webapi';
+import { getThetaInfoWebApi } from '../../theta-webapi/get-theta-info-webapi';
+import type { ThetaInfo } from '../../theta-webapi/get-theta-info-webapi';
 import DefaultPreference from 'react-native-default-preference';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../../App';
@@ -45,9 +46,7 @@ const MenuScreen: React.FC<
           PERMISSIONS.ANDROID.BLUETOOTH_SCAN,
         ]);
       } else {
-        await requestMultiple([
-          PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
-        ]);
+        await requestMultiple([PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION]);
       }
     } catch (err) {
       console.warn(err);
@@ -57,7 +56,7 @@ const MenuScreen: React.FC<
   async function scanBle(name: string) {
     try {
       setInfoText(`Scanning... ${devName}`);
-      const device = await scan({
+      const device = (await scan({
         name,
         timeout: {
           timeoutScan: 30_000,
@@ -65,7 +64,7 @@ const MenuScreen: React.FC<
           timeoutConnect: 30_000,
           timeoutTakePicture: 10_000,
         },
-      }) as ThetaDevice | undefined;
+      })) as ThetaDevice | undefined;
       if (device) {
         setInfoText(`Scan. Found device: ${devName}`);
         if (thetaDevice) {
@@ -75,7 +74,7 @@ const MenuScreen: React.FC<
       } else {
         setInfoText(`Error. ${devName} not found.`);
       }
-    } catch (_) {
+    } catch {
       setInfoText(`Error. ${devName} not found.`);
     }
   }
@@ -105,7 +104,7 @@ const MenuScreen: React.FC<
     try {
       await device.disconnect();
       setInfoText(`Disconnected. ${devName}`);
-    } catch (_) {
+    } catch {
       setInfoText(`Error. disconnect. ${devName}`);
     }
   }
@@ -116,11 +115,11 @@ const MenuScreen: React.FC<
       return;
     }
     const device = thetaDevice;
-    const service = await device.getService(BleServiceEnum.CAMERA_INFORMATION) as CameraInformation | undefined;
+    const service = (await device.getService(
+      BleServiceEnum.CAMERA_INFORMATION
+    )) as CameraInformation | undefined;
     if (service == null) {
-      setInfoText(
-        'CAMERA_INFORMATION is unsupported.',
-      );
+      setInfoText('CAMERA_INFORMATION is unsupported.');
       return;
     }
     try {
@@ -132,15 +131,15 @@ const MenuScreen: React.FC<
       const bluetooth = await service.getBluetoothMacAddress();
 
       setInfoText(
-        ` firmware: ${firmware}\n maker: ${maker}\n model: ${model}\n serial: ${serial}\n wlan: ${wlan}\n ble: ${bluetooth}`,
+        ` firmware: ${firmware}\n maker: ${maker}\n model: ${model}\n serial: ${serial}\n wlan: ${wlan}\n ble: ${bluetooth}`
       );
-    } catch (_) {
+    } catch {
       setInfoText('Error. Get Information.');
     }
   }
 
   async function sleep(ms: number) {
-    return new Promise<void>(resolve => setTimeout(resolve, ms));
+    return new Promise<void>((resolve) => setTimeout(resolve, ms));
   }
 
   async function takePicture() {
@@ -149,11 +148,11 @@ const MenuScreen: React.FC<
       return;
     }
     const device = thetaDevice;
-    const service = await device.getService(BleServiceEnum.SHOOTING_CONTROL_COMMAND) as ShootingControlCommand | undefined;
+    const service = (await device.getService(
+      BleServiceEnum.SHOOTING_CONTROL_COMMAND
+    )) as ShootingControlCommand | undefined;
     if (service == null) {
-      setInfoText(
-        'SHOOTING_CONTROL_COMMAND is unsupported.',
-      );
+      setInfoText('SHOOTING_CONTROL_COMMAND is unsupported.');
       return;
     }
     try {
@@ -165,7 +164,7 @@ const MenuScreen: React.FC<
       }
 
       setInfoText('Start take a picture.');
-      service.takePicture(error => {
+      service.takePicture((error) => {
         if (error) {
           setInfoText(`End take a picture. error ${error}`);
         } else {
@@ -196,7 +195,7 @@ const MenuScreen: React.FC<
       setUseUuid(false);
       setInfoText(`wifi connected. ${thetaInfo.serialNumber}`);
       saveDevice(false, deviceName);
-    } catch (_) {
+    } catch {
       setInfoText('Error. wifi connect.');
       return;
     }
@@ -214,7 +213,7 @@ const MenuScreen: React.FC<
         setUseUuid(false);
         saveDevice(false, deviceName);
       }
-    } catch (_) {
+    } catch {
       setInfoText('Error. wifi connect.');
     }
   }
@@ -227,7 +226,7 @@ const MenuScreen: React.FC<
         setDevName(name);
         setUseUuid(use === 'true');
       }
-    } catch (_) {
+    } catch {
       console.log('Error. loadDevice');
     }
   };
@@ -239,7 +238,7 @@ const MenuScreen: React.FC<
     try {
       await DefaultPreference.set(KEY_LAST_DEVICE_NAME, name);
       await DefaultPreference.set(KEY_LAST_USE_UUID, String(use));
-    } catch (_) {
+    } catch {
       console.log('Error. saveDevice');
     }
   };
@@ -253,7 +252,6 @@ const MenuScreen: React.FC<
 
     // Return the function to unsubscribe from the event so it gets removed on unmount
     return unsubscribe;
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [navigation]);
 
   return (
@@ -349,4 +347,3 @@ const MenuScreen: React.FC<
   );
 };
 export default MenuScreen;
-

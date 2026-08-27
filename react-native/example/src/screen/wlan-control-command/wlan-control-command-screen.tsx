@@ -1,6 +1,9 @@
 import * as React from 'react';
 import { useDeviceContext } from '../../device-context';
-import { BleServiceEnum, WlanControlCommand } from '../../modules/theta-ble-client';
+import {
+  BleServiceEnum,
+  WlanControlCommand,
+} from '../../modules/theta-ble-client';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import styles from './styles';
 import { Alert, ScrollView, Text, View } from 'react-native';
@@ -21,7 +24,6 @@ const WlanControlCommandScreen: React.FC<
   const [message, setMessage] = React.useState('');
   const scrollViewRef = React.useRef<ScrollView>(null);
 
-
   const alertToGoBack = (alertMessage: string) => {
     Alert.alert(TITLE, alertMessage, [
       {
@@ -38,11 +40,13 @@ const WlanControlCommandScreen: React.FC<
       alertToGoBack(ERROR_MESSAGE_NO_DEVICE);
       return;
     }
-    if (!await thetaDevice.isConnected()) {
+    if (!(await thetaDevice.isConnected())) {
       alertToGoBack(ERROR_MESSAGE_NOT_CONNECTED);
       return;
     }
-    const wlanControlCommand = await thetaDevice.getService(BleServiceEnum.WLAN_CONTROL_COMMAND) as WlanControlCommand | undefined;
+    const wlanControlCommand = (await thetaDevice.getService(
+      BleServiceEnum.WLAN_CONTROL_COMMAND
+    )) as WlanControlCommand | undefined;
     if (wlanControlCommand == null) {
       alertToGoBack(ERROR_MESSAGE_UNSUPPORTED);
       return;
@@ -67,6 +71,7 @@ const WlanControlCommandScreen: React.FC<
 
   React.useEffect(() => {
     initService();
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
   return (
@@ -82,10 +87,7 @@ const WlanControlCommandScreen: React.FC<
           onPress={onGetWlanPasswordState}
         />
       </View>
-      <ScrollView
-        style={styles.messageArea}
-        ref={scrollViewRef}
-      >
+      <ScrollView style={styles.messageArea} ref={scrollViewRef}>
         <Text style={styles.messageText}>{message}</Text>
       </ScrollView>
     </SafeAreaView>

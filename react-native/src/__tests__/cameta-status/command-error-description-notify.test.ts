@@ -2,7 +2,10 @@ import { NativeModules } from 'react-native';
 import { NativeEventEmitter_addListener } from '../../__mocks__/react-native';
 import type { BaseNotify } from '../../theta-device/notify';
 import { ThetaDevice } from '../../theta-device';
-import { CameraStatusCommand, CommandErrorDescriptionEnum } from '../../service';
+import {
+  CameraStatusCommand,
+  CommandErrorDescriptionEnum,
+} from '../../service';
 
 describe('setCommandErrorDescriptionNotify', () => {
   const devId = 1;
@@ -27,7 +30,7 @@ describe('setCommandErrorDescriptionNotify', () => {
         return {
           remove: jest.fn(),
         };
-      }),
+      })
     );
 
     const testValue = CommandErrorDescriptionEnum.DEVICE_BUSY;
@@ -51,7 +54,10 @@ describe('setCommandErrorDescriptionNotify', () => {
 
     expect(device.notifyList.get('COMMAND_ERROR_DESCRIPTION')).toBeDefined();
     expect(onNotify).toBeCalled();
-    expect(thetaBle.nativeSetCommandErrorDescriptionNotify).toBeCalledWith(devId, true);
+    expect(thetaBle.nativeSetCommandErrorDescriptionNotify).toBeCalledWith({
+      id: devId,
+      enable: true,
+    });
   });
 
   test('Not called different characteristic', async () => {
@@ -64,7 +70,7 @@ describe('setCommandErrorDescriptionNotify', () => {
         return {
           remove: jest.fn(),
         };
-      }),
+      })
     );
 
     const testValue = CommandErrorDescriptionEnum.DISABLED_COMMAND;
@@ -88,7 +94,10 @@ describe('setCommandErrorDescriptionNotify', () => {
 
     expect(device.notifyList.get('COMMAND_ERROR_DESCRIPTION')).toBeDefined();
     expect(onNotify).toBeCalledTimes(0);
-    expect(thetaBle.nativeSetCommandErrorDescriptionNotify).toBeCalledWith(devId, true);
+    expect(thetaBle.nativeSetCommandErrorDescriptionNotify).toBeCalledWith({
+      id: devId,
+      enable: true,
+    });
   });
 
   test('Set empty', async () => {
@@ -101,7 +110,7 @@ describe('setCommandErrorDescriptionNotify', () => {
         return {
           remove: jest.fn(),
         };
-      }),
+      })
     );
 
     const testValue = CommandErrorDescriptionEnum.INVALID_FILE_FORMAT;
@@ -127,15 +136,19 @@ describe('setCommandErrorDescriptionNotify', () => {
     expect(device.notifyList.get('COMMAND_ERROR_DESCRIPTION')).toBeUndefined();
     expect(onNotify).toBeCalledTimes(0);
     expect(thetaBle.nativeSetCommandErrorDescriptionNotify).toBeCalledTimes(2);
-    expect(thetaBle.nativeSetCommandErrorDescriptionNotify).toHaveBeenLastCalledWith(devId, false);
+    expect(
+      thetaBle.nativeSetCommandErrorDescriptionNotify
+    ).toHaveBeenLastCalledWith({ id: devId, enable: false });
   });
 
   test('exception', async () => {
-    jest.mocked(thetaBle.nativeSetCommandErrorDescriptionNotify).mockImplementation(
-      jest.fn(async () => {
-        throw 'error';
-      }),
-    );
+    jest
+      .mocked(thetaBle.nativeSetCommandErrorDescriptionNotify)
+      .mockImplementation(
+        jest.fn(async () => {
+          throw 'error';
+        })
+      );
 
     const onNotify = jest.fn();
     const device = new ThetaDevice(devId, devName);
@@ -146,7 +159,7 @@ describe('setCommandErrorDescriptionNotify', () => {
         onNotify();
       });
       expect(true).toBeFalsy();
-    } catch(error) {
+    } catch (error) {
       expect(error).toBe('error');
     }
     expect(onNotify).toBeCalledTimes(0);
@@ -163,7 +176,7 @@ describe('setCommandErrorDescriptionNotify', () => {
         return {
           remove: jest.fn(),
         };
-      }),
+      })
     );
 
     const errorMessage = 'Error receive';
@@ -187,6 +200,9 @@ describe('setCommandErrorDescriptionNotify', () => {
 
     expect(device.notifyList.get('COMMAND_ERROR_DESCRIPTION')).toBeDefined();
     expect(onNotify).toBeCalled();
-    expect(thetaBle.nativeSetCommandErrorDescriptionNotify).toBeCalledWith(devId, true);
+    expect(thetaBle.nativeSetCommandErrorDescriptionNotify).toBeCalledWith({
+      id: devId,
+      enable: true,
+    });
   });
 });

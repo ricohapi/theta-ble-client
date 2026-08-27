@@ -3,13 +3,13 @@ import styles from './styles';
 import React from 'react';
 
 interface OptionItem {
-    label: string;
-    value: number;
+  label: string;
+  value: number;
 }
 interface Props {
-    options: OptionItem[];
-    selected?: number;
-    onSelected: (value: number) => void;
+  options: OptionItem[];
+  selected?: number;
+  onSelected: (value: number) => void;
 }
 
 export const RadioButton: React.FC<Props> = ({
@@ -17,10 +17,9 @@ export const RadioButton: React.FC<Props> = ({
   selected,
   onSelected,
 }) => {
-
   return (
     <View style={styles.container}>
-      {options.map(option => {
+      {options.map((option) => {
         const active = option.value === selected;
         return (
           <TouchableOpacity

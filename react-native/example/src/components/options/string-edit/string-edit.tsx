@@ -17,7 +17,7 @@ export const StringEdit: React.FC<Props> = ({
   const getOptionPropString = (_options: ThetaOptions, _propName: string) => {
     if (_options != null) {
       const option = Object.entries(_options).find(
-        (element) => element[0] === _propName,
+        (element) => element[0] === _propName
       );
       if (option != null && option[1] != null) {
         return option[1] as string;

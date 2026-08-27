@@ -36,29 +36,29 @@ describe('Camera Power', () => {
     thetaBle.nativeGetCameraPower = jest.fn();
     thetaBle.nativeSetCameraPower = jest.fn();
   });
-  
+
   test('Call normal get', async () => {
     const bleValue = CameraPowerEnum.SLEEP;
     jest.mocked(thetaBle.nativeGetCameraPower).mockImplementation(
-      jest.fn(async (id) => {
+      jest.fn(async ({ id }) => {
         expect(id).toBe(devId);
         return bleValue;
-      }),
+      })
     );
 
     const device = new ThetaDevice(devId, devName);
     const service = new CameraStatusCommand(device);
     const response = await service.getCameraPower();
-  
+
     expect(response).toBe(bleValue);
-    expect(thetaBle.nativeGetCameraPower).toHaveBeenCalledWith(devId);
+    expect(thetaBle.nativeGetCameraPower).toHaveBeenCalledWith({ id: devId });
   });
-  
+
   test('Exception get', async () => {
     jest.mocked(thetaBle.nativeGetCameraPower).mockImplementation(
       jest.fn(async () => {
         throw 'error';
-      }),
+      })
     );
 
     const device = new ThetaDevice(devId, devName);
@@ -69,35 +69,37 @@ describe('Camera Power', () => {
     } catch (error) {
       expect(error).toBe('error');
     }
-  
-    expect(thetaBle.nativeGetCameraPower).toHaveBeenCalledWith(devId);
+
+    expect(thetaBle.nativeGetCameraPower).toHaveBeenCalledWith({ id: devId });
   });
 
-  test.each([
-    CameraPowerEnum.OFF,
-    CameraPowerEnum.ON,
-    CameraPowerEnum.SLEEP,
-  ])('Call normal set', async (testValue) => {
-    jest.mocked(thetaBle.nativeSetCameraPower).mockImplementation(
-      jest.fn(async (id, value) => {
-        expect(id).toBe(devId);
-        expect(value).toBe(testValue);
-      }),
-    );
+  test.each([CameraPowerEnum.OFF, CameraPowerEnum.ON, CameraPowerEnum.SLEEP])(
+    'Call normal set',
+    async (testValue) => {
+      jest.mocked(thetaBle.nativeSetCameraPower).mockImplementation(
+        jest.fn(async ({ id, value }) => {
+          expect(id).toBe(devId);
+          expect(value).toBe(testValue);
+        })
+      );
 
-    const device = new ThetaDevice(devId, devName);
-    const service = new CameraStatusCommand(device);
-    await service.setCameraPower(testValue);
-  
-    expect(thetaBle.nativeSetCameraPower).toHaveBeenCalledWith(devId, testValue as string);
-  });
+      const device = new ThetaDevice(devId, devName);
+      const service = new CameraStatusCommand(device);
+      await service.setCameraPower(testValue);
+
+      expect(thetaBle.nativeSetCameraPower).toHaveBeenCalledWith({
+        id: devId,
+        value: testValue as string,
+      });
+    }
+  );
 
   test('Exception for set', async () => {
     const testValue = CameraPowerEnum.ON;
     jest.mocked(thetaBle.nativeSetCameraPower).mockImplementation(
       jest.fn(async () => {
         throw 'error';
-      }),
+      })
     );
 
     const device = new ThetaDevice(devId, devName);
@@ -108,6 +110,9 @@ describe('Camera Power', () => {
     } catch (error) {
       expect(error).toBe('error');
     }
-    expect(thetaBle.nativeSetCameraPower).toHaveBeenCalledWith(devId, testValue as string);
+    expect(thetaBle.nativeSetCameraPower).toHaveBeenCalledWith({
+      id: devId,
+      value: testValue as string,
+    });
   });
 });

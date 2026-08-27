@@ -37,4 +37,4 @@ export const CameraPowerEnum = {
 
 /** type definition of CameraPowerEnum */
 export type CameraPowerEnum =
-  typeof CameraPowerEnum[keyof typeof CameraPowerEnum];
+  (typeof CameraPowerEnum)[keyof typeof CameraPowerEnum];

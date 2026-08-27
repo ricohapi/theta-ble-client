@@ -1,10 +1,14 @@
 import * as React from 'react';
 import { useDeviceContext } from '../../device-context';
-import { BleServiceEnum, CameraControlCommandV2 } from '../../modules/theta-ble-client';
+import {
+  BleServiceEnum,
+  CameraControlCommandV2,
+} from '../../modules/theta-ble-client';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import styles from './styles';
 import { Alert, ScrollView, Text, View } from 'react-native';
-import { Item, ItemListView } from '../../components/ui/item-list';
+import { ItemListView } from '../../components/ui/item-list';
+import type { Item } from '../../components/ui/item-list';
 import Button from '../../components/ui/button';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../../App';
@@ -20,7 +24,6 @@ interface CommandItem extends Item {
   };
 }
 
-/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
 function getJsonString(object: any) {
   return JSON.stringify(JSON.parse(JSON.stringify(object)), null, 2);
 }
@@ -146,8 +149,8 @@ const CameraControlCommandV2Screen: React.FC<
     },
   ];
 
-  const alertToGoBack = (message: string) => {
-    Alert.alert(TITLE, message, [
+  const alertToGoBack = (alertMessage: string) => {
+    Alert.alert(TITLE, alertMessage, [
       {
         text: 'OK',
         onPress: () => {
@@ -162,11 +165,13 @@ const CameraControlCommandV2Screen: React.FC<
       alertToGoBack(ERROR_MESSAGE_NO_DEVICE);
       return;
     }
-    if (!await thetaDevice.isConnected()) {
+    if (!(await thetaDevice.isConnected())) {
       alertToGoBack(ERROR_MESSAGE_NOT_CONNECTED);
       return;
     }
-    const cameraControlCommandV2 = await thetaDevice.getService(BleServiceEnum.CAMERA_CONTROL_COMMAND_V2) as CameraControlCommandV2 | undefined;
+    const cameraControlCommandV2 = (await thetaDevice.getService(
+      BleServiceEnum.CAMERA_CONTROL_COMMAND_V2
+    )) as CameraControlCommandV2 | undefined;
     if (cameraControlCommandV2 == null) {
       alertToGoBack(ERROR_MESSAGE_UNSUPPORTED);
       return;
@@ -180,8 +185,7 @@ const CameraControlCommandV2Screen: React.FC<
     }
     try {
       await service.setStateNotify();
-      /* eslint-disable-next-line no-empty */
-    } catch (_) { }
+    } catch {}
   };
 
   const onSelected = (item: Item) => {

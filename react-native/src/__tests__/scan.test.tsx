@@ -1,4 +1,12 @@
-import { TIMEOUT_CONNECT, TIMEOUT_PERIPHERAL, TIMEOUT_SCAN, TIMEOUT_TAKE_PICTURE, ThetaDevice, TimeoutObject, scan } from '..';
+import {
+  TIMEOUT_CONNECT,
+  TIMEOUT_PERIPHERAL,
+  TIMEOUT_SCAN,
+  TIMEOUT_TAKE_PICTURE,
+  ThetaDevice,
+  TimeoutObject,
+  scan,
+} from '..';
 import { NativeModules } from 'react-native';
 
 describe('scan', () => {
@@ -10,11 +18,13 @@ describe('scan', () => {
     jest.clearAllMocks();
     jest.mocked(thetaBle.nativeScan).mockImplementation(
       jest.fn(async () => {
-        return [{
-          deviceId: devId,
-          name: devName,
-        }];
-      }),
+        return [
+          {
+            deviceId: devId,
+            name: devName,
+          },
+        ];
+      })
     );
   });
 
@@ -47,10 +57,10 @@ describe('scan', () => {
             name: devName + '2',
           },
         ];
-      }),
+      })
     );
 
-    const deviceList = await scan() as ThetaDevice[];
+    const deviceList = (await scan()) as ThetaDevice[];
     expect(deviceList).toBeDefined();
 
     expect(thetaBle.nativeScan).toHaveBeenCalledWith({
@@ -70,8 +80,8 @@ describe('scan', () => {
   test('Timeout for call scan', async () => {
     jest.mocked(thetaBle.nativeScan).mockImplementation(
       jest.fn(async () => {
-        return [];  // When timeout to empty.
-      }),
+        return []; // When timeout to empty.
+      })
     );
 
     const device = await scan(devName);
@@ -87,7 +97,7 @@ describe('scan', () => {
     jest.mocked(thetaBle.nativeScan).mockImplementation(
       jest.fn(async () => {
         return [];
-      }),
+      })
     );
 
     const timeout = new TimeoutObject({ timeoutScan: 100 });
@@ -108,7 +118,7 @@ describe('scan', () => {
     jest.mocked(thetaBle.nativeScan).mockImplementation(
       jest.fn(async () => {
         throw 'error';
-      }),
+      })
     );
 
     try {
@@ -124,33 +134,58 @@ describe('scan', () => {
   });
 
   test.each([
-    [new TimeoutObject({ timeoutScan: 100 }), 100, TIMEOUT_PERIPHERAL, TIMEOUT_CONNECT, TIMEOUT_TAKE_PICTURE],
-    [new TimeoutObject({ timeoutPeripheral: 100 }), TIMEOUT_SCAN, 100, TIMEOUT_CONNECT, TIMEOUT_TAKE_PICTURE],
-    [new TimeoutObject({ timeoutConnect: 100 }), TIMEOUT_SCAN, TIMEOUT_PERIPHERAL, 100, TIMEOUT_TAKE_PICTURE],
-    [new TimeoutObject({ timeoutTakePicture: 100 }), TIMEOUT_SCAN, TIMEOUT_PERIPHERAL, TIMEOUT_CONNECT, 100],
-  ])('set timeout', async (
-    testValue,
-    timeoutScan,
-    timeoutPeripheral,
-    timeoutConnect,
-    timeoutTakePicture,
-  ) => {
+    [
+      new TimeoutObject({ timeoutScan: 100 }),
+      100,
+      TIMEOUT_PERIPHERAL,
+      TIMEOUT_CONNECT,
+      TIMEOUT_TAKE_PICTURE,
+    ],
+    [
+      new TimeoutObject({ timeoutPeripheral: 100 }),
+      TIMEOUT_SCAN,
+      100,
+      TIMEOUT_CONNECT,
+      TIMEOUT_TAKE_PICTURE,
+    ],
+    [
+      new TimeoutObject({ timeoutConnect: 100 }),
+      TIMEOUT_SCAN,
+      TIMEOUT_PERIPHERAL,
+      100,
+      TIMEOUT_TAKE_PICTURE,
+    ],
+    [
+      new TimeoutObject({ timeoutTakePicture: 100 }),
+      TIMEOUT_SCAN,
+      TIMEOUT_PERIPHERAL,
+      TIMEOUT_CONNECT,
+      100,
+    ],
+  ])(
+    'set timeout',
+    async (
+      testValue,
+      timeoutScan,
+      timeoutPeripheral,
+      timeoutConnect,
+      timeoutTakePicture
+    ) => {
+      jest.mocked(thetaBle.nativeScan).mockImplementation(
+        jest.fn(async ({ timeout }) => {
+          expect(timeout.timeoutScan).toBe(timeoutScan);
+          expect(timeout.timeoutPeripheral).toBe(timeoutPeripheral);
+          expect(timeout.timeoutConnect).toBe(timeoutConnect);
+          expect(timeout.timeoutTakePicture).toBe(timeoutTakePicture);
+          return [];
+        })
+      );
+      await scan(devName, testValue);
 
-    jest.mocked(thetaBle.nativeScan).mockImplementation(
-      jest.fn(async ({ timeout }) => {
-        expect(timeout.timeoutScan).toBe(timeoutScan);
-        expect(timeout.timeoutPeripheral).toBe(timeoutPeripheral);
-        expect(timeout.timeoutConnect).toBe(timeoutConnect);
-        expect(timeout.timeoutTakePicture).toBe(timeoutTakePicture);
-        return [];
-      }),
-    );
-    await scan(devName, testValue);
-
-    expect(thetaBle.nativeScan).toHaveBeenCalledWith({
-      name: devName,
-      timeout: testValue,
-    });
-
-  });
+      expect(thetaBle.nativeScan).toHaveBeenCalledWith({
+        name: devName,
+        timeout: testValue,
+      });
+    }
+  );
 });

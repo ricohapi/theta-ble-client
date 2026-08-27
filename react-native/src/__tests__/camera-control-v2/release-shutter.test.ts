@@ -12,7 +12,7 @@ describe('CameraControlCommandV2 releaseShutter', () => {
     jest.mocked(thetaBle.nativeContainService).mockImplementation(
       jest.fn(async () => {
         return true;
-      }),
+      })
     );
   });
 
@@ -20,29 +20,36 @@ describe('CameraControlCommandV2 releaseShutter', () => {
     thetaBle.nativeContainService = jest.fn();
     thetaBle.nativeCameraControlCommandV2ReleaseShutter = jest.fn();
   });
-  
+
   const setupService = async () => {
     const device = new ThetaDevice(devId, devName);
-    const service = await device.getService(BleServiceEnum.CAMERA_CONTROL_COMMAND_V2);
+    const service = await device.getService(
+      BleServiceEnum.CAMERA_CONTROL_COMMAND_V2
+    );
     return service as CameraControlCommandV2;
   };
 
   test('releaseShutter', async () => {
-    thetaBle.nativeCameraControlCommandV2ReleaseShutter = jest.fn().mockImplementation( async (id) => {
-      expect(id).toBe(devId);
-    });
+    thetaBle.nativeCameraControlCommandV2ReleaseShutter = jest
+      .fn()
+      .mockImplementation(async ({ id }) => {
+        expect(id).toBe(devId);
+      });
 
     const service = await setupService();
     await service.releaseShutter();
 
-    expect(thetaBle.nativeCameraControlCommandV2ReleaseShutter).toHaveBeenCalledWith(devId);
+    expect(
+      thetaBle.nativeCameraControlCommandV2ReleaseShutter
+    ).toHaveBeenCalledWith({ id: devId });
   });
-  
-  test('Exception releaseShutter', async () => {
 
-    thetaBle.nativeCameraControlCommandV2ReleaseShutter = jest.fn().mockImplementation( () => {
-      throw 'error';
-    });
+  test('Exception releaseShutter', async () => {
+    thetaBle.nativeCameraControlCommandV2ReleaseShutter = jest
+      .fn()
+      .mockImplementation(() => {
+        throw 'error';
+      });
 
     const service = await setupService();
     try {

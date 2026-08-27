@@ -12,4 +12,4 @@ export interface GpsInfo {
   dateTimeZone?: string;
   /** Geodetic reference */
   datum?: string;
-};
+}

@@ -1,16 +1,12 @@
 import * as React from 'react';
-import {
-  StyleProp,
-  TouchableOpacity,
-  View,
-  ViewStyle,
-  type ButtonProps,
-  Text,
-} from 'react-native';
+import { TouchableOpacity, View, type ButtonProps, Text } from 'react-native';
+import type { StyleProp, ViewStyle } from 'react-native';
 import styles from './styles';
 
-interface Props
-  extends Pick<ButtonProps, 'disabled' | 'onPress' | 'title' | 'testID'> {
+interface Props extends Pick<
+  ButtonProps,
+  'disabled' | 'onPress' | 'title' | 'testID'
+> {
   style?: StyleProp<ViewStyle>;
 }
 

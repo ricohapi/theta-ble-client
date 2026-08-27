@@ -1,4 +1,10 @@
-import type { CameraPowerEnum, CaptureModeEnum, NetworkTypeEnum, WlanAntennaConfigEnum, WlanFrequencyEnum } from '../values';
+import type {
+  CameraPowerEnum,
+  CaptureModeEnum,
+  NetworkTypeEnum,
+  WlanAntennaConfigEnum,
+  WlanFrequencyEnum,
+} from '../values';
 import type { AccessInfo } from './access-info';
 
 /** camera setting options */

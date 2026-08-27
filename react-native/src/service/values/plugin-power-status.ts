@@ -16,4 +16,4 @@ export const PluginPowerStatusEnum = {
 
 /** type definition of PluginControlEnum */
 export type PluginPowerStatusEnum =
-  typeof PluginPowerStatusEnum[keyof typeof PluginPowerStatusEnum];
+  (typeof PluginPowerStatusEnum)[keyof typeof PluginPowerStatusEnum];

@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { View, Text, Modal, SafeAreaView, ModalProps } from 'react-native';
+import { View, Text, Modal, SafeAreaView } from 'react-native';
+import type { ModalProps } from 'react-native';
 import styles from './styles';
 import ItemListView from '../item-list-view/item-list-view';
 import type { Item } from '..';

@@ -1,6 +1,17 @@
 buildscript {
-  // Buildscript is evaluated before everything else so we can't use getExtOrDefault
-  def kotlin_version = rootProject.ext.has("kotlinVersion") ? rootProject.ext.get("kotlinVersion") : project.properties["ThetaBleClientReactNative_kotlinVersion"]
+  ext.ThetaBleClientReactNative = [
+    kotlinVersion: "2.0.21",
+    minSdkVersion: 26,
+    compileSdkVersion: 36
+  ]
+
+  ext.getExtOrDefault = { prop ->
+    if (rootProject.ext.has(prop)) {
+      return rootProject.ext.get(prop)
+    }
+
+    return ThetaBleClientReactNative[prop]
+  }
 
   repositories {
     google()
@@ -8,79 +19,62 @@ buildscript {
   }
 
   dependencies {
-    classpath "com.android.tools.build:gradle:7.2.1"
+    classpath "com.android.tools.build:gradle:8.7.2"
     // noinspection DifferentKotlinGradleVersion
-    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${getExtOrDefault('kotlinVersion')}"
+    classpath "com.facebook.react:react-native-gradle-plugin"
   }
 }
 
-def isNewArchitectureEnabled() {
-  return rootProject.hasProperty("newArchEnabled") && rootProject.getProperty("newArchEnabled") == "true"
-}
 
 apply plugin: "com.android.library"
 apply plugin: "kotlin-android"
 
-if (isNewArchitectureEnabled()) {
-  apply plugin: "com.facebook.react"
-}
+apply plugin: "com.facebook.react"
 
-def getExtOrDefault(name) {
-  return rootProject.ext.has(name) ? rootProject.ext.get(name) : project.properties["ThetaBleClientReactNative_" + name]
-}
-
-def getExtOrIntegerDefault(name) {
-  return rootProject.ext.has(name) ? rootProject.ext.get(name) : (project.properties["ThetaBleClientReactNative_" + name]).toInteger()
+// Only present so this module can be built/tested standalone (./gradlew
+// testDebugUnitTest from this directory, no host app). When linked into an
+// app via autolinking, the app's own com.android.application plugin
+// application already adds these repositories and forces the react-android/
+// hermes-android versions project-wide; that fan-out never runs here since
+// there's no app module in this standalone build.
+repositories {
+  google()
+  mavenCentral()
 }
 
 android {
-  compileSdkVersion getExtOrIntegerDefault("compileSdkVersion")
+  namespace "com.ricoh360.thetableclientreactnative"
+
+  compileSdkVersion getExtOrDefault("compileSdkVersion")
 
   defaultConfig {
-    minSdkVersion getExtOrIntegerDefault("minSdkVersion")
-    targetSdkVersion getExtOrIntegerDefault("targetSdkVersion")
-    buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
-  }
-  buildTypes {
-    release {
-      minifyEnabled false
-    }
-  }
-
-  lintOptions {
-    disable "GradleCompatible"
+    minSdkVersion getExtOrDefault("minSdkVersion")
   }
 
   compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
+    sourceCompatibility JavaVersion.VERSION_17
+    targetCompatibility JavaVersion.VERSION_17
   }
 
-}
+  kotlinOptions {
+    jvmTarget = "17"
+  }
 
-repositories {
-  mavenCentral()
-  google()
+  testOptions {
+    unitTests.all {
+      testLogging {
+        events "passed", "skipped", "failed"
+      }
+    }
+  }
 }
-
-def kotlin_version = getExtOrDefault("kotlinVersion")
 
 dependencies {
-  // For < 0.71, this will be from the local maven repo
-  // For > 0.71, this will be replaced by `com.facebook.react:react-android:$version` by react gradle plugin
-  //noinspection GradleDynamicVersion
-  implementation "com.facebook.react:react-native"
-  implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-
+  implementation "com.facebook.react:react-android:0.78.2"
   implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3"
+  implementation "com.ricoh360.thetableclient:theta-ble-client-android:1.4.0"
 
-  implementation "com.ricoh360.thetableclient:theta-ble-client-android:1.3.3"
-}
-
-if (isNewArchitectureEnabled()) {
-  react {
-    jsRootDir = file("../src/")
-    libraryName = "ThetaBleClientReactNative"
-    codegenJavaPackageName = "com.ricoh360.thetableclientreactnative"
-  }
+  testImplementation "junit:junit:4.13.2"
+  testImplementation "org.mockito.kotlin:mockito-kotlin:5.4.0"
 }

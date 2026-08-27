@@ -20,7 +20,7 @@ describe('CameraControlCommandV2 setOptions', () => {
     jest.mocked(thetaBle.nativeContainService).mockImplementation(
       jest.fn(async () => {
         return true;
-      }),
+      })
     );
   });
 
@@ -31,7 +31,9 @@ describe('CameraControlCommandV2 setOptions', () => {
 
   const setupService = async () => {
     const device = new ThetaDevice(devId, devName);
-    const service = await device.getService(BleServiceEnum.CAMERA_CONTROL_COMMAND_V2);
+    const service = await device.getService(
+      BleServiceEnum.CAMERA_CONTROL_COMMAND_V2
+    );
     return service as CameraControlCommandV2;
   };
 
@@ -48,11 +50,13 @@ describe('CameraControlCommandV2 setOptions', () => {
       wlanAntennaConfig: WlanAntennaConfigEnum.MIMO,
       wlanFrequency: WlanFrequencyEnum.GHZ_2_4,
     };
-    thetaBle.nativeCameraControlCommandV2SetOptions = jest.fn().mockImplementation(async (id, options) => {
-      expect(id).toBe(devId);
-      expect(options).toStrictEqual(testData);
-      return;
-    });
+    thetaBle.nativeCameraControlCommandV2SetOptions = jest
+      .fn()
+      .mockImplementation(async ({ id, options }) => {
+        expect(id).toBe(devId);
+        expect(options).toStrictEqual(testData);
+        return;
+      });
 
     const service = await setupService();
     await service.setOptions({
@@ -70,10 +74,11 @@ describe('CameraControlCommandV2 setOptions', () => {
   });
 
   test('Exception setOptions', async () => {
-
-    thetaBle.nativeCameraControlCommandV2SetOptions = jest.fn().mockImplementation(() => {
-      throw 'error';
-    });
+    thetaBle.nativeCameraControlCommandV2SetOptions = jest
+      .fn()
+      .mockImplementation(() => {
+        throw 'error';
+      });
 
     const service = await setupService();
     try {

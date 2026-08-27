@@ -16,7 +16,6 @@ const ERROR_MESSAGE_NOT_CONNECTED = 'Not connected.';
 const ERROR_MESSAGE_UNSUPPORTED = 'Unsupported.';
 const TITLE = 'OptionsByString';
 
-
 const OptionsByStringScreen: React.FC<
   NativeStackScreenProps<RootStackParamList, 'OptionsByString'>
 > = ({ navigation }) => {
@@ -28,7 +27,6 @@ const OptionsByStringScreen: React.FC<
   React.useEffect(() => {
     navigation.setOptions({ title: 'OptionsByString' });
   }, [navigation]);
-
 
   const onPressGet = async () => {
     if (optionKey.length === 0 || service == null) {
@@ -45,8 +43,8 @@ const OptionsByStringScreen: React.FC<
     }
   };
 
-  const alertToGoBack = (message: string) => {
-    Alert.alert(TITLE, message, [
+  const alertToGoBack = (alertMessage: string) => {
+    Alert.alert(TITLE, alertMessage, [
       {
         text: 'OK',
         onPress: () => {
@@ -61,11 +59,13 @@ const OptionsByStringScreen: React.FC<
       alertToGoBack(ERROR_MESSAGE_NO_DEVICE);
       return;
     }
-    if (!await thetaDevice.isConnected()) {
+    if (!(await thetaDevice.isConnected())) {
       alertToGoBack(ERROR_MESSAGE_NOT_CONNECTED);
       return;
     }
-    const cameraControlCommandV2 = await thetaDevice.getService(BleServiceEnum.CAMERA_CONTROL_COMMAND_V2) as CameraControlCommandV2 | undefined;
+    const cameraControlCommandV2 = (await thetaDevice.getService(
+      BleServiceEnum.CAMERA_CONTROL_COMMAND_V2
+    )) as CameraControlCommandV2 | undefined;
     if (cameraControlCommandV2 == null) {
       alertToGoBack(ERROR_MESSAGE_UNSUPPORTED);
       return;
@@ -90,7 +90,7 @@ const OptionsByStringScreen: React.FC<
             value={optionKey}
             onChangeText={setOptionKey}
             placeholder="Enter option key"
-            autoCapitalize='none'
+            autoCapitalize="none"
           />
           <Button
             style={styles.button}

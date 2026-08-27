@@ -15,7 +15,7 @@ export interface Timeout {
   /**
    * Specifies a time period (in milliseconds) required to process an ble peripheral.
    */
-  timeoutPeripheral?: number ;
+  timeoutPeripheral?: number;
 
   /**
    * Specifies a time period (in milliseconds) required to connection with THETA.
@@ -56,6 +56,7 @@ export class TimeoutObject implements Timeout {
     this.timeoutScan = timeout?.timeoutScan ?? TIMEOUT_SCAN;
     this.timeoutPeripheral = timeout?.timeoutPeripheral ?? TIMEOUT_PERIPHERAL;
     this.timeoutConnect = timeout?.timeoutConnect ?? TIMEOUT_CONNECT;
-    this.timeoutTakePicture = timeout?.timeoutTakePicture ?? TIMEOUT_TAKE_PICTURE;
+    this.timeoutTakePicture =
+      timeout?.timeoutTakePicture ?? TIMEOUT_TAKE_PICTURE;
   }
 }

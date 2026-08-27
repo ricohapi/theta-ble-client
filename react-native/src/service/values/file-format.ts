@@ -9,35 +9,35 @@ export const FileFormatEnum = {
 
   /**
    * Still image. 5376x2688
-   * 
+   *
    * For RICOH THETA V
    */
   IMAGE_5K: 'IMAGE_5K',
 
   /**
    * Movie. 3840x1920. H.264/MPEG-4 AVC
-   * 
+   *
    * For RICOH THETA V, RICOH THETA Z1 or later
    */
   VIDEO_4K: 'VIDEO_4K',
 
   /**
    * Movie. 1920x960. H.264/MPEG-4 AVC
-   * 
+   *
    * For RICOH THETA V, RICOH THETA Z1 or later
    */
   VIDEO_2K: 'VIDEO_2K',
 
   /**
    * Still image JPEG format. 6720x3360 (Equirectangular) or 7296x3648 (Dual-Fisheye)
-   * 
+   *
    * For RICOH THETA Z1 or later
    */
   IMAGE_6_7K: 'IMAGE_6_7K',
 
   /**
    * Still image RAW+ format. 7296x3648
-   * 
+   *
    * For RICOH THETA Z1 or later
    */
   RAW_P_6_7K: 'RAW_P_6_7K',
@@ -63,4 +63,4 @@ export const FileFormatEnum = {
 
 /** type definition of FileFormatEnum */
 export type FileFormatEnum =
-  typeof FileFormatEnum[keyof typeof FileFormatEnum];
+  (typeof FileFormatEnum)[keyof typeof FileFormatEnum];

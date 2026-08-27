@@ -24,12 +24,14 @@ export class WlanControlCommand extends ThetaService {
    * Read WLAN password state.
    *
    * Characteristic: E522112A-5689-4901-0803-0520637DC895
-   * 
+   *
    * @returns start-up status
    */
   async getWlanPasswordState(): Promise<WlanPasswordStateEnum> {
     try {
-      return await ThetaBleClient.nativeWlanControlCommandGetWlanPasswordState(this.device.id);
+      return await ThetaBleClient.nativeWlanControlCommandGetWlanPasswordState(
+        this.device.id
+      );
     } catch (error) {
       throw error;
     }

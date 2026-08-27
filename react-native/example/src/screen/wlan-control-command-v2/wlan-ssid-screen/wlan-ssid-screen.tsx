@@ -3,7 +3,10 @@ import { Alert, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../../../App';
-import { BleServiceEnum, WlanControlCommandV2 } from '../../../modules/theta-ble-client';
+import {
+  BleServiceEnum,
+  WlanControlCommandV2,
+} from '../../../modules/theta-ble-client';
 import { useDeviceContext } from '../../../device-context';
 import Button from '../../../components/ui/button';
 import { InputNumber } from '../../../components/ui/input-number';
@@ -41,9 +44,9 @@ const WlanSsidScreen: React.FC<
   };
 
   const addMessage = (newMessage: string) => {
-    setMessage(prevItem => {
+    setMessage((prevItem) => {
       return prevItem + '\n' + newMessage;
-    }); 
+    });
   };
 
   const messageScrollToBottom = () => {
@@ -58,29 +61,32 @@ const WlanSsidScreen: React.FC<
     try {
       initList();
       SetScanStatus(ScanStatus.SCANNING);
-      await service.scanSsidStart(scanTimeout, (ssid) => {
-        const newMessage = 'onNotify SSID: ' + ssid;
-        console.log(newMessage);
-        addMessage(newMessage);
-        messageScrollToBottom();  
-        setSsidList((prevState) => {
-          const newList = [...prevState];
-          const index = newList.findIndex((item) => item === ssid);
-          if (index >= 0) {
-            newList.splice(index, 1, ssid);
-          } else {
-            newList.push(ssid);
-          }
-          return newList;
-        });
-      },
-      (list) => {
-        console.log('Scan onCompleted:' + JSON.stringify(list));
-        const newMessage = `Scan onCompleted. ${list.length} ssid found.`;
-        addMessage(newMessage);
-        messageScrollToBottom();  
-        SetScanStatus(ScanStatus.IDLE);
-      });
+      await service.scanSsidStart(
+        scanTimeout,
+        (ssid) => {
+          const newMessage = 'onNotify SSID: ' + ssid;
+          console.log(newMessage);
+          addMessage(newMessage);
+          messageScrollToBottom();
+          setSsidList((prevState) => {
+            const newList = [...prevState];
+            const index = newList.findIndex((item) => item === ssid);
+            if (index >= 0) {
+              newList.splice(index, 1, ssid);
+            } else {
+              newList.push(ssid);
+            }
+            return newList;
+          });
+        },
+        (list) => {
+          console.log('Scan onCompleted:' + JSON.stringify(list));
+          const newMessage = `Scan onCompleted. ${list.length} ssid found.`;
+          addMessage(newMessage);
+          messageScrollToBottom();
+          SetScanStatus(ScanStatus.IDLE);
+        }
+      );
 
       setMessage('Scan Start OK.');
     } catch (error) {
@@ -99,7 +105,7 @@ const WlanSsidScreen: React.FC<
       await service.scanSsidStop();
       SetScanStatus(ScanStatus.IDLE);
       addMessage('Scan Stop OK.');
-      messageScrollToBottom();  
+      messageScrollToBottom();
     } catch (error) {
       SetScanStatus(ScanStatus.SCANNING);
       setMessage(JSON.stringify(error, null, 2));
@@ -116,17 +122,19 @@ const WlanSsidScreen: React.FC<
       },
     ]);
   };
-  
+
   const initService = async () => {
     if (thetaDevice == null) {
       alertToGoBack(ERROR_MESSAGE_NO_DEVICE);
       return;
     }
-    if (!await thetaDevice.isConnected()) {
+    if (!(await thetaDevice.isConnected())) {
       alertToGoBack(ERROR_MESSAGE_NOT_CONNECTED);
       return;
     }
-    const wlanControlCommandV2 = await thetaDevice.getService(BleServiceEnum.WLAN_CONTROL_COMMAND_V2) as WlanControlCommandV2 | undefined;
+    const wlanControlCommandV2 = (await thetaDevice.getService(
+      BleServiceEnum.WLAN_CONTROL_COMMAND_V2
+    )) as WlanControlCommandV2 | undefined;
     if (wlanControlCommandV2 == null) {
       alertToGoBack(ERROR_MESSAGE_UNSUPPORTED);
       return;
@@ -135,26 +143,27 @@ const WlanSsidScreen: React.FC<
     setNetworkTypeNotify(wlanControlCommandV2);
   };
 
-  const setNetworkTypeNotify = async (wlanControlCommandV2: WlanControlCommandV2) => {
+  const setNetworkTypeNotify = async (
+    wlanControlCommandV2: WlanControlCommandV2
+  ) => {
     try {
       await wlanControlCommandV2.setNetworkTypeNotify((networkType) => {
         const newMessage = `onChange NetworkType: ${networkType}`;
         addMessage(newMessage);
-        messageScrollToBottom();  
+        messageScrollToBottom();
       });
     } catch (error) {
       setMessage(JSON.stringify(error, null, 2));
     }
   };
-  
+
   const resetNotify = async () => {
     if (service == null) {
       return;
     }
     try {
       await service.setNetworkTypeNotify();
-      /* eslint-disable-next-line no-empty */
-    } catch (_) {}
+    } catch {}
   };
 
   const gotoSetAccessPoint = async () => {
@@ -163,7 +172,7 @@ const WlanSsidScreen: React.FC<
     }
     try {
       await service.scanSsidStop();
-    } catch (_) {
+    } catch {
       /* empty */
     }
     navigation.navigate('WlanSetAccessPoint', { ssid: selectedSsid });
@@ -176,17 +185,14 @@ const WlanSsidScreen: React.FC<
     };
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
-  
+
   return (
     <SafeAreaView
       style={styles.safeAreaContainer}
       edges={['left', 'right', 'bottom']}
     >
       <View>
-        <ScrollView
-          style={styles.messageArea}
-          ref={scrollViewRef}
-        >
+        <ScrollView style={styles.messageArea} ref={scrollViewRef}>
           <Text style={styles.messageText}>{message}</Text>
         </ScrollView>
       </View>

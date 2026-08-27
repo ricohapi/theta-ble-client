@@ -27,7 +27,7 @@ const val KEY_HOST_NAME = "hostName"
 fun toGetOptionsParam(optionNames: ReadableArray): List<OptionName> {
   val optionNameList = mutableListOf<OptionName>()
   for (index in 0..<optionNames.size()) {
-    val option = optionNames.getString(index)
+    val option = optionNames.getString(index) ?: continue
     optionNameList.add(OptionName.valueOf(option))
   }
   return optionNameList
@@ -36,12 +36,16 @@ fun toGetOptionsParam(optionNames: ReadableArray): List<OptionName> {
 fun toGetOptionsByStringParam(optionNames: ReadableArray): List<String> {
   val optionNameList = mutableListOf<String>()
   for (index in 0..<optionNames.size()) {
-    optionNameList.add(optionNames.getString(index))
+    optionNames.getString(index)?.let { optionNameList.add(it) }
   }
   return optionNameList
 }
 
-fun <T : Enum<T>> addOptionsEnumToMap(options: ThetaOptions, name: OptionName, objects: WritableMap) {
+fun <T : Enum<T>> addOptionsEnumToMap(
+  options: ThetaOptions,
+  name: OptionName,
+  objects: WritableMap
+) {
   options.getValue<T>(name)?.let { value ->
     objects.putString(name.keyName, value.name)
   }
@@ -99,7 +103,8 @@ fun toAccessInfo(value: ReadableMap): AccessInfo {
   val subnetMask = value.getString(KEY_SUBNET_MASK)
   val defaultGateway = value.getString(KEY_DEFAULT_GATEWAY)
   val proxyURL = value.getString(KEY_PROXY_URL)
-  val frequency = value.getString(KEY_FREQUENCY)?.let { value -> WlanFrequency.entries.find { it.name == value } }
+  val frequency =
+    value.getString(KEY_FREQUENCY)?.let { value -> WlanFrequency.entries.find { it.name == value } }
   val wlanSignalStrength = value.getInt(KEY_WLAN_SIGNAL_STRENGTH)
   val wlanSignalLevel = value.getInt(KEY_WLAN_SIGNAL_LEVEL)
   val lteSignalStrength = value.getInt(KEY_LTE_SIGNAL_STRENGTH)
@@ -107,8 +112,7 @@ fun toAccessInfo(value: ReadableMap): AccessInfo {
   val dhcpLeaseAddress = value.getArray(DhcpLeaseAddress.keyName)?.let { array ->
     val list = mutableListOf<DhcpLeaseAddress>()
     for (i in 0 until array.size()) {
-      val map = array.getMap(i)
-      list.add(toDhcpLeaseAddress(map))
+      array.getMap(i)?.let { list.add(toDhcpLeaseAddress(it)) }
     }
     if (list.size > 0) list else null
   }
@@ -184,8 +188,12 @@ fun toSetOptionsParam(optionsMap: ReadableMap): ThetaOptions {
         OptionName.Password -> result.password = value as? String
         OptionName.Ssid -> result.ssid = value as? String
         OptionName.Username -> result.username = value as? String
-        OptionName.WlanAntennaConfig -> result.wlanAntennaConfig = WlanAntennaConfig.entries.find { it.name == value }
-        OptionName.WlanFrequency -> result.wlanFrequency = WlanFrequency.entries.find { it.name == value }
+        OptionName.WlanAntennaConfig -> result.wlanAntennaConfig =
+          WlanAntennaConfig.entries.find { it.name == value }
+
+        OptionName.WlanFrequency -> result.wlanFrequency =
+          WlanFrequency.entries.find { it.name == value }
+
         OptionName.WifiPassword -> result.wifiPassword = value as? String
         else -> {}
       }

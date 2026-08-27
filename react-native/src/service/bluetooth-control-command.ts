@@ -1,4 +1,8 @@
-import type {  ScanPeripheralDeviceCompletedNotify, ScanPeripheralDeviceNotify, ThetaDevice } from '../theta-device';
+import type {
+  ScanPeripheralDeviceCompletedNotify,
+  ScanPeripheralDeviceNotify,
+  ThetaDevice,
+} from '../theta-device';
 import { ThetaService } from './theta-service';
 import { BleServiceEnum } from './values';
 import * as ThetaBleClient from '../native';
@@ -22,23 +26,37 @@ export class BluetoothControlCommand extends ThetaService {
   }
 
   private setNotifyScan(callback?: (value: PeripheralDevice) => void) {
-    const notifyCallBack = callback != null ? (event: ScanPeripheralDeviceNotify) => {
-      if (event.params != null) {
-        callback(event.params);
-      }
-    } : undefined;
-    this.device.notifyList.set('NOTIFICATION_SCANNED_BLUETOOTH_PERIPHERAL_DEVICE', notifyCallBack);
+    const notifyCallBack =
+      callback != null
+        ? (event: ScanPeripheralDeviceNotify) => {
+            if (event.params != null) {
+              callback(event.params);
+            }
+          }
+        : undefined;
+    this.device.notifyList.set(
+      'NOTIFICATION_SCANNED_BLUETOOTH_PERIPHERAL_DEVICE',
+      notifyCallBack
+    );
   }
 
   private setCompletedScan(callback?: (value: PeripheralDevice[]) => void) {
-    const notifyCallBack = callback != null ? (event: ScanPeripheralDeviceCompletedNotify) => {
-      if (event.params != null) {
-        this.device.notifyList.delete('NOTIFICATION_SCANNED_BLUETOOTH_PERIPHERAL_DEVICE');
-        this.device.notifyList.delete('SCAN_BLUETOOTH_PERIPHERAL_DEVICE');
-        callback(event.params);
-      }
-    } : undefined;
-    this.device.notifyList.set('SCAN_BLUETOOTH_PERIPHERAL_DEVICE', notifyCallBack);
+    const notifyCallBack =
+      callback != null
+        ? (event: ScanPeripheralDeviceCompletedNotify) => {
+            if (event.params != null) {
+              this.device.notifyList.delete(
+                'NOTIFICATION_SCANNED_BLUETOOTH_PERIPHERAL_DEVICE'
+              );
+              this.device.notifyList.delete('SCAN_BLUETOOTH_PERIPHERAL_DEVICE');
+              callback(event.params);
+            }
+          }
+        : undefined;
+    this.device.notifyList.set(
+      'SCAN_BLUETOOTH_PERIPHERAL_DEVICE',
+      notifyCallBack
+    );
     if (!notifyCallBack) {
       this.setNotifyScan();
     }
@@ -57,7 +75,9 @@ export class BluetoothControlCommand extends ThetaService {
     try {
       await this.scanPeripheralDeviceStop();
       return await ThetaBleClient.nativeBluetoothControlCommandScanPeripheralDevice(
-        this.device.id, timeout);
+        this.device.id,
+        timeout
+      );
     } catch (error) {
       throw error;
     }
@@ -78,14 +98,16 @@ export class BluetoothControlCommand extends ThetaService {
   async scanPeripheralDeviceStart(
     timeout: number,
     onNotify: (peripheralDevice: PeripheralDevice) => void,
-    onCompleted?: (peripheralDeviceList: PeripheralDevice[]) => void,
+    onCompleted?: (peripheralDeviceList: PeripheralDevice[]) => void
   ) {
     try {
       await this.scanPeripheralDeviceStop();
       this.setNotifyScan(onNotify);
       this.setCompletedScan(onCompleted);
       return await ThetaBleClient.nativeBluetoothControlCommandScanPeripheralDeviceStart(
-        this.device.id, timeout);
+        this.device.id,
+        timeout
+      );
     } catch (error) {
       this.setNotifyScan();
       this.setCompletedScan();
@@ -101,7 +123,9 @@ export class BluetoothControlCommand extends ThetaService {
   async scanPeripheralDeviceStop() {
     try {
       this.setNotifyScan();
-      await ThetaBleClient.nativeBluetoothControlCommandScanPeripheralDeviceStop(this.device.id);
+      await ThetaBleClient.nativeBluetoothControlCommandScanPeripheralDeviceStop(
+        this.device.id
+      );
       this.setCompletedScan();
     } catch (error) {
       throw error;
@@ -118,7 +142,9 @@ export class BluetoothControlCommand extends ThetaService {
   async connectPeripheralDevice(peripheralDevice: PeripheralDevice) {
     try {
       return await ThetaBleClient.nativeBluetoothControlCommandConnectPeripheralDevice(
-        this.device.id, peripheralDevice.macAddress);
+        this.device.id,
+        peripheralDevice.macAddress
+      );
     } catch (error) {
       throw error;
     }
@@ -134,10 +160,11 @@ export class BluetoothControlCommand extends ThetaService {
   async deletePeripheralDevice(peripheralDevice: PeripheralDevice) {
     try {
       return await ThetaBleClient.nativeBluetoothControlCommandDeletePeripheralDevice(
-        this.device.id, peripheralDevice.macAddress);
+        this.device.id,
+        peripheralDevice.macAddress
+      );
     } catch (error) {
       throw error;
     }
   }
-
 }

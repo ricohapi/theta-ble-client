@@ -11,11 +11,13 @@ describe('scanThetaSsid', () => {
     jest.clearAllMocks();
     jest.mocked(thetaBle.nativeScanThetaSsid).mockImplementation(
       jest.fn(async () => {
-        return [{
-          ssid,
-          password,
-        }];
-      }),
+        return [
+          {
+            ssid,
+            password,
+          },
+        ];
+      })
     );
   });
 
@@ -38,7 +40,7 @@ describe('scanThetaSsid', () => {
     jest.mocked(thetaBle.nativeScanThetaSsid).mockImplementation(
       jest.fn(async () => {
         return [];
-      }),
+      })
     );
 
     const timeout = 100;
@@ -58,7 +60,7 @@ describe('scanThetaSsid', () => {
     jest.mocked(thetaBle.nativeScanThetaSsid).mockImplementation(
       jest.fn(async () => {
         throw 'error';
-      }),
+      })
     );
 
     try {
@@ -72,5 +74,4 @@ describe('scanThetaSsid', () => {
       timeout: undefined,
     });
   });
-
 });

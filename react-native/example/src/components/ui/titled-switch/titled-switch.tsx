@@ -1,12 +1,6 @@
 import * as React from 'react';
-import {
-  StyleProp,
-  View,
-  ViewStyle,
-  Text,
-  ViewProps,
-  Switch,
-} from 'react-native';
+import { View, Text, Switch } from 'react-native';
+import type { StyleProp, ViewStyle, ViewProps } from 'react-native';
 import styles from './styles';
 
 interface Props extends Pick<ViewProps, 'testID'> {

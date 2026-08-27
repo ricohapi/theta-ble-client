@@ -31,7 +31,7 @@ describe('WlanControlCommandV2 setAccessPointDynamically', () => {
     jest.mocked(thetaBle.nativeContainService).mockImplementation(
       jest.fn(async () => {
         return true;
-      }),
+      })
     );
   });
 
@@ -42,16 +42,20 @@ describe('WlanControlCommandV2 setAccessPointDynamically', () => {
 
   const setupService = async () => {
     const device = new ThetaDevice(devId, devName);
-    const service = await device.getService(BleServiceEnum.WLAN_CONTROL_COMMAND_V2);
+    const service = await device.getService(
+      BleServiceEnum.WLAN_CONTROL_COMMAND_V2
+    );
     return service as WlanControlCommandV2;
   };
 
   test('setAccessPointDynamically', async () => {
-    thetaBle.nativeWlanControlCommandV2SetAccessPointDynamically = jest.fn().mockImplementation(async (id, value) => {
-      expect(id).toBe(devId);
-      expect(value).toStrictEqual(testData);
-      return;
-    });
+    thetaBle.nativeWlanControlCommandV2SetAccessPointDynamically = jest
+      .fn()
+      .mockImplementation(async ({ id, params: value }) => {
+        expect(id).toBe(devId);
+        expect(value).toStrictEqual(testData);
+        return;
+      });
 
     const service = await setupService();
     await service.setAccessPointDynamically(
@@ -60,16 +64,19 @@ describe('WlanControlCommandV2 setAccessPointDynamically', () => {
       testData.security,
       testData.password,
       testData.connectionPriority,
-      testData.proxy,
+      testData.proxy
     );
-    expect(thetaBle.nativeWlanControlCommandV2SetAccessPointDynamically).toBeCalledWith(devId, testData);
+    expect(
+      thetaBle.nativeWlanControlCommandV2SetAccessPointDynamically
+    ).toBeCalledWith({ id: devId, params: testData });
   });
 
   test('Exception setAccessPointDynamically', async () => {
-
-    thetaBle.nativeWlanControlCommandV2SetAccessPointDynamically = jest.fn().mockImplementation(() => {
-      throw 'error';
-    });
+    thetaBle.nativeWlanControlCommandV2SetAccessPointDynamically = jest
+      .fn()
+      .mockImplementation(() => {
+        throw 'error';
+      });
 
     const service = await setupService();
     try {
@@ -79,12 +86,14 @@ describe('WlanControlCommandV2 setAccessPointDynamically', () => {
         testData.security,
         testData.password,
         testData.connectionPriority,
-        testData.proxy,
+        testData.proxy
       );
       throw new Error('failed');
     } catch (error) {
       expect(error).toBe('error');
     }
-    expect(thetaBle.nativeWlanControlCommandV2SetAccessPointDynamically).toBeCalledWith(devId, testData);
+    expect(
+      thetaBle.nativeWlanControlCommandV2SetAccessPointDynamically
+    ).toBeCalledWith({ id: devId, params: testData });
   });
 });

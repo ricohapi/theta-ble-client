@@ -16,7 +16,7 @@ describe('WlanControlCommandV2 setNetworkType', () => {
     jest.mocked(thetaBle.nativeContainService).mockImplementation(
       jest.fn(async () => {
         return true;
-      }),
+      })
     );
   });
 
@@ -27,27 +27,32 @@ describe('WlanControlCommandV2 setNetworkType', () => {
 
   const setupService = async () => {
     const device = new ThetaDevice(devId, devName);
-    const service = await device.getService(BleServiceEnum.WLAN_CONTROL_COMMAND_V2);
+    const service = await device.getService(
+      BleServiceEnum.WLAN_CONTROL_COMMAND_V2
+    );
     return service as WlanControlCommandV2;
   };
 
   test('setNetworkType', async () => {
     const testData = NetworkTypeEnum.CLIENT;
-    thetaBle.nativeWlanControlCommandV2SetNetworkType = jest.fn().mockImplementation(async (id, value) => {
-      expect(id).toBe(devId);
-      expect(value).toBe(testData);
-      return;
-    });
+    thetaBle.nativeWlanControlCommandV2SetNetworkType = jest
+      .fn()
+      .mockImplementation(async ({ id, networkType: value }) => {
+        expect(id).toBe(devId);
+        expect(value).toBe(testData);
+        return;
+      });
 
     const service = await setupService();
     await service.setNetworkType(NetworkTypeEnum.CLIENT);
   });
 
   test('Exception setNetworkType', async () => {
-
-    thetaBle.nativeWlanControlCommandV2SetNetworkType = jest.fn().mockImplementation(() => {
-      throw 'error';
-    });
+    thetaBle.nativeWlanControlCommandV2SetNetworkType = jest
+      .fn()
+      .mockImplementation(() => {
+        throw 'error';
+      });
 
     const service = await setupService();
     try {

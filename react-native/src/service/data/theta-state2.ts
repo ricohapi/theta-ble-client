@@ -8,13 +8,13 @@ export interface ThetaState2 {
    * gpsInfo set by API.
    */
   externalGpsInfo: {
-    gpsInfo: GpsInfo
+    gpsInfo: GpsInfo;
   };
 
   /**
    * gpsInfo from the built-in GPS module.
    */
   internalGpsInfo: {
-    gpsInfo: GpsInfo
+    gpsInfo: GpsInfo;
   };
-};
+}

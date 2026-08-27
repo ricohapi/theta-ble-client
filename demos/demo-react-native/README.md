@@ -32,3 +32,9 @@ A simple sample React Native application using [theta-ble-client](https://github
   ```
   $ yarn start
   ```
+
+* For iOS, install CocoaPods dependencies first (only needed on first clone or after updating native deps).
+  ```
+  $ cd ios
+  $ pod install
+  ```

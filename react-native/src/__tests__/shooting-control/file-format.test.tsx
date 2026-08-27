@@ -17,10 +17,10 @@ const devName = '0123456789';
 
 async function getFileFormatTest(fileFormat: FileFormatEnum) {
   jest.mocked(thetaBle.nativeGetFileFormat).mockImplementation(
-    jest.fn(async (id) => {
+    jest.fn(async ({ id }) => {
       expect(id).toBe(devId);
       return fileFormat as string;
-    }),
+    })
   );
 
   const device = new ThetaDevice(devId, devName);
@@ -28,7 +28,7 @@ async function getFileFormatTest(fileFormat: FileFormatEnum) {
   const response = await service.getFileFormat();
 
   expect(response).toBe(fileFormat);
-  expect(thetaBle.nativeGetFileFormat).toHaveBeenCalledWith(devId);
+  expect(thetaBle.nativeGetFileFormat).toHaveBeenCalledWith({ id: devId });
 }
 
 test('Call getFileFormat normal', () => {
@@ -42,7 +42,7 @@ test('Call getFileFormat normal', () => {
     FileFormatEnum.VIDEO_3_6K,
     FileFormatEnum.RESERVED,
   ];
-  valueList.forEach(function(element){
+  valueList.forEach(function (element) {
     getFileFormatTest(element);
   });
 });
@@ -51,9 +51,9 @@ test('Exception for Call getFileFormat', async () => {
   jest.mocked(thetaBle.nativeGetFileFormat).mockImplementation(
     jest.fn(async () => {
       throw 'error';
-    }),
+    })
   );
-  
+
   const device = new ThetaDevice(devId, devName);
   const service = new ShootingControlCommand(device);
   try {
@@ -63,22 +63,25 @@ test('Exception for Call getFileFormat', async () => {
     expect(error).toBe('error');
   }
 
-  expect(thetaBle.nativeGetFileFormat).toHaveBeenCalledWith(devId);
+  expect(thetaBle.nativeGetFileFormat).toHaveBeenCalledWith({ id: devId });
 });
 
 async function setFileFormatTest(fileFormat: FileFormatEnum) {
   jest.mocked(thetaBle.nativeSetFileFormat).mockImplementation(
-    jest.fn(async (id, value: string) => {
+    jest.fn(async ({ id, value }) => {
       expect(id).toBe(devId);
       expect(value).toBe(fileFormat as string);
-    }),
+    })
   );
 
   const device = new ThetaDevice(devId, devName);
   const service = new ShootingControlCommand(device);
   await service.setFileFormat(fileFormat);
 
-  expect(thetaBle.nativeSetFileFormat).toHaveBeenCalledWith(devId, fileFormat as string);
+  expect(thetaBle.nativeSetFileFormat).toHaveBeenCalledWith({
+    id: devId,
+    value: fileFormat as string,
+  });
 }
 
 test('Call setFileFormat normal', () => {
@@ -91,7 +94,7 @@ test('Call setFileFormat normal', () => {
     FileFormatEnum.VIDEO_2_7K,
     FileFormatEnum.VIDEO_3_6K,
   ];
-  valueList.forEach(function(element){
+  valueList.forEach(function (element) {
     setFileFormatTest(element);
   });
 });
@@ -100,9 +103,9 @@ test('Exception for Call setFileFormat', async () => {
   jest.mocked(thetaBle.nativeSetFileFormat).mockImplementation(
     jest.fn(async () => {
       throw 'error';
-    }),
+    })
   );
-  
+
   const device = new ThetaDevice(devId, devName);
   const service = new ShootingControlCommand(device);
   try {
@@ -112,5 +115,8 @@ test('Exception for Call setFileFormat', async () => {
     expect(error).toBe('error');
   }
 
-  expect(thetaBle.nativeSetFileFormat).toHaveBeenCalledWith(devId, FileFormatEnum.IMAGE_5K as string);
+  expect(thetaBle.nativeSetFileFormat).toHaveBeenCalledWith({
+    id: devId,
+    value: FileFormatEnum.IMAGE_5K as string,
+  });
 });
