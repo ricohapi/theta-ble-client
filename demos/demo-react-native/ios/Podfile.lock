@@ -47,7 +47,6 @@ PODS:
     - React-RCTText (= 0.78.2)
     - React-RCTVibration (= 0.78.2)
   - React-callinvoker (0.78.2)
-  - React-Codegen (0.1.0)
   - React-Core (0.78.2):
     - glog
     - hermes-engine
@@ -1661,15 +1660,29 @@ PODS:
     - ReactCommon/turbomodule/core
     - Yoga
   - SocketRocket (0.7.1)
-  - theta-ble-client-react-native (1.3.3):
-    - RCT-Folly
+  - theta-ble-client-react-native (1.4.0):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.11.18.00)
     - RCTRequired
     - RCTTypeSafety
-    - React-Codegen
     - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - THETABleClient (= 1.3.3)
-  - THETABleClient (1.3.3)
+    - THETABleClient (= 1.4.0)
+    - Yoga
+  - THETABleClient (1.4.0)
   - Yoga (0.0.0)
 
 DEPENDENCIES:
@@ -1749,7 +1762,6 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
-    - React-Codegen
     - SocketRocket
     - THETABleClient
 
@@ -1912,7 +1924,6 @@ SPEC CHECKSUMS:
   RCTTypeSafety: 48ad3c858926b1c46f46a81a58822b476e178e2c
   React: 3b5754191f1b65f1dbc52fbea7959c3d2d9e39c9
   React-callinvoker: 6beeaf4c7db11b6cc953fac45f2c76e3fb125013
-  React-Codegen: 4b8b4817cea7a54b83851d4c1f91f79aa73de30a
   React-Core: 88e817c42de035378cc71e009193b9a044d3f595
   React-CoreModules: dcf764d71efb4f75d38fcae8d4513b6729f49360
   React-cxxreact: 8cdcc937c5fbc406fe843a381102fd69440ca78a
@@ -1970,8 +1981,8 @@ SPEC CHECKSUMS:
   RNPermissions: 4998f58a699af4f93bb2ee470c31a649e8c496fc
   RNScreens: 9b9bb7f9dc3eb218d79d84e0ac15df65d0e349f2
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
-  theta-ble-client-react-native: a865a542eb1703e398ace1e13bc37ed8d0f0dd0e
-  THETABleClient: 30b4c5f5043e2cc1d901fa88cc31be0bf1751e93
+  theta-ble-client-react-native: ab48f4fa309d64ff57cb8919a30eb24ab8038496
+  THETABleClient: 92b86f8f645babfb58313044256ee22938dbe0c2
   Yoga: e14bad835e12b6c7e2260fc320bd00e0f4b45add
 
 PODFILE CHECKSUM: 8ac636fd2fce7efa5b7ad01847d46b754b8c0d8a
